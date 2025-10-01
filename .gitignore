@@ -1,0 +1,7 @@
+# Rojo Files
+/sourcemap.json
+
+# Wally packages
+Packages/
+DevPackages/
+ServerPackages/
