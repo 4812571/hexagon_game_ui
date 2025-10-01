@@ -38,7 +38,7 @@ local function Window(props: WindowProps)
 
         AnchorPoint = props.AnchorPoint or Vector2.new(0.5, 0.5),
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
-        Size = props.Size or UDim2.fromOffset(930, 715),
+        Size = props.Size or UDim2.fromOffset(465, 350),
 
         Children = {
             scope:New "UIStroke" {
