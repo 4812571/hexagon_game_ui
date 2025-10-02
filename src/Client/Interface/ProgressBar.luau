@@ -55,7 +55,7 @@ local function ProgressBar(props: ProgressBarProps)
                 Position = UDim2.fromScale(0.5, 0.5),
                 Size = UDim2.fromScale(1, 1),
 
-                CornerRadius = UDim.new(0, 5),
+                CornerRadius = UDim.new(1, 0),
 
                 PaddingBottom = bottomPadding,
 
@@ -73,7 +73,7 @@ local function ProgressBar(props: ProgressBarProps)
                     return UDim2.fromScale(use(props.Progress), 1)
                 end),
 
-                CornerRadius = UDim.new(0, 5),
+                CornerRadius = UDim.new(1, 0),
 
                 PaddingBottom = bottomPadding,
 
