@@ -21,6 +21,9 @@ export type WindowProps = {
     Position: Fusion.UsedAs<UDim2>?,
     Size: Fusion.UsedAs<UDim2>?,
 
+    Title: Fusion.UsedAs<string>,
+    Icon: Fusion.UsedAs<string>,
+
     Children: Fusion.UsedAs<Fusion.Child>?,
 
     Close: () -> ()?,
