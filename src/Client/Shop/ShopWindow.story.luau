@@ -12,6 +12,38 @@ return function(target: Instance)
 
     local window = ShopWindow {
         Scope = scope,
+
+        OnStarterPackPurchase = function()
+            print("Purchasing starter pack...")
+        end,
+
+        OnBombsPackPurchase = function()
+            print("Purchasing bombs pack...")
+        end,
+
+        OnHundredBombsPackPurchase = function()
+            print("Purchasing 100 bombs pack...")
+        end,
+
+        OnMaxSpeedPurchase = function()
+            print("Purchasing max speed...")
+        end,
+
+        OnDoubleCashPurchase = function()
+            print("Purchasing double cash...")
+        end,
+
+        OnDoubleStartTilesPurchase = function()
+            print("Purchasing double start tiles...")
+        end,
+
+        OnRevivesPurchase = function(tier: number)
+            print(`Purchasing revives tier {tier}...`)
+        end,
+
+        OnCashPurchase = function(tier: number)
+            print(`Purchasing cash tier {tier}...`)
+        end,
     }
 
     window.Parent = target

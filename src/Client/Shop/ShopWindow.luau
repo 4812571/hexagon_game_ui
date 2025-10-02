@@ -12,6 +12,17 @@ local Window = require(Client.Interface.Window)
 
 export type ShopWindowProps = {
     Scope: Fusion.Scope<typeof(Fusion)>,
+
+    OnStarterPackPurchase: () -> (),
+    OnBombsPackPurchase: () -> (),
+    OnHundredBombsPackPurchase: () -> (),
+   
+    OnMaxSpeedPurchase: () -> (),
+    OnDoubleCashPurchase: () -> (),
+    OnDoubleStartTilesPurchase: () -> (),
+    
+    OnRevivesPurchase: (tier: number) -> (),
+    OnCashPurchase: (tier: number) -> (),
 }
 
 local function ShopWindow(props: ShopWindowProps)
