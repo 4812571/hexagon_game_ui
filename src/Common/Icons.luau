@@ -26,6 +26,11 @@ local Icons = {
     Heart = "rbxassetid://106262535697646",
     ManyHearts = "rbxassetid://115117628922340",
     HeartsBag = "rbxassetid://100111693583765",
+
+    Forward = "rbxassetid://73108532595753",
+    Back = "rbxassetid://78356648264514",
+    Pause = "rbxassetid://120243105719317",
+    Play = "rbxassetid://121059300989375",
 }
 
 return Icons
