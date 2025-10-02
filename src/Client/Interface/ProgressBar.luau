@@ -39,6 +39,8 @@ local function ProgressBar(props: ProgressBarProps)
 
         Name = props.Name or "ProgressBar",
 
+        BackgroundTransparency = 1,
+
         AnchorPoint = props.AnchorPoint,
         Position = props.Position,
         Size = props.Size,
