@@ -12,6 +12,19 @@ return function(target: Instance)
 
     local window = RebirthWindow {
         Scope = scope,
+
+        SpeedGain = 0.25,
+        IncomeGain = 0.2,
+
+        BombGain = 8,
+        GoldBombGain = 6,
+        NukeGain = 2,
+
+        Level = 15,
+        RequiredLevel = 100,
+
+        Coins = 95_281,
+        RequiredCoins = 1_000_000,
     }
 
     window.Parent = target

@@ -12,6 +12,19 @@ local Window = require(Client.Interface.Window)
 
 export type RebirthWindowProps = {
     Scope: Fusion.Scope<typeof(Fusion)>,
+
+    SpeedGain: Fusion.UsedAs<number>,
+    IncomeGain: Fusion.UsedAs<number>,
+
+    BombGain: Fusion.UsedAs<number>,
+    GoldBombGain: Fusion.UsedAs<number>,
+    NukeGain: Fusion.UsedAs<number>,
+
+    Level: Fusion.UsedAs<number>,
+    RequiredLevel: Fusion.UsedAs<number>,
+
+    Coins: Fusion.UsedAs<number>,
+    RequiredCoins: Fusion.UsedAs<number>,
 }
 
 local function RebirthWindow(props: RebirthWindowProps)
