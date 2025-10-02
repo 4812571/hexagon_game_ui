@@ -6,9 +6,9 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 
 local Frame = require(Client.Interface.Frame)
-local TextButton = require(Client.Interface.TextButton)
 local ListLayout = require(Client.Interface.ListLayout)
 local FlexItem = require(Client.Interface.FlexItem)
+local CloseButton = require(Client.Interface.CloseButton)
 
 export type WindowProps = {
     Scope: Fusion.Scope<typeof(Fusion)>,
@@ -85,21 +85,15 @@ local function Window(props: WindowProps)
                         FlexMode = Enum.UIFlexMode.Shrink,
                     },
 
-                    TextButton {
+                    CloseButton {
                         Scope = scope,
-
-                        Name = "CloseButton",
-
-                        BackgroundColor3 = Color3.fromRGB(255, 63, 63),
 
                         AnchorPoint = Vector2.new(0.5, 0.5),
                         Position = UDim2.fromScale(1, 0),
                         Size = UDim2.fromOffset(75, 75),
 
-                        Text = "X",
-
                         Activated = props.Close,
-                    },
+                    }
                 }
             },
 
