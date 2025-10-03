@@ -9,6 +9,7 @@ local Frame = require(Client.Interface.Frame)
 local TextLabel = require(Client.Interface.TextLabel)
 local ListLayout = require(Client.Interface.ListLayout)
 local FlexItem = require(Client.Interface.FlexItem)
+local Icon = require(Client.Interface.Icon)
 local CloseButton = require(Client.Interface.CloseButton)
 
 export type WindowProps = {
@@ -24,6 +25,7 @@ export type WindowProps = {
 
     Title: Fusion.UsedAs<string>,
     Icon: Fusion.UsedAs<string>,
+    IconScale: Fusion.UsedAs<number>?,
 
     Children: Fusion.UsedAs<Fusion.Child>?,
 
@@ -128,24 +130,11 @@ local function Window(props: WindowProps)
                                     Padding = UDim.new(0, 10),
                                 },
 
-                                Frame {
+                                Icon {
                                     Scope = scope,
 
-                                    Size = UDim2.fromOffset(30, 30),
-
-                                    BackgroundTransparency = 1,
-
-                                    Children = scope:New "ImageLabel" {
-                                        Name = "Icon",
-
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        Size = UDim2.fromScale(1.25, 1.25),
-
-                                        BackgroundTransparency = 1,
-
-                                        Image = props.Icon,
-                                    }
+                                    Icon = props.Icon,
+                                    IconScale = props.IconScale,
                                 },
 
                                 TextLabel {
