@@ -32,7 +32,9 @@ local Icons = {
     Back = "rbxassetid://135796071604940",
     Pause = "rbxassetid://79260960268908",
     Play = "rbxassetid://82288992670357",
+
+    FearfulFace = "rbxassetid://119657450518303",
+    PartyFace = "rbxassetid://140676173895758",
 }
 
 return Icons
-
