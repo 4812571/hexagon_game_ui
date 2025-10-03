@@ -5,8 +5,6 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
-local Children = Fusion.Children
-
 local Frame = require(Client.Interface.Frame)
 
 export type IconProps = {
