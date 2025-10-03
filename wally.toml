@@ -6,3 +6,6 @@ realm = "shared"
 
 [dependencies]
 Fusion = "elttob/fusion@0.3.0"
+Signal = "sleitnick/signal@2.0.3"
+Observe = "4812571/observe@0.2.6"
+ProfileService = "nottirb/profileservice@0.1.0"

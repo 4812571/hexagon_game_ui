@@ -1,0 +1,23 @@
+struct Axial {
+    Q: i32,
+    R: i32,
+}
+
+struct InitialData {
+    Owned: map {[Axial]: Color3},
+    Selected: map {[Axial]: Color3},
+}
+
+event HexagonsColored {
+    From: Server,
+    Type:Reliable,
+    Call: SingleAsync,
+    Data: (Color3?, Axial[]),
+}
+
+event HexagonsSelected {
+    From: Server,
+    Type:Reliable,
+    Call: SingleAsync,
+    Data: (Color3?, Axial[]),
+}

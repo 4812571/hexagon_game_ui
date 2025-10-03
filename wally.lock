@@ -3,11 +3,31 @@
 registry = "test"
 
 [[package]]
+name = "4812571/observe"
+version = "0.2.6"
+dependencies = []
+
+[[package]]
 name = "dylan/hexagon-game-ui"
 version = "0.1.0"
-dependencies = [["Fusion", "elttob/fusion@0.3.0"]]
+dependencies = [["Fusion", "elttob/fusion@0.3.0"], ["Loader", "sleitnick/loader@2.0.0"], ["Observe", "4812571/observe@0.2.6"], ["ProfileService", "nottirb/profileservice@0.1.0"], ["Signal", "sleitnick/signal@2.0.3"]]
 
 [[package]]
 name = "elttob/fusion"
 version = "0.3.0"
+dependencies = []
+
+[[package]]
+name = "nottirb/profileservice"
+version = "0.1.0"
+dependencies = []
+
+[[package]]
+name = "sleitnick/loader"
+version = "2.0.0"
+dependencies = []
+
+[[package]]
+name = "sleitnick/signal"
+version = "2.0.3"
 dependencies = []

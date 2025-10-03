@@ -8,6 +8,10 @@
         "ServerScriptService": {
             "$className": "ServerScriptService",
 
+            "NetworkServer": {
+                "$path": ".blink/server/NetworkServer.luau"
+            },
+
             "Server": {
                 "$className": "Folder",
                 "$path": "src/Server"
@@ -16,6 +20,10 @@
 
         "ReplicatedStorage": {
             "$className": "ReplicatedStorage",
+
+            "NetworkClient": {
+                "$path": ".blink/client/NetworkClient.luau"
+            },
 
             "Client": {
                 "$className": "Folder",

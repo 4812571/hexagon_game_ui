@@ -1,0 +1,16 @@
+option ServerOutput = "../.blink/server/NetworkServer.luau"
+option ClientOutput = "../.blink/client/NetworkClient.luau"
+
+import "./Hexagon.blink"
+
+struct InitialData {
+    JoinTime: f64,
+
+    Hexagon: Hexagon.InitialData,
+}
+
+function Join {
+    Yield: Coroutine,
+    Return: InitialData?,
+}
+
