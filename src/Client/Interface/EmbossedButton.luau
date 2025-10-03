@@ -79,13 +79,13 @@ local function EmbossedButton(props: EmbossedButtonProps)
         end
 
         if not wasActive and state == Enum.GuiState.Hover then
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonHover)
+            -- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonHover)
         end
 
         if state == Enum.GuiState.Press then
             wasActive = true
 
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonActivate)
+            -- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonActivate)
 
             if props.Pressed then
                 props.Pressed()
@@ -97,7 +97,7 @@ local function EmbossedButton(props: EmbossedButtonProps)
         if wasActive then
             wasActive = false
 
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonRelease)
+            -- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonRelease)
 
             if props.Released then
                 props.Released()

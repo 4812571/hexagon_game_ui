@@ -66,13 +66,13 @@ local function ButtonFrame(props: ButtonFrameProps)
         end
 
         if not wasActive and state == Enum.GuiState.Hover then
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameHover)
+            -- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameHover)
         end
 
         if state == Enum.GuiState.Press then
             wasActive = true
 
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameActivate)
+            -- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameActivate)
 
             if props.Pressed then
                 props.Pressed()
@@ -84,7 +84,7 @@ local function ButtonFrame(props: ButtonFrameProps)
         if wasActive then
             wasActive = false
 
-            SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameRelease)
+            --- SoundService:PlayLocalSound(ReplicatedStorage.Assets.Sounds.ButtonFrameRelease)
 
             if props.Released then
                 props.Released()
