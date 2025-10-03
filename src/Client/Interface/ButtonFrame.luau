@@ -28,6 +28,8 @@ export type ButtonFrameProps = {
     Position: Fusion.UsedAs<UDim2>?,
     Size: Fusion.UsedAs<UDim2>?,
 
+    SizeConstraint: Fusion.UsedAs<Enum.SizeConstraint>?,
+
     AutomaticSize: Fusion.UsedAs<Enum.AutomaticSize>?,
 
     Children: Fusion.UsedAs<Fusion.Child>?,
@@ -101,6 +103,8 @@ local function ButtonFrame(props: ButtonFrameProps)
         AnchorPoint = props.AnchorPoint or Vector2.new(0, 0),
         Position = props.Position or UDim2.fromScale(0, 0),
         Size = props.Size or UDim2.fromScale(0, 0),
+
+        SizeConstraint = props.SizeConstraint,
 
         AutomaticSize = props.AutomaticSize,
 
