@@ -4,6 +4,8 @@ local Packages = ReplicatedStorage.Packages
 local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
+local LevelRewards = require(Common.LevelRewards)
+
 local Fusion = require(Packages.Fusion)
 
 local LevelWindow = require(Client.Level.LevelWindow)
@@ -27,7 +29,7 @@ return function(target: Instance)
 
     local entries = {}
 
-    for level, reward in Common.LevelRewards do
+    for level, reward in LevelRewards do
         local entry: LevelRewardEntry = {
             Level = level,
             Reward = reward,
