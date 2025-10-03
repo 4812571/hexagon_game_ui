@@ -16,6 +16,7 @@ export type FrameProps = {
     AnchorPoint: Fusion.UsedAs<Vector2>?,
     Position: Fusion.UsedAs<UDim2>?,
     Size: Fusion.UsedAs<UDim2>?,
+    Rotation: Fusion.UsedAs<number>?,
 
     SizeConstraint: Fusion.UsedAs<Enum.SizeConstraint>?,
 
@@ -40,6 +41,7 @@ local function Frame(props: FrameProps)
         AnchorPoint = props.AnchorPoint or Vector2.new(0, 0),
         Position = props.Position or UDim2.fromScale(0, 0),
         Size = props.Size or UDim2.fromScale(0, 0),
+        Rotation = props.Rotation,
 
         SizeConstraint = props.SizeConstraint,
 

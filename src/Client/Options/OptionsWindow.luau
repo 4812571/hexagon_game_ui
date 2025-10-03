@@ -25,6 +25,7 @@ local function OptionsWindow(props: OptionsWindowProps)
         Scope = props.Scope,
         Title = "Options",
         Icon = Icons.Gear,
+        IconScale = 1.05,
     }
 end
 

@@ -6,8 +6,10 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 
 local Frame = require(Client.Interface.Frame)
+local TextLabel = require(Client.Interface.TextLabel)
 local ListLayout = require(Client.Interface.ListLayout)
 local FlexItem = require(Client.Interface.FlexItem)
+local Icon = require(Client.Interface.Icon)
 local CloseButton = require(Client.Interface.CloseButton)
 
 export type WindowProps = {
@@ -23,6 +25,7 @@ export type WindowProps = {
 
     Title: Fusion.UsedAs<string>,
     Icon: Fusion.UsedAs<string>,
+    IconScale: Fusion.UsedAs<number>?,
 
     Children: Fusion.UsedAs<Fusion.Child>?,
 
@@ -74,7 +77,7 @@ local function Window(props: WindowProps)
             Frame {
                 Scope = scope,
 
-                Name = "CloseButton",
+                Name = "Header",
 
                 BackgroundTransparency = 1,
 
@@ -93,6 +96,58 @@ local function Window(props: WindowProps)
                         Size = UDim2.fromOffset(75, 75),
 
                         Activated = props.Close,
+                    },
+
+                    Frame {
+                        Scope = scope,
+
+                        Name = "Title",
+
+                        BackgroundTransparency = 1,
+
+                        AutomaticSize = Enum.AutomaticSize.XY,
+
+                        AnchorPoint = Vector2.new(0.15, 1),
+
+                        Children = Frame {
+                            Scope = scope,
+
+                            BackgroundTransparency = 1,
+
+                            AutomaticSize = Enum.AutomaticSize.XY,
+
+                            Rotation = -5,
+
+                            Children = {
+                                ListLayout {
+                                    Scope = scope,
+
+                                    FillDirection = Enum.FillDirection.Horizontal,
+
+                                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                                    VerticalAlignment = Enum.VerticalAlignment.Top,
+
+                                    Padding = UDim.new(0, 10),
+                                },
+
+                                Icon {
+                                    Scope = scope,
+
+                                    Icon = props.Icon,
+                                    IconScale = props.IconScale,
+                                },
+
+                                TextLabel {
+                                    Scope = scope,
+
+                                    Text = props.Title,
+
+                                    TextSize = 30,
+
+                                    AutomaticSize = Enum.AutomaticSize.XY,
+                                },
+                            }
+                        }
                     }
                 }
             },

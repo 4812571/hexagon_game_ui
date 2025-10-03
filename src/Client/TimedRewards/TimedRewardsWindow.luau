@@ -32,6 +32,7 @@ local function TimedRewardsWindow(props: TimedRewardsWindowProps)
         Scope = props.Scope,
         Title = "Rewards",
         Icon = Icons.Gift,
+        IconScale = 1.2,
     }
 end
 

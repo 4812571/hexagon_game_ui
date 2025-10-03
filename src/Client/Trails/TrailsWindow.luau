@@ -19,6 +19,7 @@ local function TrailsWindow(props: TrailsWindowProps)
         Scope = props.Scope,
         Title = "Trails",
         Icon = Icons.Aura,
+        IconScale = 1.1,
     }
 end
 

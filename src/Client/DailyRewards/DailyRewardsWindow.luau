@@ -33,6 +33,7 @@ local function DailyRewardsWindow(props: DailyRewardsWindowProps)
         Scope = props.Scope,
         Title = "Daily",
         Icon = Icons.Calendar,
+        IconScale = 0.95,
     }
 end
 
