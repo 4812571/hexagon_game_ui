@@ -6,6 +6,7 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 
 local Frame = require(Client.Interface.Frame)
+local TextLabel = require(Client.Interface.TextLabel)
 local ListLayout = require(Client.Interface.ListLayout)
 local FlexItem = require(Client.Interface.FlexItem)
 local CloseButton = require(Client.Interface.CloseButton)
@@ -74,7 +75,7 @@ local function Window(props: WindowProps)
             Frame {
                 Scope = scope,
 
-                Name = "CloseButton",
+                Name = "Header",
 
                 BackgroundTransparency = 1,
 
@@ -93,6 +94,71 @@ local function Window(props: WindowProps)
                         Size = UDim2.fromOffset(75, 75),
 
                         Activated = props.Close,
+                    },
+
+                    Frame {
+                        Scope = scope,
+
+                        Name = "Title",
+
+                        BackgroundTransparency = 1,
+
+                        AutomaticSize = Enum.AutomaticSize.XY,
+
+                        AnchorPoint = Vector2.new(0.15, 1),
+
+                        Children = Frame {
+                            Scope = scope,
+
+                            BackgroundTransparency = 1,
+
+                            AutomaticSize = Enum.AutomaticSize.XY,
+
+                            Rotation = -5,
+
+                            Children = {
+                                ListLayout {
+                                    Scope = scope,
+
+                                    FillDirection = Enum.FillDirection.Horizontal,
+
+                                    HorizontalAlignment = Enum.HorizontalAlignment.Left,
+                                    VerticalAlignment = Enum.VerticalAlignment.Top,
+
+                                    Padding = UDim.new(0, 10),
+                                },
+
+                                Frame {
+                                    Scope = scope,
+
+                                    Size = UDim2.fromOffset(30, 30),
+
+                                    BackgroundTransparency = 1,
+
+                                    Children = scope:New "ImageLabel" {
+                                        Name = "Icon",
+
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        Size = UDim2.fromScale(1.25, 1.25),
+
+                                        BackgroundTransparency = 1,
+
+                                        Image = props.Icon,
+                                    }
+                                },
+
+                                TextLabel {
+                                    Scope = scope,
+
+                                    Text = props.Title,
+
+                                    TextSize = 30,
+
+                                    AutomaticSize = Enum.AutomaticSize.XY,
+                                },
+                            }
+                        }
                     }
                 }
             },
