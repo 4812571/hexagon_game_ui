@@ -16,7 +16,7 @@ local initialData = NetworkClient.Join.Invoke()
 
 local scope = Fusion.scoped(Fusion)
 
-local clientPlayer = ClientPlayer(scope, initialData.JoinTime)
+local clientPlayer = ClientPlayer(scope, initialData.JoinTime, initialData.PlayerData)
 print(`[Client] Joined the game at {clientPlayer.JoinTime}!`)
 
 local binderController = BinderController(scope)
