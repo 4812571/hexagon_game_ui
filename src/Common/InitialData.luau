@@ -2,14 +2,17 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Common = ReplicatedStorage.Common
 
-local HexagonInitialData = require(Common.Hexagon.HexagonInitialData)
+local PlayerData = require(Common.Player.PlayerData)
+local HexagonData = require(Common.Hexagon.HexagonData)
 
-export type HexagonInitialData = HexagonInitialData.HexagonInitialData
+export type PlayerData = PlayerData.PlayerData
+export type HexagonData = HexagonData.HexagonData
 
 export type InitialData = {
     JoinTime: number,
 
-    Hexagon: HexagonInitialData,
+    Hexagon: HexagonData,
+    Player: PlayerData,
 }
 
 return nil

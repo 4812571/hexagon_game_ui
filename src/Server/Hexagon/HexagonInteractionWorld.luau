@@ -40,6 +40,7 @@ export type HexagonInteractionWorld = {
 
     GetOwnedTiles: () -> {[Axial]: HexagonPlayer},
     GetSelectedTiles: () -> {[Axial]: HexagonPlayer},
+    GetCount: (player: HexagonPlayer) -> number,
 
     FindBestSpawn: () -> Axial,
 
@@ -94,6 +95,7 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
 
     local playerTileSelection: {[HexagonPlayer]: TileSet} = {}
     local playerTileOwnership: {[HexagonPlayer]: TileSet} = {}
+    local ownershipCount: {[HexagonPlayer]: number} = {}
 
     local tileSelection: {[string]: HexagonPlayer?} = {}
     local tileOwnership: {[string]: HexagonPlayer?} = {}
@@ -104,6 +106,10 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
 
     local function GetOwner(axial: Axial): HexagonPlayer?
         return tileOwnership[HexagonUtil.Key(axial)]
+    end
+
+    local function GetCount(player: HexagonPlayer): number
+        return ownershipCount[player] or 0
     end
 
     local function GetOwnedTiles(): {[Axial]: HexagonPlayer}
@@ -259,15 +265,14 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
     local function ClearOwnership(player: HexagonPlayer)
         local ownership = playerTileOwnership[player]
 
-        if not ownership then
-            return
+        if ownership then
+            for key, axial in ownership do
+                tileOwnership[key] = nil
+                ownerChanged:Fire(axial, nil)
+            end
         end
 
-        for key, axial in ownership do
-            tileOwnership[key] = nil
-            ownerChanged:Fire(axial, nil)
-        end
-
+        ownershipCount[player] = nil
         playerTileOwnership[player] = nil
     end
 
@@ -281,6 +286,7 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
 
             if currentOwner then
                 playerTileOwnership[currentOwner][key] = nil
+                ownershipCount[currentOwner] -= 1 -- safety: if player owns a tile, they should have an ownership count
             end
 
             tileOwnership[key] = player
@@ -288,6 +294,12 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
             if not playerTileOwnership[player] then
                 playerTileOwnership[player] = {}
             end
+
+            if not ownershipCount[player] then
+                ownershipCount[player] = 0
+            end
+
+            ownershipCount[player] += 1
 
             playerTileOwnership[player][key] = axial
 
@@ -382,6 +394,7 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
     local self: HexagonInteractionWorld = {
         GetSelector = GetSelector,
         GetOwner = GetOwner,
+        GetCount = GetCount,
 
         GetOwnedTiles = GetOwnedTiles,
         GetSelectedTiles = GetSelectedTiles,

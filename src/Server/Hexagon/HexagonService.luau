@@ -22,8 +22,8 @@ local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 local HexagonUtil = require(Common.Hexagon.HexagonUtil)
 type Axial = HexagonUtil.Axial
 
-local HexagonInitialData = require(Common.Hexagon.HexagonInitialData)
-type HexagonInitialData = HexagonInitialData.HexagonInitialData
+local HexagonData = require(Common.Hexagon.HexagonData)
+type HexagonData = HexagonData.HexagonData
 
 local NetworkServer = require(ServerScriptService.NetworkServer)
 
@@ -69,7 +69,7 @@ type Services = {
 }
 
 export type HexagonService = {
-    InitialData: () -> HexagonInitialData,
+    InitialData: () -> HexagonData,
 
     Init: () -> (),
     Start: () -> (),
@@ -85,7 +85,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     local activePlayers: Set<HexagonPlayer> = {}
     
-    local function InitialData(): HexagonInitialData
+    local function InitialData(): HexagonData
         local owned = {}
 
         for axial, owner in world.GetOwnedTiles() do
@@ -98,7 +98,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             selected[axial] = selector.Color
         end
 
-        local data: HexagonInitialData = {
+        local data: HexagonData = {
             Owned = owned,
             Selected = selected,
         }
@@ -122,6 +122,20 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local function RemovePlayer(player: HexagonPlayer)
         world.RemoveFromGame(player)
         activePlayers[player] = nil
+
+        local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
+
+        if not leaderstats then
+            return
+        end
+
+        local tiles = leaderstats:FindFirstChild("Tiles") :: IntValue?
+
+        if not tiles then
+            return
+        end
+
+        tiles.Value = 0
     end
 
     local function PlayerPositions(): {[HexagonPlayer]: Axial}
@@ -208,6 +222,24 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             world.RemoveFromGame(player)
             activePlayers[player] = nil
         end
+
+        for player, _ in activePlayers do
+            local count = world.GetCount(player)
+
+            local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
+
+            if not leaderstats then
+                continue
+            end
+
+            local tiles = leaderstats:FindFirstChild("Tiles") :: IntValue?
+
+            if not tiles then
+                continue
+            end
+
+            tiles.Value = count
+        end
     end
 
     local function Init()
@@ -222,6 +254,16 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     local function Start()
         table.insert(scope, PlayerService.ObservePlayers(function(serverPlayer: ServerPlayer)
+            local leaderstats = Instance.new("Folder")
+            leaderstats.Name = "leaderstats"
+
+            local tiles = Instance.new("IntValue")
+            tiles.Name = "Tiles"
+            tiles.Value = 0
+            
+            tiles.Parent = leaderstats
+            leaderstats.Parent = serverPlayer.Player
+
             return Observe.Character(serverPlayer.Player, function(character: Model?)
                 if not character then
                     return
@@ -246,7 +288,6 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
                 NetworkServer.Hexagon.HexagonsSelected.Fire(serverPlayer.Player, color, axials)
             end
         end))
-
 
         table.insert(scope, RunService.Heartbeat:Connect(Update))
     end

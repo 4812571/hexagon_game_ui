@@ -14,8 +14,8 @@ local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 local HexagonUtil = require(Common.Hexagon.HexagonUtil)
 type Axial = HexagonUtil.Axial
 
-local HexagonInitialData = require(Common.Hexagon.HexagonInitialData)
-type InitialData = HexagonInitialData.HexagonInitialData
+local HexagonData = require(Common.Hexagon.HexagonData)
+type InitialData = HexagonData.HexagonData
 
 local NetworkClient = require(ReplicatedStorage.NetworkClient)
 

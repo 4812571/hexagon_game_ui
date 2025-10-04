@@ -8,13 +8,15 @@ local Common = ReplicatedStorage.Common
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
+type Scope = Fusion.Scope<typeof(Fusion)>
 local innerScope = Fusion.innerScope
-type Scope = Fusion.Scope<unknown>
 
 local Observe = require(Packages.Observe)
 
-local Signal = require(Common.Signal)
-type Signal<T...> = Signal.Signal<T...>
+local PlayerData = require(Common.Player.PlayerData)
+type PlayerData = PlayerData.PlayerData
+
+local DefaultPlayerData = require(Common.Player.DefaultPlayerData)
 
 local InitialData = require(Common.InitialData)
 type InitialData = InitialData.InitialData
@@ -39,7 +41,7 @@ type Map<K, V> = { [K]: V }
 
 type Services = {
     PlayerService: PlayerService,
-    
+
     HexagonService: HexagonService,
 }
 
@@ -47,18 +49,14 @@ export type PlayerJoinService = {
     Start: () -> (),
 }
 
-type PlayerData = {
-
-}
-
 local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinService
     local PlayerService = services.PlayerService
     local HexagonService = services.HexagonService
 
-    local playerDataLoader: PlayerDataLoader<PlayerData> = PlayerDataLoader(scope, "PlayerData_1", {} :: PlayerData)
+    local playerDataLoader: PlayerDataLoader<PlayerData> = PlayerDataLoader(scope, "PlayerData_1", DefaultPlayerData)
 
     local function Join(player: Player): InitialData?
-        local profile = playerDataLoader.AwaitProfile(player)
+        local profile: Profile<PlayerData>? = playerDataLoader.AwaitProfile(player)
        
         if not profile then
             return nil
@@ -71,6 +69,8 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
 
         local initialData: InitialData = {
             JoinTime = joinTime,
+
+            Player = profile.Data,
             Hexagon = HexagonService.InitialData(),
         }
 

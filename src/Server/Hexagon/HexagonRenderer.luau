@@ -22,8 +22,8 @@ type Axial = HexagonUtil.Axial
 local TileSet = require(Common.Hexagon.TileSet)
 type TileSet = TileSet.TileSet
 
-local HexagonInitialData = require(Common.Hexagon.HexagonInitialData)
-type HexagonInitialData = HexagonInitialData.HexagonInitialData
+local HexagonData = require(Common.Hexagon.HexagonData)
+type HexagonData = HexagonData.HexagonData
 
 type ColorRecord = Color3 | "None"
 
