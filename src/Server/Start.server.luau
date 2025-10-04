@@ -11,10 +11,12 @@ local Fusion = require(Packages.Fusion)
 local JoinService = require(Server.JoinService)
 local PlayerService = require(Server.Player.PlayerService)
 local HexagonService = require(Server.Hexagon.HexagonService)
+local AuthoritativeTimingService = require(Server.AuthoritativeTimingService)
 
 local scope = Fusion.scoped(Fusion)
 
 local playerService = PlayerService(scope)
+local authoritativeTimingService = AuthoritativeTimingService(scope)
 
 local hexagonService = HexagonService(scope, {
     PlayerService = playerService,
@@ -27,6 +29,7 @@ local playerLoadingService = JoinService(scope, {
 
 local services = {
     PlayerService = playerService,
+    AuthoritativeTimingService = authoritativeTimingService,
     PlayerLoadingService = playerLoadingService,
     HexagonService = hexagonService,
 }
