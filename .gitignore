@@ -1,6 +1,9 @@
 # Rojo Files
 /sourcemap.json
 
+# Blink emit
+.blink/
+
 # Wally packages
 Packages/
 DevPackages/
