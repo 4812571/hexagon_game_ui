@@ -16,16 +16,21 @@ type PlayerData = PlayerData.PlayerData
 local ServerCoins = require(Server.Coins.ServerCoins)
 type ServerCoins = ServerCoins.ServerCoins
 
+local ServerBombs = require(Server.Bombs.ServerBombs)
+type ServerBombs = ServerBombs.ServerBombs
+
 export type ServerPlayer = {
     Scope: UnknownScope,
     Player: Player,
     JoinTime: number,
 
     Coins: ServerCoins,
+    Bombs: ServerBombs,
 }
 
 local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number, data: PlayerData): ServerPlayer
     local coins = ServerCoins(scope, data.Coins)
+    local bombs = ServerBombs(scope, data.Bombs)
 
     local self: ServerPlayer = {
         Scope = scope,
@@ -33,6 +38,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
         JoinTime = joinTime,
 
         Coins = coins,
+        Bombs = bombs,
     }
 
     return self
