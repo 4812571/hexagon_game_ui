@@ -2,11 +2,13 @@ option ServerOutput = "../.blink/server/NetworkServer.luau"
 option ClientOutput = "../.blink/client/NetworkClient.luau"
 
 import "./Hexagon.blink"
+import "./Player.blink"
 
 struct InitialData {
     JoinTime: f64,
 
-    Hexagon: Hexagon.InitialData,
+    Hexagon: Hexagon.HexagonData,
+    Player: Player.PlayerData,
 }
 
 function Join {

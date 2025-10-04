@@ -154,8 +154,15 @@ Queue.Reliable[0] = table.create(256)
 Queue.Reliable[1] = table.create(256)
 Queue.Reliable[2] = table.create(256)
 export type Hexagon_Axial = { Q: number, R: number }
-export type Hexagon_InitialData = { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }
-export type InitialData = { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }
+export type Hexagon_HexagonData = { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }
+export type Player_Coins_CoinsData = { Coins: number }
+export type Player_Level_LevelData = { TotalExperience: number }
+export type Player_Options_OptionsData = { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }
+export type Player_Bombs_BombsData = { Bombs: number, GoldBombs: number, Nukes: number }
+export type Player_Quests_QuestsData = { Progress: {[string]: number} }
+export type Player_Trails_TrailsData = { EquippedId: string?, OwnedIds: { string } }
+export type Player_PlayerData = { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } }
+export type InitialData = { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }
 local function Hexagon_ReadEVENT_HexagonsColored(): (Color3?, { { Q: number, R: number } })
 	-- Read BLOCK: 3 bytes
 	local BLOCK_START = Read(3)
@@ -227,7 +234,7 @@ local function WriteFUNCTION_DATA_Join(Value: nil, InvocationIdentifier: number)
 	buffer.writeu8(SendBuffer, BLOCK_START + 1, InvocationIdentifier)
 end
 
-local function ReadFUNCTION_RETURN_Join(): ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }?)
+local function ReadFUNCTION_RETURN_Join(): ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }?)
 	-- Read BLOCK: 2 bytes
 	local BLOCK_START = Read(2)
 	local Success = buffer.readu8(RecieveBuffer, BLOCK_START + 0)
@@ -236,8 +243,8 @@ local function ReadFUNCTION_RETURN_Join(): ({ JoinTime: number, Hexagon: { Owned
 	end
 	local Value
 	if buffer.readu8(RecieveBuffer, BLOCK_START + 1) == 1 then
-		-- Read BLOCK: 12 bytes
-		local BLOCK_START = Read(12)
+		-- Read BLOCK: 56 bytes
+		local BLOCK_START = Read(56)
 		Value = {} :: any
 		Value.JoinTime = buffer.readf64(RecieveBuffer, BLOCK_START + 0)
 		Value.Hexagon = {} :: any
@@ -269,6 +276,55 @@ local function ReadFUNCTION_RETURN_Join(): ({ JoinTime: number, Hexagon: { Owned
 			local Element_2 = Color3.fromRGB(buffer.readu8(RecieveBuffer, OFFSET_2), buffer.readu8(RecieveBuffer, OFFSET_3), buffer.readu8(RecieveBuffer, OFFSET_4))
 			Value.Hexagon.Selected[Key_2] = Element_2
 		end
+		Value.Player = {} :: any
+		Value.Player.Coins = {} :: any
+		Value.Player.Coins.Coins = buffer.readi32(RecieveBuffer, BLOCK_START + 12)
+		Value.Player.Level = {} :: any
+		Value.Player.Level.TotalExperience = buffer.readi32(RecieveBuffer, BLOCK_START + 16)
+		Value.Player.Options = {} :: any
+		Value.Player.Options.MusicVolume = buffer.readf64(RecieveBuffer, BLOCK_START + 20)
+		Value.Player.Options.SFXVolume = buffer.readf64(RecieveBuffer, BLOCK_START + 28)
+		Value.Player.Options.NightMode = (buffer.readu8(RecieveBuffer, BLOCK_START + 36) == 1)
+		Value.Player.Options.CameraShake = (buffer.readu8(RecieveBuffer, BLOCK_START + 37) == 1)
+		Value.Player.Options.Minimap = (buffer.readu8(RecieveBuffer, BLOCK_START + 38) == 1)
+		Value.Player.Bombs = {} :: any
+		Value.Player.Bombs.Bombs = buffer.readi32(RecieveBuffer, BLOCK_START + 39)
+		Value.Player.Bombs.GoldBombs = buffer.readi32(RecieveBuffer, BLOCK_START + 43)
+		Value.Player.Bombs.Nukes = buffer.readi32(RecieveBuffer, BLOCK_START + 47)
+		Value.Player.Quests = {} :: any
+		Value.Player.Quests.Progress = {}
+		Elements_2 = buffer.readu16(RecieveBuffer, BLOCK_START + 51)
+		for _ = 1, Elements_2 do
+			local OFFSET_0 = Read(2)
+			local Length = buffer.readu16(RecieveBuffer, OFFSET_0)
+			local Key_2 = buffer.readstring(RecieveBuffer, Read(Length), Length)
+			local OFFSET_1 = Read(4)
+			local Element_2 = buffer.readi32(RecieveBuffer, OFFSET_1)
+			Value.Player.Quests.Progress[Key_2] = Element_2
+		end
+		Value.Player.Trails = {} :: any
+		if buffer.readu8(RecieveBuffer, BLOCK_START + 53) == 1 then
+			-- Read BLOCK: 2 bytes
+			local BLOCK_START = Read(2)
+			local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 0)
+			Value.Player.Trails.EquippedId = buffer.readstring(RecieveBuffer, Read(Length), Length)
+		end
+		-- START ARRAY
+		local Length = buffer.readu16(RecieveBuffer, BLOCK_START + 54)
+		if Length < 0 then error(`Expected "Length" to be larger than 0, got {Length} instead.`) end
+		if Length > 65535 then error(`Expected "Length" to be smaller than 65535, got {Length} instead.`) end
+		Value.Player.Trails.OwnedIds = table.create(Length)
+			-- Read BLOCK: 2 bytes
+		local ARRAY_START_2 = Read(2 * Length)
+		for Index = 1, Length do
+			-- Read 2
+			local OPERATION_OFFSET_0 = ARRAY_START_2
+			ARRAY_START_2 += 2
+			Length = buffer.readu16(RecieveBuffer, OPERATION_OFFSET_0)
+			local Item_2 = buffer.readstring(RecieveBuffer, Read(Length), Length)
+			table.insert(Value.Player.Trails.OwnedIds, Item_2)
+		end
+		-- END ARRAY
 	end
 	return Value
 end
@@ -282,6 +338,20 @@ if not RunService:IsRunning() then
 		},
 		HexagonsSelected = {
 			On = NOOP
+		},
+	},
+	Player = {
+		Coins = {
+		},
+		Level = {
+		},
+		Options = {
+		},
+		Bombs = {
+		},
+		Quests = {
+		},
+		Trails = {
 		},
 	},
 	Join = {
@@ -405,8 +475,22 @@ local Returns = table.freeze({
 			end
 		},
 	},
+	Player = {
+		Coins = {
+		},
+		Level = {
+		},
+		Options = {
+		},
+		Bombs = {
+		},
+		Quests = {
+		},
+		Trails = {
+		},
+	},
 	Join = {
-		Invoke = function(Value: nil): ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }?)
+		Invoke = function(Value: nil): ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }?)
 			local InvocationIdentifier = Invoke()
 			if Calls[InvocationIdentifier] ~= nil then
 				Invocations -= 1
@@ -414,7 +498,7 @@ local Returns = table.freeze({
 			end
 			WriteFUNCTION_DATA_Join(Value, InvocationIdentifier)
 			Calls[InvocationIdentifier] = coroutine.running()
-			local Success, ReturnValue: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }? = coroutine.yield()
+			local Success, ReturnValue: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }? = coroutine.yield()
 			if Success ~= true then
 				error("There was an exception while processing \"Join\".")
 			end

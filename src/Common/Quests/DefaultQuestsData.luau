@@ -6,7 +6,7 @@ local QuestsData = require(Common.Quests.QuestsData)
 type QuestsData = QuestsData.QuestsData
 
 local DefaultQuestsData: QuestsData = {
-    Quests = {},
+    Progress = {},
 }
 
 return DefaultQuestsData

@@ -1,0 +1,5 @@
+struct BombsData {
+    Bombs: i32,
+    GoldBombs: i32,
+    Nukes: i32,
+}

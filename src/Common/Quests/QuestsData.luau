@@ -1,10 +1,5 @@
-export type QuestEntry = {
-    Completed: boolean,
-    Progress: number,
-}
-
 export type QuestsData = {
-    Quests: {[string]: QuestEntry},
+    Progress: {[string]: number},
 }
 
 return nil

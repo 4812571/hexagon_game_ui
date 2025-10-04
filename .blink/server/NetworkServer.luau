@@ -153,8 +153,15 @@ local Queue: any = {
 
 Queue.Reliable[2] = table.create(256)
 export type Hexagon_Axial = { Q: number, R: number }
-export type Hexagon_InitialData = { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }
-export type InitialData = { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }
+export type Hexagon_HexagonData = { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }
+export type Player_Coins_CoinsData = { Coins: number }
+export type Player_Level_LevelData = { TotalExperience: number }
+export type Player_Options_OptionsData = { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }
+export type Player_Bombs_BombsData = { Bombs: number, GoldBombs: number, Nukes: number }
+export type Player_Quests_QuestsData = { Progress: {[string]: number} }
+export type Player_Trails_TrailsData = { EquippedId: string?, OwnedIds: { string } }
+export type Player_PlayerData = { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } }
+export type InitialData = { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }
 local function Hexagon_WriteEVENT_HexagonsColored(Value1: Color3?, Value2: { { Q: number, R: number } }): ()
 	-- Allocate BLOCK: 4 bytes
 	local BLOCK_START = Allocate(4)
@@ -221,7 +228,7 @@ local function ReadFUNCTION_DATA_Join(): (nil)
 	return nil
 end
 
-local function WriteFUNCTION_RETURN_Join(Value: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }?, InvocationIdentifier: number): ()
+local function WriteFUNCTION_RETURN_Join(Value: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }?, InvocationIdentifier: number): ()
 	-- Allocate BLOCK: 4 bytes
 	local BLOCK_START = Allocate(4)
 	buffer.writeu8(SendBuffer, BLOCK_START + 0, 2)
@@ -229,8 +236,8 @@ local function WriteFUNCTION_RETURN_Join(Value: { JoinTime: number, Hexagon: { O
 	buffer.writeu8(SendBuffer, BLOCK_START + 2, 1)
 	buffer.writeu8(SendBuffer, BLOCK_START + 3, Value ~= nil and 1 or 0)
 	if Value ~= nil then
-		-- Allocate BLOCK: 12 bytes
-		local BLOCK_START = Allocate(12)
+		-- Allocate BLOCK: 56 bytes
+		local BLOCK_START = Allocate(56)
 		buffer.writef64(SendBuffer, BLOCK_START + 0, Value.JoinTime)
 		local Elements_2 = 0
 		for Key_2, Element_2 in Value.Hexagon.Owned do
@@ -264,6 +271,52 @@ local function WriteFUNCTION_RETURN_Join(Value: { JoinTime: number, Hexagon: { O
 			buffer.writeu8(SendBuffer, OFFSET_4, Color.B * 255)
 		end
 		buffer.writeu16(SendBuffer, BLOCK_START + 10, Elements_2)
+		buffer.writei32(SendBuffer, BLOCK_START + 12, Value.Player.Coins.Coins)
+		buffer.writei32(SendBuffer, BLOCK_START + 16, Value.Player.Level.TotalExperience)
+		buffer.writef64(SendBuffer, BLOCK_START + 20, Value.Player.Options.MusicVolume)
+		buffer.writef64(SendBuffer, BLOCK_START + 28, Value.Player.Options.SFXVolume)
+		buffer.writeu8(SendBuffer, BLOCK_START + 36, Value.Player.Options.NightMode and 1 or 0)
+		buffer.writeu8(SendBuffer, BLOCK_START + 37, Value.Player.Options.CameraShake and 1 or 0)
+		buffer.writeu8(SendBuffer, BLOCK_START + 38, Value.Player.Options.Minimap and 1 or 0)
+		buffer.writei32(SendBuffer, BLOCK_START + 39, Value.Player.Bombs.Bombs)
+		buffer.writei32(SendBuffer, BLOCK_START + 43, Value.Player.Bombs.GoldBombs)
+		buffer.writei32(SendBuffer, BLOCK_START + 47, Value.Player.Bombs.Nukes)
+		local Elements_2 = 0
+		for Key_2, Element_2 in Value.Player.Quests.Progress do
+			Elements_2 += 1
+			local Length = #Key_2
+			local OFFSET_0 = Allocate(2)
+			buffer.writeu16(SendBuffer, OFFSET_0, Length)
+			Allocate(Length)
+			buffer.writestring(SendBuffer, SendOffset, Key_2, Length)
+			local OFFSET_1 = Allocate(4)
+			buffer.writei32(SendBuffer, OFFSET_1, Element_2)
+		end
+		buffer.writeu16(SendBuffer, BLOCK_START + 51, Elements_2)
+		buffer.writeu8(SendBuffer, BLOCK_START + 53, Value.Player.Trails.EquippedId ~= nil and 1 or 0)
+		if Value.Player.Trails.EquippedId ~= nil then
+			-- Allocate BLOCK: 2 bytes
+			local BLOCK_START = Allocate(2)
+			local Length = #Value.Player.Trails.EquippedId
+			buffer.writeu16(SendBuffer, BLOCK_START + 0, Length)
+			Allocate(Length)
+			buffer.writestring(SendBuffer, SendOffset, Value.Player.Trails.EquippedId, Length)
+		end
+		-- START ARRAY
+		buffer.writeu16(SendBuffer, BLOCK_START + 54, #Value.Player.Trails.OwnedIds)
+			-- Allocate BLOCK: 2 bytes
+		local ARRAY_START_2 = Allocate(2 * #Value.Player.Trails.OwnedIds)
+		for Index = 1, #Value.Player.Trails.OwnedIds do
+			local Item_2 = Value.Player.Trails.OwnedIds[Index]
+			local Length = #Item_2
+			-- Allocate 2
+			local OPERATION_OFFSET_0 = ARRAY_START_2
+			ARRAY_START_2 += 2
+			buffer.writeu16(SendBuffer, OPERATION_OFFSET_0, Length)
+			Allocate(Length)
+			buffer.writestring(SendBuffer, SendOffset, Item_2, Length)
+		end
+		-- END ARRAY
 	end
 end
 
@@ -282,6 +335,20 @@ if not RunService:IsRunning() then
 			FireAll = NOOP,
 			FireList = NOOP,
 			FireExcept = NOOP
+		},
+	},
+	Player = {
+		Coins = {
+		},
+		Level = {
+		},
+		Options = {
+		},
+		Bombs = {
+		},
+		Quests = {
+		},
+		Trails = {
 		},
 	},
 	Join = {
@@ -471,10 +538,24 @@ local Returns = table.freeze({
 			end,
 		},
 	},
+	Player = {
+		Coins = {
+		},
+		Level = {
+		},
+		Options = {
+		},
+		Bombs = {
+		},
+		Quests = {
+		},
+		Trails = {
+		},
+	},
 	Join = {
-		On = function(Listener: (Player, nil) -> ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }?)): ()
+		On = function(Listener: (Player, nil) -> ({ JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }?)): ()
 			Events.Reliable[2] = function(Player: Player, Value: nil, InvocationIdentifier: number): ()
-				local ReturnValue: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} } }?;
+				local ReturnValue: { JoinTime: number, Hexagon: { Owned: {[{ Q: number, R: number }]: Color3}, Selected: {[{ Q: number, R: number }]: Color3} }, Player: { Coins: { Coins: number }, Level: { TotalExperience: number }, Options: { MusicVolume: number, SFXVolume: number, NightMode: boolean, CameraShake: boolean, Minimap: boolean }, Bombs: { Bombs: number, GoldBombs: number, Nukes: number }, Quests: { Progress: {[string]: number} }, Trails: { EquippedId: string?, OwnedIds: { string } } } }?;
 				local Success, Error = pcall(function ()
 					ReturnValue = Listener(Player, Value)
 				end)

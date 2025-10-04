@@ -7,17 +7,25 @@ export type Value<T> = Fusion.Value<T>
 local PlayerData = require(ReplicatedStorage.Common.Player.PlayerData)
 type PlayerData = PlayerData.PlayerData
 
+local ClientCoins = require(ReplicatedStorage.Client.Coins.ClientCoins)
+type ClientCoins = ClientCoins.ClientCoins
+
+local ClientLevel = require(ReplicatedStorage.Client.Level.ClientLevel)
+type ClientLevel = ClientLevel.ServerLevel
+
 export type ClientPlayer = {
     JoinTime: number,
 
-    Coins: Value<number>,
+    Coins: ClientCoins,
+    Level: ClientLevel,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
     local self: ClientPlayer = {
         JoinTime = joinTime,
 
-        Coins = scope:Value(data.Coins.Coins),
+        Coins = ClientCoins(scope, data.Coins),
+        Level = ClientLevel(scope, data.Level),
     }
 
     return self

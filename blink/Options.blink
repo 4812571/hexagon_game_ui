@@ -1,0 +1,7 @@
+struct OptionsData {
+    MusicVolume: f64,
+    SFXVolume: f64,
+    NightMode: boolean,
+    CameraShake: boolean,
+    Minimap: boolean,
+}

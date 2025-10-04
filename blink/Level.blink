@@ -1,0 +1,3 @@
+struct LevelData {
+    TotalExperience: i32,
+}

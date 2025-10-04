@@ -1,0 +1,15 @@
+import "./Coins.blink"
+import "./Level.blink"
+import "./Options.blink"
+import "./Bombs.blink"
+import "./Quests.blink"
+import "./Trails.blink"
+
+struct PlayerData {
+    Coins: Coins.CoinsData,
+    Level: Level.LevelData,
+    Options: Options.OptionsData,
+    Bombs: Bombs.BombsData,
+    Quests: Quests.QuestsData,
+    Trails: Trails.TrailsData,
+}

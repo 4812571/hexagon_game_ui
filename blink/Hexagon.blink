@@ -3,7 +3,7 @@ struct Axial {
     R: i32,
 }
 
-struct InitialData {
+struct HexagonData {
     Owned: map {[Axial]: Color3},
     Selected: map {[Axial]: Color3},
 }

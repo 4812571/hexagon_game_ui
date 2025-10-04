@@ -1,0 +1,3 @@
+struct CoinsData {
+    Coins: i32,
+}

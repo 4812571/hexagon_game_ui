@@ -1,0 +1,3 @@
+struct QuestsData {
+    Progress: map {[string]: i32},
+}
