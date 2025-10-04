@@ -16,7 +16,7 @@ type Handler<T...> = Observe.Handler<T...>
 type Cleanup = Observe.Cleanup
 
 local ServerPlayer = require(Server.Player.ServerPlayer)
-type ServerPlayer = ServerPlayer.ServerPlayer
+export type ServerPlayer = ServerPlayer.ServerPlayer
 
 type Map<K, V> = { [K]: V }
 

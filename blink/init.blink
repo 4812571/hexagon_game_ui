@@ -1,8 +1,16 @@
 option ServerOutput = "../.blink/server/NetworkServer.luau"
 option ClientOutput = "../.blink/client/NetworkClient.luau"
 
-import "./Hexagon.blink"
 import "./Player.blink"
+
+import "./Bombs.blink"
+import "./Coins.blink"
+import "./Level.blink"
+import "./Options.blink"
+import "./Quests.blink"
+import "./Trails.blink"
+
+import "./Hexagon.blink"
 
 struct InitialData {
     JoinTime: f64,

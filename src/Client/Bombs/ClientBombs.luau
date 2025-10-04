@@ -14,6 +14,10 @@ export type ClientBombs = {
     Bombs: Value<number>,
     GoldBombs: Value<number>,
     Nukes: Value<number>,
+
+    LastBombTime: Value<number>,
+    LastGoldBombTime: Value<number>,
+    LastNukeTime: Value<number>,
 }
 
 local function ClientBombs(scope: Scope, data: BombsData): ClientBombs
@@ -21,10 +25,18 @@ local function ClientBombs(scope: Scope, data: BombsData): ClientBombs
     local goldBombs = scope:Value(data.GoldBombs)
     local nukes = scope:Value(data.Nukes)
 
+    local lastBombTime = scope:Value(0)
+    local lastGoldBombTime = scope:Value(0)
+    local lastNukeTime = scope:Value(0)
+
     local self = {
         Bombs = bombs,
         GoldBombs = goldBombs,
         Nukes = nukes,
+
+        LastBombTime = lastBombTime,
+        LastGoldBombTime = lastGoldBombTime,
+        LastNukeTime = lastNukeTime,
     }
 
     return self

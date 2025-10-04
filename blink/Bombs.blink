@@ -3,3 +3,14 @@ struct BombsData {
     GoldBombs: i32,
     Nukes: i32,
 }
+
+enum BombType = {
+    Bomb,
+    GoldBomb,
+    Nuke,
+}
+
+function Use {
+    Yield: Coroutine,
+    Data: (BombType, f64),
+}
