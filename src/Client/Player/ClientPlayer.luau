@@ -11,7 +11,7 @@ local ClientCoins = require(ReplicatedStorage.Client.Coins.ClientCoins)
 type ClientCoins = ClientCoins.ClientCoins
 
 local ClientLevel = require(ReplicatedStorage.Client.Level.ClientLevel)
-type ClientLevel = ClientLevel.ServerLevel
+type ClientLevel = ClientLevel.ClientLevel
 
 local ClientBombs = require(ReplicatedStorage.Client.Bombs.ClientBombs)
 type ClientBombs = ClientBombs.ClientBombs

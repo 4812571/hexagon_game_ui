@@ -14,7 +14,7 @@ local GetLevelInfo = require(Common.Level.GetLevelInfo)
 local LevelData = require(Common.Level.LevelData)
 type LevelData = LevelData.LevelData
 
-export type ServerLevel = {
+export type ClientLevel = {
     TotalExperience: Value<number>,
     
     Level: UsedAs<number>,
@@ -22,7 +22,7 @@ export type ServerLevel = {
     RequiredExperience: UsedAs<number>,
 }
 
-local function ServerLevel(scope: Scope, data: LevelData): ServerLevel
+local function ClientLevel(scope: Scope, data: LevelData): ClientLevel
     local totalExperience = scope:Value(data.TotalExperience)
 
     local levelInfo = scope:Computed(function(use)
@@ -52,4 +52,4 @@ local function ServerLevel(scope: Scope, data: LevelData): ServerLevel
     return self
 end
 
-return ServerLevel
+return ClientLevel
