@@ -1,0 +1,27 @@
+{
+  "ServiceTemplate": {
+    "scope": "luau",
+    "prefix": ".service",
+    "body": [
+      "local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")",
+      "",
+      "local Packages = ReplicatedStorage.Packages",
+      "",
+      "local Fusion = require(Packages.Fusion)",
+      "type Scope = Fusion.Scope<typeof(Fusion)>",
+      "",
+      "export type ${TM_FILENAME_BASE} = {",
+      "    ",
+      "}",
+      "",
+      "local function ${TM_FILENAME_BASE}(scope: Scope): ${TM_FILENAME_BASE}",
+      "    local self = {}",
+      "",
+      "    return self",
+      "end",
+      "",
+      "return ${TM_FILENAME_BASE}"
+    ],
+    "description": "Generic service module using file name as type and function name"
+  }
+}
