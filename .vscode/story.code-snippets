@@ -1,0 +1,28 @@
+{
+  "Service Template": {
+    "prefix": ".story",
+    "body": [
+      "local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")",
+      "",
+      "local Packages = ReplicatedStorage.Packages",
+      "",
+      "local Fusion = require(Packages.Fusion)",
+      "",
+      "local ${1:ComponentName} = require(script.Parent.${1:ComponentName})",
+      "",
+      "return function(target: Instance)",
+      "    local scope = Fusion.scoped(Fusion)",
+      "    ",
+      "    local instance = ${1:ComponentName} {",
+      "        Scope = scope,",
+      "    }",
+      "",
+      "    instance.Parent = target",
+      "",
+      "    return function()",
+      "        scope:doCleanup()",
+      "    end",
+      "end"
+    ]
+  }
+}
