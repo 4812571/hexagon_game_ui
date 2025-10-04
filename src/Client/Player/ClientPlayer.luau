@@ -16,12 +16,16 @@ type ClientLevel = ClientLevel.ServerLevel
 local ClientBombs = require(ReplicatedStorage.Client.Bombs.ClientBombs)
 type ClientBombs = ClientBombs.ClientBombs
 
+local ClientOptions = require(ReplicatedStorage.Client.Options.ClientOptions)
+type ClientOptions = ClientOptions.ClientOptions
+
 export type ClientPlayer = {
     JoinTime: number,
 
     Coins: ClientCoins,
     Level: ClientLevel,
     Bombs: ClientBombs,
+    Options: ClientOptions,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
@@ -31,6 +35,7 @@ local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): C
         Coins = ClientCoins(scope, data.Coins),
         Level = ClientLevel(scope, data.Level),
         Bombs = ClientBombs(scope, data.Bombs),
+        Options = ClientOptions(scope, data.Options),
     }
 
     return self
