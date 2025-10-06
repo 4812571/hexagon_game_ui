@@ -8,7 +8,7 @@ local Fusion = require(Packages.Fusion)
 
 local Icons = require(Common.Icons)
 
-local TimedRewards = require(Common.TimedRewards)
+local TimedRewards = require(Common.TimedRewards.TimedRewards)
 type TimedRewardData = TimedRewards.TimedRewardData
 
 local Window = require(Client.Interface.Window)
