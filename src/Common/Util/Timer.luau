@@ -1,16 +1,8 @@
-local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local function UpdateSignal(): RBXScriptSignal
-    if RunService:IsClient() then
-        return RunService.RenderStepped
-    end
+local Common = ReplicatedStorage.Common
 
-    if RunService:IsServer() then
-        return RunService.Heartbeat
-    end
-
-    error("Invalid time context")
-end
+local UpdateSignal = require(Common.Util.UpdateSignal)
 
 local function Timer(interval: number, callback: () -> ()): () -> ()
     local elapsed = 0
