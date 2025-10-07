@@ -8,7 +8,7 @@ local Fusion = require(Packages.Fusion)
 local peek = Fusion.peek
 
 local Timer = require(Common.Util.Timer)
-local TimedRewards = require(Common.TimedRewards)
+local TimedRewards = require(Common.TimedRewards.TimedRewards)
 
 local TimedRewardsWindow = require(Client.TimedRewards.TimedRewardsWindow)
 type TimedRewardEntry = TimedRewardsWindow.TimedRewardEntry
