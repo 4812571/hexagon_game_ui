@@ -10,14 +10,21 @@ struct HexagonData {
 
 event HexagonsColored {
     From: Server,
-    Type:Reliable,
+    Type: Reliable,
     Call: SingleAsync,
     Data: (Color3?, Axial[]),
 }
 
 event HexagonsSelected {
     From: Server,
-    Type:Reliable,
+    Type: Reliable,
     Call: SingleAsync,
     Data: (Color3?, Axial[]),
+}
+
+event PlayerCrowned {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: Instance(Player)?,
 }
