@@ -95,7 +95,7 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
         end)
 
         table.insert(scope, Observe.Players(HandlePlayer))
-        table.insert(scope, playerDataLoader.ProfileLoaded:Connect(OnProfileRelease))
+        table.insert(scope, playerDataLoader.ProfileReleased:Connect(OnProfileRelease))
     end
 
     local self = {

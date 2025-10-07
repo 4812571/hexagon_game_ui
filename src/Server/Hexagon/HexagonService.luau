@@ -73,6 +73,10 @@ export type HexagonService = {
 
     Init: () -> (),
     Start: () -> (),
+
+    GetPlayer: (player: ServerPlayer) -> HexagonPlayer?,
+    FloodTiles: (player: HexagonPlayer, tiles: {Axial}) -> (),
+    FinishSelection: (player: HexagonPlayer) -> {[string]: Axial}?,
 }
 
 local function HexagonService(scope: Scope, services: Services): HexagonService
@@ -83,7 +87,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     local colors = Sequence(COLORS)
 
-    local activePlayers: Set<HexagonPlayer> = {}
+    local activePlayers: {[ServerPlayer]: HexagonPlayer} = {}
     
     local function InitialData(): HexagonData
         local owned = {}
@@ -106,6 +110,10 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         return data
     end
 
+    local function GetPlayer(player: ServerPlayer): HexagonPlayer?
+        return activePlayers[player]
+    end
+
     local function JoinPlayer(player: ServerPlayer, character: Model): HexagonPlayer
         local hexagonPlayer = HexagonPlayer(player, character, colors.Next())
 
@@ -115,13 +123,13 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         local worldPosition = HexagonUtil.AxialToWorld(spawnPoint) * HexagonConfig.HexagonSize
         character:PivotTo(CFrame.new(worldPosition + Vector3.yAxis * 5))
 
-        activePlayers[hexagonPlayer] = true
+        activePlayers[player] = hexagonPlayer
         return hexagonPlayer
     end
 
     local function RemovePlayer(player: HexagonPlayer)
         world.RemoveFromGame(player)
-        activePlayers[player] = nil
+        activePlayers[player.Player] = nil
 
         local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
 
@@ -141,7 +149,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local function PlayerPositions(): {[HexagonPlayer]: Axial}
         local positions: {[HexagonPlayer]: Axial} = {}
 
-        for player, _ in activePlayers do
+        for _, player in activePlayers do
             local worldPosition = player.Character:GetPivot().Position
             local hexPosition = worldPosition / HexagonConfig.HexagonSize
             local axial = HexagonUtil.WorldToNearestAxial(hexPosition)
@@ -178,6 +186,50 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         }
 
         return partitioned
+    end
+
+    local function FloodTiles(player: HexagonPlayer, tiles: {Axial})
+        local playerPositions = PlayerPositions()
+
+        local tileSet: {[string]: Axial} = {}
+
+        for _, tile in tiles do
+            tileSet[HexagonUtil.Key(tile)] = tile
+        end
+
+        local kills = {}
+
+        for otherPlayer, pos in playerPositions do
+            if otherPlayer == player then
+                continue
+            end
+
+            if tileSet[HexagonUtil.Key(pos)] then
+                kills[otherPlayer] = true
+            end
+        end
+
+        world.ClaimTiles(player, tileSet)
+
+        for otherPlayer, _ in kills do
+            local humanoid = otherPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+            if humanoid then
+                humanoid.Health = 0
+            end
+
+            RemovePlayer(otherPlayer)
+        end
+    end
+
+    local function FinishSelection(player: HexagonPlayer): {[string]: Axial}?
+        local innerClaimed = world.FinishSelection(player)
+
+        if not innerClaimed then
+            return nil
+        end
+
+        return innerClaimed
     end
 
     local function Update()
@@ -219,11 +271,10 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
                 humanoid.Health = 0
             end
 
-            world.RemoveFromGame(player)
-            activePlayers[player] = nil
+            RemovePlayer(player)
         end
 
-        for player, _ in activePlayers do
+        for _, player in activePlayers do
             local count = world.GetCount(player)
 
             local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
@@ -294,9 +345,11 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     local self = {
         InitialData = InitialData,
-        
+        GetPlayer = GetPlayer,
+        FloodTiles = FloodTiles,
         Init = Init,
         Start = Start,
+        FinishSelection = FinishSelection,
     }
 
     return self

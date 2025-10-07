@@ -1,3 +1,5 @@
+--!strict
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
@@ -49,26 +51,20 @@ local function PlayerService(scope: Scope): PlayerService
     end
 
     local function Unmount(player: Player)
-        local entry = players[player]
+        local serverPlayer = players[player]
 
-        if not entry then
+        if not serverPlayer then
             return
         end
 
-        entry.Scope:doCleanup()
+        Fusion.doCleanup(serverPlayer.Scope)
 
         players[player] = nil
-        playerRemoving:Fire(entry.ServerPlayer)
+        playerRemoving:Fire(serverPlayer)
     end
 
     local function Get(player: Player): ServerPlayer?
-        local entry = players[player]
-
-        if not entry then
-            return nil
-        end 
-
-        return entry.ServerPlayer
+        return players[player]
     end
 
     local function GetAll(): { ServerPlayer }

@@ -1,3 +1,5 @@
+import "./Hexagon.blink"
+
 struct BombsData {
     Bombs: i32,
     GoldBombs: i32,
@@ -13,4 +15,18 @@ enum BombType = {
 function Use {
     Yield: Coroutine,
     Data: (BombType, f64),
+}
+
+event BombDeployed {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: (BombType, Hexagon.Axial, i32),
+}
+
+event BombExploded {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: i32,
 }

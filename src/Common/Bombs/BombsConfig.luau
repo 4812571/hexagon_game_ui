@@ -1,7 +1,27 @@
+export type BombConfig = {
+    Cooldown: number,
+    FuseTime: number,
+    BlastRadius: number,
+}
+
 local BombsConfig = {
-    BombCooldown = 2,
-    GoldBombCooldown = 3,
-    NukeCooldown = 4,
+    Bomb = {
+        Cooldown = 2,
+        FuseTime = 5,
+        BlastRadius = 4,
+    },
+
+    GoldBomb = {
+        Cooldown = 3,
+        FuseTime = 5,
+        BlastRadius = 7,
+    },
+
+    Nuke = {
+        Cooldown = 4,
+        FuseTime = 5,
+        BlastRadius = 12,
+    },
 }
 
 return BombsConfig

@@ -27,6 +27,7 @@ local hexagonService = HexagonService(scope, {
 local bombService = BombService(scope, {
     AuthoritativeTimingService = authoritativeTimingService,
     PlayerService = playerService,
+    HexagonService = hexagonService,
 })
 
 local playerLoadingService = JoinService(scope, {

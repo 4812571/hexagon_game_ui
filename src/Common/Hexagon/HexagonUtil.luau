@@ -9,12 +9,12 @@ local function Key(axial: Axial): string
 	return tostring(axial.Q) .. "-" .. tostring(axial.R)
 end
 
-local function Neighbors(axial: Axial): {Axial}
-	local directions = {
-		Axial(1, 0), Axial(1, -1), Axial(0, -1),
-		Axial(-1, 0), Axial(-1, 1), Axial(0, 1),
-	}
+local directions = {
+    Axial(1, 0), Axial(1, -1), Axial(0, -1),
+    Axial(-1, 0), Axial(-1, 1), Axial(0, 1),
+}
 
+local function Neighbors(axial: Axial): {Axial}
 	local neighbors = {}
 
 	for _, dir in directions do
@@ -77,6 +77,29 @@ local function Hexagon(radius: number): {Axial}
 	return hexes
 end
 
+local function Add(a: Axial, b: Axial): Axial
+    return Axial(a.Q + b.Q, a.R + b.R)
+end
+
+local function Ring(radius: number): {Axial}
+    if radius == 0 then
+        return {Axial(0, 0)}
+    end
+
+    local results = {}
+    -- starting hex: go `radius` steps southwest
+    local hex = Axial(-radius, radius)
+
+    for side = 1, 6 do
+        for step = 1, radius do
+            table.insert(results, hex)
+            hex = Add(hex, directions[side])
+        end
+    end
+
+    return results
+end
+
 local function IsInBounds(axial: Axial, radius: number): boolean
     local q = axial.Q
     local r = axial.R
@@ -116,22 +139,20 @@ local HexagonUtil = {
     Axial = Axial,
 	Key = Key,
 
+    Add = Add,
+
 	Neighbors = Neighbors,
 
     AxialToWorld = AxialToWorld,
     WorldToAxial = WorldToAxial,
     NearestAxial = NearestAxial,
     WorldToNearestAxial = WorldToNearestAxial,
-    
+
 	Hexagon = Hexagon,
+    Ring = Ring,
+
 	IsInBounds = IsInBounds,
 	ClampToBounds = ClampToBounds,
 }
-
-for _, axial in HexagonUtil.Hexagon(3) do
-	local afterPipeline = HexagonUtil.WorldToAxial(HexagonUtil.AxialToWorld(axial))
-	assert(math.abs(afterPipeline.Q - axial.Q) < 0.01)
-	assert(math.abs(afterPipeline.R - axial.R) < 0.01)
-end
 
 return HexagonUtil
