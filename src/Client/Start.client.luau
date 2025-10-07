@@ -13,6 +13,7 @@ local ClientPlayer = require(Client.Player.ClientPlayer)
 
 local BinderController = require(Client.BinderController)
 local HexagonRenderingController = require(Client.Hexagon.HexagonRenderingController)
+local HexagonEffectsController = require(Client.Hexagon.HexagonEffectsController)
 local BombController = require(Client.Bombs.BombController)
 local CrownController = require(Client.Crown.CrownController)
 
@@ -29,6 +30,7 @@ print(`[Client] Joined the game at {clientPlayer.JoinTime}!`)
 
 local binderController = BinderController(scope)
 local hexagonRenderingController = HexagonRenderingController(scope, initialData.Hexagon)
+local hexagonEffectsController = HexagonEffectsController(scope)
 local crownController = CrownController(scope)
 local bombController = BombController(scope, clientPlayer)
 
@@ -36,6 +38,7 @@ local controllers = {
     BinderController = binderController,
     HexagonRenderingController = hexagonRenderingController,
     BombController = bombController,
+    HexagonEffectsController = hexagonEffectsController,
     CrownController = crownController,
 }
 

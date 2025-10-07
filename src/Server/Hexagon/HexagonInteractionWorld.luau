@@ -48,11 +48,16 @@ export type HexagonInteractionWorld = {
     ClaimRadius: (player: HexagonPlayer, center: Axial, claimRadius: number) -> (),
 
     SelectTile: (player: HexagonPlayer, axial: Axial) -> (),
-    FinishSelection: (player: HexagonPlayer) -> TileSet?,
+    FinishSelection: (player: HexagonPlayer) -> SelectionResult?,
     RemoveFromGame: (player: HexagonPlayer) -> (),
 
     SelectionChanged: Signal<Axial, HexagonPlayer?>,
     OwnerChanged: Signal<Axial, HexagonPlayer?>,
+}
+
+export type SelectionResult = {
+    OuterClaimed: TileSet,
+    InnerClaimed: TileSet,
 }
 
 local function HexEdges(radius: number): {[string]: Axial}
@@ -361,16 +366,16 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
         return remainingTiles
     end
 
-    local function FinishSelection(player: HexagonPlayer): TileSet?
-        local selections = DeselectTiles(player)
+    local function FinishSelection(player: HexagonPlayer): SelectionResult?
+        local outerClaimed = DeselectTiles(player)
 
-        if not selections then
+        if not outerClaimed then
             return nil
         end
 
         local tilesBefore = Copy(playerTileOwnership[player] or {})
 
-        ClaimTiles(player, selections)
+        ClaimTiles(player, outerClaimed)
 
         local unreachable = FindUnreachableTiles(player)
         ClaimTiles(player, unreachable)
@@ -383,7 +388,12 @@ local function HexagonInteractionWorld(scope: Scope, radius: number): HexagonInt
             end
         end
 
-        return innerClaimed
+        local selectionResult: SelectionResult = {
+            OuterClaimed = outerClaimed,
+            InnerClaimed = innerClaimed,
+        }
+
+        return selectionResult
     end
 
     local function RemoveFromGame(player: HexagonPlayer)

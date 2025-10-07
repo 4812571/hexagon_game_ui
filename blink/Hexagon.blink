@@ -28,3 +28,10 @@ event PlayerCrowned {
     Call: SingleAsync,
     Data: Instance(Player)?,
 }
+
+event ClaimEffect {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: (i32, i32),
+}

@@ -15,6 +15,7 @@ type Scope = Fusion.Scope<unknown>
 
 local Observe = require(Packages.Observe)
 
+local Count = require(Common.Util.Count)
 local Sequence = require(Common.Util.Sequence)
 
 local HexagonConfig = require(Common.Hexagon.HexagonConfig)
@@ -56,6 +57,13 @@ type PartitionedTouches = {
     OtherSelection: {[HexagonPlayer]: HexagonPlayer},
 }
 
+type TileSet = {[string]: Axial}
+
+type SelectionResult = {
+    OuterClaimed: TileSet,
+    InnerClaimed: TileSet,
+}
+
 local function Color(player: HexagonPlayer?): Color3?
     if not player then
         return nil
@@ -76,7 +84,7 @@ export type HexagonService = {
 
     GetPlayer: (player: ServerPlayer) -> HexagonPlayer?,
     FloodTiles: (player: HexagonPlayer, tiles: {Axial}) -> (),
-    FinishSelection: (player: HexagonPlayer) -> {[string]: Axial}?,
+    FinishSelection: (player: HexagonPlayer) -> SelectionResult?,
 }
 
 local function HexagonService(scope: Scope, services: Services): HexagonService
@@ -191,7 +199,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local function FloodTiles(player: HexagonPlayer, tiles: {Axial})
         local playerPositions = PlayerPositions()
 
-        local tileSet: {[string]: Axial} = {}
+        local tileSet: TileSet = {}
 
         for _, tile in tiles do
             tileSet[HexagonUtil.Key(tile)] = tile
@@ -222,14 +230,40 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
     end
 
-    local function FinishSelection(player: HexagonPlayer): {[string]: Axial}?
-        local innerClaimed = world.FinishSelection(player)
+    local function FinishSelection(player: HexagonPlayer): SelectionResult?
+        local selectionResult = world.FinishSelection(player)
 
-        if not innerClaimed then
+        if not selectionResult then
             return nil
         end
 
-        return innerClaimed
+        NetworkServer.Hexagon.ClaimEffect.Fire(player.Player.Player, Count(selectionResult.OuterClaimed), Count(selectionResult.InnerClaimed))
+
+        local playerPositions = PlayerPositions()
+
+        local kills = {}
+
+        for otherPlayer, pos in playerPositions do
+            if otherPlayer == player then
+                continue
+            end
+
+            if selectionResult.InnerClaimed[HexagonUtil.Key(pos)] then
+                kills[otherPlayer] = true
+            end
+        end
+
+        for otherPlayer, _ in kills do
+            local humanoid = otherPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+            if humanoid then
+                humanoid.Health = 0
+            end
+
+            RemovePlayer(otherPlayer)
+        end
+
+        return selectionResult
     end
 
     local function UpdateCrowned()
@@ -263,18 +297,20 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
 
         for player, _ in touches.SelfTerritory do
-            local innerClaimed = world.FinishSelection(player)
+            local claimed = world.FinishSelection(player)
 
-            if not innerClaimed then
+            if not claimed then
                 continue
             end
+
+            NetworkServer.Hexagon.ClaimEffect.Fire(player.Player.Player, Count(claimed.OuterClaimed), Count(claimed.InnerClaimed))
 
             for otherPlayer, position in playerPositions do
                 if otherPlayer == player then
                     continue
                 end
 
-                if innerClaimed[HexagonUtil.Key(position)] then
+                if claimed.InnerClaimed[HexagonUtil.Key(position)] then
                     kills[otherPlayer] = true
                 end
             end
