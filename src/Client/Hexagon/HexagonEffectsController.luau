@@ -32,8 +32,16 @@ local function HexagonEffectsController(scope: Scope)
         NetworkClient.Hexagon.ClaimEffect.On(function(exteriorTiles: number, interiorTiles: number)
             local totalTiles = exteriorTiles + interiorTiles
 
-            if totalTiles > 0 then
-                FovShake(BOUNCE_VELOCITY)
+            if totalTiles <= 0 then
+                return
+            end
+
+            FovShake(BOUNCE_VELOCITY)
+
+            if interiorTiles > 0 then
+                -- play major sound
+            else
+                -- play minor sound
             end
         end)
 
