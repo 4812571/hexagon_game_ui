@@ -232,6 +232,22 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         return innerClaimed
     end
 
+    local function UpdateCrowned()
+        local crownPlayer = nil
+        local maxTiles = 0
+
+        for _, player in activePlayers do
+            local count = world.GetCount(player)
+
+            if count > maxTiles then
+                maxTiles = count
+                crownPlayer = player.Player.Player
+            end
+        end
+
+        NetworkServer.Hexagon.PlayerCrowned.FireAll(crownPlayer)
+    end
+
     local function Update()
         local playerPositions = PlayerPositions()
         local touches = PartitionTouches(playerPositions)
@@ -292,19 +308,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             tiles.Value = count
         end
 
-        local crownPlayer = nil
-        local maxTiles = 0
-
-        for _, player in activePlayers do
-            local count = world.GetCount(player)
-
-            if count > maxTiles then
-                maxTiles = count
-                crownPlayer = player.Player.Player
-            end
-        end
-
-        NetworkServer.Hexagon.PlayerCrowned.FireAll(crownPlayer)
+        UpdateCrowned()
     end
 
     local function Init()
