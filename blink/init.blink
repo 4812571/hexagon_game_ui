@@ -9,6 +9,7 @@ import "./Level.blink"
 import "./Options.blink"
 import "./Quests.blink"
 import "./Trails.blink"
+import "./Spins.blink"
 
 import "./Hexagon.blink"
 

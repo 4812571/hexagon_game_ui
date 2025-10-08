@@ -1,0 +1,15 @@
+import "./Rewards.blink"
+
+struct SpinsData {
+    Spins: i32,
+    PendingReward: Rewards.Reward?,
+}
+
+function PerformSpin {
+    Yield: Coroutine,
+    Return: Rewards.Reward,
+}
+
+function ClaimReward {
+    Yield: Coroutine,
+}
