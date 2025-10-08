@@ -20,7 +20,6 @@ local function HexagonEffectsController(scope: Scope)
     local cameraSpring = scope:Spring(scope:Value(BASE_FOV), SPRING_SPEED)
 
     local function FovShake(intensity: number)
-        print(`[HexagonEffectsController] Shaking FOV with intensity {intensity}`)
         cameraSpring:addVelocity(intensity)
     end
 
