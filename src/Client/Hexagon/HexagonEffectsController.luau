@@ -24,10 +24,6 @@ local function HexagonEffectsController(scope: Scope)
         cameraSpring:addVelocity(intensity)
     end
 
-    scope:Observer(cameraSpring):onBind(function()
-        print(Fusion.peek(cameraSpring))
-    end)
-
     local function Start()
         NetworkClient.Hexagon.ClaimEffect.On(function(exteriorTiles: number, interiorTiles: number)
             local totalTiles = exteriorTiles + interiorTiles
