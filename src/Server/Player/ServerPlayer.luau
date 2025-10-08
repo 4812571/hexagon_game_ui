@@ -22,6 +22,8 @@ type PlayerOptions = PlayerOptions.PlayerOptions
 local PlayerLevel = require(Common.Level.PlayerLevel)
 type PlayerLevel = PlayerLevel.PlayerLevel
 
+local PlayerLevelRewards = require(Common.Level.PlayerLevelRewards)
+type PlayerLevelRewards = PlayerLevelRewards.PlayerLevelRewards
 local PlayerRevives = require(Common.Revives.PlayerRevives)
 type PlayerRevives = PlayerRevives.PlayerRevives
 
@@ -37,6 +39,7 @@ export type ServerPlayer = {
     Bombs: PlayerBombs,
     Options: PlayerOptions,
     Level: PlayerLevel,
+    LevelRewards: PlayerLevelRewards,
     Revives: PlayerRevives,
     Trails: PlayerTrails,
 }
@@ -46,6 +49,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
     local bombs = PlayerBombs(scope, data.Bombs)
     local options = PlayerOptions(scope, data.Options)
     local level = PlayerLevel(scope, data.Level)
+    local levelRewards = PlayerLevelRewards(scope, data.LevelRewards)
     local revives = PlayerRevives(scope, data.Revives)
     local trails = PlayerTrails(scope, data.Trails)
 
@@ -58,6 +62,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
         Bombs = bombs,
         Options = options,
         Level = level,
+        LevelRewards = levelRewards,
         Revives = revives,
         Trails = trails,
     }
