@@ -145,7 +145,6 @@ local function BombService(scope: Scope, services: Services): BombService
 
     local function HandleUse(player: Player, bombType: BombType, clientTime: number)
         local serverPlayer = PlayerService.Get(player)
-        print(serverPlayer)
 
         if not serverPlayer then
             KickAndError(player, "[BombService] No player data found.")
