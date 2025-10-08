@@ -19,6 +19,8 @@ local PlayerService = require(Server.Player.PlayerService)
 local SpinRewards = require(Common.Spins.SpinRewards)
 local WeightedChoice = require(Common.Util.WeightedChoice)
 
+local ApplyReward = require(Common.Rewards.ApplyReward)
+
 type Services = {
     PlayerService: PlayerService.PlayerService,
 }
@@ -55,6 +57,23 @@ local function SpinService(scope: Scope, services: Services): SpinService
             serverPlayer.Spins.PendingReward:set(spinResult)
 
             return spinResult
+        end)
+
+        NetworkServer.Spins.ClaimReward.On(function(player: Player): ()
+            local serverPlayer = PlayerService.Get(player)
+
+            if not serverPlayer then
+                return KickAndError(player, "[SpinService] Player data not found")
+            end
+
+            local reward = peek(serverPlayer.Spins.PendingReward)
+
+            if not reward then
+                return KickAndError(player, "[SpinService] No pending reward to claim")
+            end
+
+            ApplyReward(serverPlayer, reward)
+            serverPlayer.Spins.PendingReward:set(nil)
         end)
     end
 

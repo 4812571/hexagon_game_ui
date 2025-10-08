@@ -10,6 +10,7 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
 
 local Rewards = require(Common.Rewards.Rewards)
+local ApplyReward = require(Common.Rewards.ApplyReward)
 type Reward = Rewards.Reward
 
 local NetworkClient = require(ReplicatedStorage.NetworkClient)
@@ -31,7 +32,9 @@ local function SpinController(scope: Scope, player: ClientPlayer): SpinControlle
             return
         end
 
-        print(`[SpinController] Claimed reward: {reward.Type}`)
+        ApplyReward(player, reward)
+        player.Spins.PendingReward:set(nil)
+
         NetworkClient.Spins.ClaimReward.Invoke()
     end
 
