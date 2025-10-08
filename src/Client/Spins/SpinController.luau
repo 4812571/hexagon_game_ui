@@ -9,7 +9,7 @@ local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
 
-local Rewards = require(Common.Rewards)
+local Rewards = require(Common.Rewards.Rewards)
 type Reward = Rewards.Reward
 
 local NetworkClient = require(ReplicatedStorage.NetworkClient)

@@ -2,17 +2,18 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Common = ReplicatedStorage.Common
 
-local BombReward = require(Common.Rewards.BombReward)
-local CoinReward = require(Common.Rewards.CoinReward)
-local IncomeReward = require(Common.Rewards.IncomeReward)
-local SpeedReward = require(Common.Rewards.SpeedReward)
-local SpinReward = require(Common.Rewards.SpinReward)
+local Rewards = require(Common.Rewards.Rewards)
+local BombReward = require(Rewards.BombReward)
+local CoinReward = require(Rewards.CoinReward)
+local IncomeReward = require(Rewards.IncomeReward)
+local SpeedReward = require(Rewards.SpeedReward)
+local SpinReward = require(Rewards.SpinReward)
 
-export type BombReward = BombReward.BombReward
-export type CoinReward = CoinReward.CoinReward
-export type IncomeReward = IncomeReward.IncomeReward
-export type SpeedReward = SpeedReward.SpeedReward
-export type SpinReward = SpinReward.SpinReward
+export type BombReward = Rewards.BombReward
+export type CoinReward = Rewards.CoinReward
+export type IncomeReward = Rewards.IncomeReward
+export type SpeedReward = Rewards.SpeedReward
+export type SpinReward = Rewards.SpinReward
 
 export type LevelReward = 
     | BombReward
