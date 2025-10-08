@@ -17,6 +17,7 @@ local HexagonEffectsController = require(Client.Hexagon.HexagonEffectsController
 local VictoryController = require(Client.Victory.VictoryController)
 local BombController = require(Client.Bombs.BombController)
 local CrownController = require(Client.Crown.CrownController)
+local PlayerSpeedController = require(Client.Player.PlayerSpeedController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -35,6 +36,7 @@ local hexagonEffectsController = HexagonEffectsController(scope)
 local victoryController = VictoryController(scope)
 local crownController = CrownController(scope)
 local bombController = BombController(scope, clientPlayer)
+local playerSpeedController = PlayerSpeedController(scope, clientPlayer)
 
 local controllers = {
     BinderController = binderController,
@@ -43,6 +45,7 @@ local controllers = {
     BombController = bombController,
     HexagonEffectsController = hexagonEffectsController,
     CrownController = crownController,
+    PlayerSpeedController = playerSpeedController,
 }
 
 for _, controller: any in controllers do
