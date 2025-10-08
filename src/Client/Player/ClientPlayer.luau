@@ -7,35 +7,35 @@ export type Value<T> = Fusion.Value<T>
 local PlayerData = require(ReplicatedStorage.Common.Player.PlayerData)
 type PlayerData = PlayerData.PlayerData
 
-local ClientCoins = require(ReplicatedStorage.Client.Coins.ClientCoins)
-type ClientCoins = ClientCoins.ClientCoins
+local PlayerCoins = require(ReplicatedStorage.Common.Coins.PlayerCoins)
+type PlayerCoins = PlayerCoins.PlayerCoins
 
-local ClientLevel = require(ReplicatedStorage.Client.Level.ClientLevel)
-type ClientLevel = ClientLevel.ClientLevel
+local PlayerLevel = require(ReplicatedStorage.Common.Level.PlayerLevel)
+type PlayerLevel = PlayerLevel.PlayerLevel
 
 local PlayerBombs = require(ReplicatedStorage.Common.Bombs.PlayerBombs)
 type PlayerBombs = PlayerBombs.PlayerBombs
 
-local ClientOptions = require(ReplicatedStorage.Client.Options.ClientOptions)
-type ClientOptions = ClientOptions.ClientOptions
+local PlayerOptions = require(ReplicatedStorage.Common.Options.PlayerOptions)
+type PlayerOptions = PlayerOptions.PlayerOptions
 
 export type ClientPlayer = {
     JoinTime: number,
 
-    Coins: ClientCoins,
-    Level: ClientLevel,
+    Coins: PlayerCoins,
+    Level: PlayerLevel,
     Bombs: PlayerBombs,
-    Options: ClientOptions,
+    Options: PlayerOptions,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
     local self: ClientPlayer = {
         JoinTime = joinTime,
 
-        Coins = ClientCoins(scope, data.Coins),
-        Level = ClientLevel(scope, data.Level),
+        Coins = PlayerCoins(scope, data.Coins),
+        Level = PlayerLevel(scope, data.Level),
         Bombs = PlayerBombs(scope, data.Bombs),
-        Options = ClientOptions(scope, data.Options),
+        Options = PlayerOptions(scope, data.Options),
     }
 
     return self
