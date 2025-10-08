@@ -4,15 +4,16 @@ local Common = ReplicatedStorage.Common
 
 local Duration = require(Common.Duration)
 
-local CoinReward = require(Common.Rewards.CoinReward)
-local BombReward = require(Common.Rewards.BombReward)
-local SpinReward = require(Common.Rewards.SpinReward)
-local ReviveReward = require(Common.Rewards.ReviveReward)
+local Rewards = require(Common.Rewards.Rewards)
+local CoinReward = Rewards.CoinReward
+local BombReward = Rewards.BombReward
+local SpinReward = Rewards.SpinReward
+local ReviveReward = Rewards.ReviveReward
 
-export type CoinReward = CoinReward.CoinReward
-export type BombReward = BombReward.BombReward
-export type SpinReward = SpinReward.SpinReward
-export type ReviveReward = ReviveReward.ReviveReward
+type CoinReward = Rewards.CoinReward
+type BombReward = Rewards.BombReward
+type SpinReward = Rewards.SpinReward
+type ReviveReward = Rewards.ReviveReward
 
 export type TimedReward =
     | CoinReward
