@@ -16,8 +16,8 @@ type PlayerData = PlayerData.PlayerData
 local ServerCoins = require(Server.Coins.ServerCoins)
 type ServerCoins = ServerCoins.ServerCoins
 
-local ServerBombs = require(Server.Bombs.ServerBombs)
-type ServerBombs = ServerBombs.ServerBombs
+local PlayerBombs = require(Common.Bombs.PlayerBombs)
+type ServerBombs = PlayerBombs.PlayerBombs
 
 local ServerOptions = require(Server.Options.ServerOptions)
 type ServerOptions = ServerOptions.ServerOptions
@@ -38,7 +38,7 @@ export type ServerPlayer = {
 
 local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number, data: PlayerData): ServerPlayer
     local coins = ServerCoins(scope, data.Coins)
-    local bombs = ServerBombs(scope, data.Bombs)
+    local bombs = PlayerBombs(scope, data.Bombs)
     local options = ServerOptions(scope, data.Options)
     local level = ServerLevel(scope, data.Level)
 

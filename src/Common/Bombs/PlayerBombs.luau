@@ -1,16 +1,18 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 
 local Packages = ReplicatedStorage.Packages
 local Common = ReplicatedStorage.Common
 
 local Fusion = require(Packages.Fusion)
+local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
 
 local BombsData = require(Common.Bombs.BombsData)
 type BombsData = BombsData.BombsData
 
-export type ClientBombs = {
+export type PlayerBombs = {
     Bombs: Value<number>,
     GoldBombs: Value<number>,
     Nukes: Value<number>,
@@ -20,10 +22,24 @@ export type ClientBombs = {
     LastNukeTime: Value<number>,
 }
 
-local function ClientBombs(scope: Scope, data: BombsData): ClientBombs
+local function PlayerBombs(scope: Scope, data: BombsData): PlayerBombs
     local bombs = scope:Value(data.Bombs)
     local goldBombs = scope:Value(data.GoldBombs)
     local nukes = scope:Value(data.Nukes)
+
+    if RunService:IsServer() then
+        scope:Observer(bombs):onChange(function()
+            data.Bombs = peek(bombs)
+        end)
+
+        scope:Observer(goldBombs):onChange(function()
+            data.GoldBombs = peek(goldBombs)
+        end)
+
+        scope:Observer(nukes):onChange(function()
+            data.Nukes = peek(nukes)
+        end)
+    end
 
     local lastBombTime = scope:Value(0)
     local lastGoldBombTime = scope:Value(0)
@@ -33,7 +49,7 @@ local function ClientBombs(scope: Scope, data: BombsData): ClientBombs
         Bombs = bombs,
         GoldBombs = goldBombs,
         Nukes = nukes,
-
+    
         LastBombTime = lastBombTime,
         LastGoldBombTime = lastGoldBombTime,
         LastNukeTime = lastNukeTime,
@@ -42,4 +58,4 @@ local function ClientBombs(scope: Scope, data: BombsData): ClientBombs
     return self
 end
 
-return ClientBombs
+return PlayerBombs
