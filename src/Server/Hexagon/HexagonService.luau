@@ -17,6 +17,7 @@ local Observe = require(Packages.Observe)
 
 local Count = require(Common.Util.Count)
 local Sequence = require(Common.Util.Sequence)
+local Timer = require(Common.Util.Timer)
 
 local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 
@@ -50,6 +51,9 @@ local COLORS = {
     Color3.fromRGB(255, 165, 0),
     Color3.fromRGB(128, 0, 128),
 }
+
+local WINNER_TILES = 10_000
+local WIN_SECONDS = 10
 
 type PartitionedTouches = {
     SelfTerritory: {[HexagonPlayer]: Axial},
@@ -266,6 +270,44 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         return selectionResult
     end
 
+    local winnerCandidate: HexagonPlayer? = nil
+    local winnerSeconds = WIN_SECONDS
+
+    local function RobloxPlayer(player: HexagonPlayer?): Player?
+        if not player then
+            return nil
+        end
+
+        return player.Player.Player
+    end
+
+    table.insert(scope, Timer(1, function()
+        NetworkServer.Hexagon.WinnerSeconds.FireAll(RobloxPlayer(winnerCandidate), winnerSeconds)
+
+        if winnerSeconds <= 0 then
+            for _, player in activePlayers do
+                RemovePlayer(player)
+
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+
+                if humanoid then
+                    humanoid.Health = 0
+                end
+            end
+
+            if not winnerCandidate then
+                error("No winner candidate on win")
+            end
+
+            -- this is a crime against type theory
+            ((winnerCandidate.Player.Player:FindFirstChild("leaderstats") :: IntValue):FindFirstChild("Wins") :: IntValue).Value += 1
+        end
+
+        if winnerCandidate then
+            winnerSeconds -= 1
+        end
+    end))
+
     local function UpdateCrowned()
         local crownPlayer = nil
         local maxTiles = 0
@@ -275,11 +317,23 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
             if count > maxTiles then
                 maxTiles = count
-                crownPlayer = player.Player.Player
+                crownPlayer = player
             end
         end
 
-        NetworkServer.Hexagon.PlayerCrowned.FireAll(crownPlayer)
+        NetworkServer.Hexagon.PlayerCrowned.FireAll(RobloxPlayer(crownPlayer))
+
+        if maxTiles < WINNER_TILES then
+            winnerCandidate = nil
+            winnerSeconds = WIN_SECONDS
+            return
+        end
+
+        if crownPlayer ~= winnerCandidate then
+            winnerCandidate = crownPlayer
+            winnerSeconds = WIN_SECONDS
+            return
+        end
     end
 
     local function Update()
@@ -365,8 +419,13 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             local tiles = Instance.new("IntValue")
             tiles.Name = "Tiles"
             tiles.Value = 0
+
+            local wins = Instance.new("IntValue")
+            wins.Name = "Wins"
+            wins.Value = 0
             
             tiles.Parent = leaderstats
+            wins.Parent = leaderstats
             leaderstats.Parent = serverPlayer.Player
 
             return Observe.Character(serverPlayer.Player, function(character: Model?)

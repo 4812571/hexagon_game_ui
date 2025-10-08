@@ -29,6 +29,13 @@ event PlayerCrowned {
     Data: Instance(Player)?,
 }
 
+event WinnerSeconds {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: (Instance(Player)?, i32),
+}
+
 event ClaimEffect {
     From: Server,
     Type: Reliable,
