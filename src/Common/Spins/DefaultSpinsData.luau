@@ -1,3 +1,5 @@
+--!strict
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Common = ReplicatedStorage.Common
@@ -7,7 +9,7 @@ type SpinsData = SpinsData.SpinsData
 
 local DefaultSpinsData: SpinsData = {
     Spins = 0,
-    PendingRewards = {},
+    PendingReward = nil,
 }
 
 return DefaultSpinsData
