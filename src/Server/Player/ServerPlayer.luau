@@ -25,6 +25,9 @@ type PlayerLevel = PlayerLevel.PlayerLevel
 local PlayerRevives = require(Common.Revives.PlayerRevives)
 type PlayerRevives = PlayerRevives.PlayerRevives
 
+local PlayerTrails = require(Common.Trails.PlayerTrails)
+type PlayerTrails = PlayerTrails.PlayerTrails
+
 export type ServerPlayer = {
     Scope: UnknownScope,
     Player: Player,
@@ -35,6 +38,7 @@ export type ServerPlayer = {
     Options: PlayerOptions,
     Level: PlayerLevel,
     Revives: PlayerRevives,
+    Trails: PlayerTrails,
 }
 
 local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number, data: PlayerData): ServerPlayer
@@ -43,6 +47,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
     local options = PlayerOptions(scope, data.Options)
     local level = PlayerLevel(scope, data.Level)
     local revives = PlayerRevives(scope, data.Revives)
+    local trails = PlayerTrails(scope, data.Trails)
 
     local self: ServerPlayer = {
         Scope = scope,
@@ -54,6 +59,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
         Options = options,
         Level = level,
         Revives = revives,
+        Trails = trails,
     }
 
     return self
