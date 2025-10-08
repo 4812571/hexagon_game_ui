@@ -102,8 +102,8 @@ local function BombService(scope: Scope, services: Services): BombService
     local HexagonService = services.HexagonService
 
     PlayerService.ObservePlayers(function(player: ServerPlayer)
-        player.Bombs.Bombs:set(100)
-        player.Bombs.GoldBombs:set(15)
+        player.Bombs.Bombs:set(10)
+        player.Bombs.GoldBombs:set(8)
         player.Bombs.Nukes:set(3)
 
         return nil
