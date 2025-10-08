@@ -13,6 +13,7 @@ local DefaultOptionsData = require(Common.Options.DefaultOptionsData)
 local DefaultQuestsData = require(Common.Quests.DefaultQuestsData)
 local DefaultRevivesData = require(Common.Revives.DefaultRevivesData)
 local DefaultTrailsData = require(Common.Trails.DefaultTrailsData)
+local DefaultSpeedData = require(Common.Speed.DefaultSpeedData)
 
 local DefaultPlayerData: PlayerData = {
     Bombs = DefaultBombsData,
@@ -23,6 +24,7 @@ local DefaultPlayerData: PlayerData = {
     Quests = DefaultQuestsData,
     Revives = DefaultRevivesData,
     Trails = DefaultTrailsData,
+    Speed = DefaultSpeedData,
 }
 
 return DefaultPlayerData
