@@ -11,6 +11,7 @@ local DefaultLevelData = require(Common.Level.DefaultLevelData)
 local DefaultLevelRewardsData = require(Common.Level.DefaultLevelRewardsData)
 local DefaultOptionsData = require(Common.Options.DefaultOptionsData)
 local DefaultQuestsData = require(Common.Quests.DefaultQuestsData)
+local DefaultRevivesData = require(Common.Revives.DefaultRevivesData)
 local DefaultTrailsData = require(Common.Trails.DefaultTrailsData)
 
 local DefaultPlayerData: PlayerData = {
@@ -20,6 +21,7 @@ local DefaultPlayerData: PlayerData = {
     LevelRewards = DefaultLevelRewardsData,
     Options = DefaultOptionsData,
     Quests = DefaultQuestsData,
+    Revives = DefaultRevivesData,
     Trails = DefaultTrailsData,
 }
 

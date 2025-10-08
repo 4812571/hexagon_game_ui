@@ -22,6 +22,12 @@ type PlayerBombs = PlayerBombs.PlayerBombs
 local PlayerOptions = require(ReplicatedStorage.Common.Options.PlayerOptions)
 type PlayerOptions = PlayerOptions.PlayerOptions
 
+local PlayerRevives = require(ReplicatedStorage.Common.Revives.PlayerRevives)
+type PlayerRevives = PlayerRevives.PlayerRevives
+
+local PlayerTrails = require(ReplicatedStorage.Common.Trails.PlayerTrails)
+type PlayerTrails = PlayerTrails.PlayerTrails
+
 export type ClientPlayer = {
     JoinTime: number,
 
@@ -29,7 +35,9 @@ export type ClientPlayer = {
     Level: PlayerLevel,
     LevelRewards: PlayerLevelRewards,
     Bombs: PlayerBombs,
+    Revives: PlayerRevives,
     Options: PlayerOptions,
+    Trails: PlayerTrails,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
@@ -40,7 +48,9 @@ local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): C
         Level = PlayerLevel(scope, data.Level),
         LevelRewards = PlayerLevelRewards(scope, data.LevelRewards),
         Bombs = PlayerBombs(scope, data.Bombs),
+        Revives = PlayerRevives(scope, data.Revives),
         Options = PlayerOptions(scope, data.Options),
+        Trails = PlayerTrails(scope, data.Trails),
     }
 
     return self
