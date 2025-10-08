@@ -6,6 +6,7 @@ import "./Options.blink"
 import "./Quests.blink"
 import "./Revives.blink"
 import "./Trails.blink"
+import "./Spins.blink"
 
 struct PlayerData {
     Bombs: Bombs.BombsData,
@@ -16,4 +17,5 @@ struct PlayerData {
     Quests: Quests.QuestsData,
     Revives: Revives.RevivesData,
     Trails: Trails.TrailsData,
+    Spins: Spins.SpinsData,
 }

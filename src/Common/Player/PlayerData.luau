@@ -10,6 +10,7 @@ local OptionsData = require(Common.Options.OptionsData)
 local QuestsData = require(Common.Quests.QuestsData)
 local RevivesData = require(Common.Revives.RevivesData)
 local TrailsData = require(Common.Trails.TrailsData)
+local SpinsData = require(Common.Spins.SpinsData)
 
 export type PlayerData = {
     Bombs: BombsData.BombsData,
@@ -20,6 +21,7 @@ export type PlayerData = {
     Quests: QuestsData.QuestsData,
     Revives: RevivesData.RevivesData,
     Trails: TrailsData.TrailsData,
+    Spins: SpinsData.SpinsData,
 }
 
 return nil

@@ -17,6 +17,7 @@ local HexagonEffectsController = require(Client.Hexagon.HexagonEffectsController
 local VictoryController = require(Client.Victory.VictoryController)
 local BombController = require(Client.Bombs.BombController)
 local CrownController = require(Client.Crown.CrownController)
+local SpinController = require(Client.Spins.SpinController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -35,11 +36,13 @@ local hexagonEffectsController = HexagonEffectsController(scope)
 local victoryController = VictoryController(scope)
 local crownController = CrownController(scope)
 local bombController = BombController(scope, clientPlayer)
+local spinController = SpinController(scope, clientPlayer)
 
 local controllers = {
     BinderController = binderController,
     HexagonRenderingController = hexagonRenderingController,
     VictoryController = victoryController,
+    SpinController = spinController,
     BombController = bombController,
     HexagonEffectsController = hexagonEffectsController,
     CrownController = crownController,

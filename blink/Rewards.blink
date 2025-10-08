@@ -1,0 +1,36 @@
+enum BombType = {
+    Bomb,
+    GoldBomb,
+    Nuke,
+}
+
+enum Reward = "Type" {
+    Bomb {
+        BombType: BombType,
+        Amount: i32,
+    },
+
+    Coin {
+        Amount: i32,
+    },
+
+    Income {
+        Percent: i32,
+    },
+
+    MultiplyCoin {
+        Multiplier: f64,
+    },
+
+    Revive {
+        Amount: i32,
+    },
+
+    Speed {
+        Percent: i32,
+    },
+
+    Spin {
+        Amount: i32,
+    },
+}
