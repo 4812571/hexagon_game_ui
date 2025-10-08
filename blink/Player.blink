@@ -1,15 +1,19 @@
+import "./Bombs.blink"
 import "./Coins.blink"
 import "./Level.blink"
+import "./LevelRewards.blink"
 import "./Options.blink"
-import "./Bombs.blink"
 import "./Quests.blink"
+import "./Revives.blink"
 import "./Trails.blink"
 
 struct PlayerData {
+    Bombs: Bombs.BombsData,
     Coins: Coins.CoinsData,
     Level: Level.LevelData,
+    LevelRewards: LevelRewards.LevelRewardsData,
     Options: Options.OptionsData,
-    Bombs: Bombs.BombsData,
     Quests: Quests.QuestsData,
+    Revives: Revives.RevivesData,
     Trails: Trails.TrailsData,
 }

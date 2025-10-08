@@ -1,0 +1,3 @@
+struct LevelRewardsData {
+    ClaimedIndexes: map {[i32]: bool},
+}
