@@ -13,6 +13,9 @@ type PlayerCoins = PlayerCoins.PlayerCoins
 local PlayerLevel = require(ReplicatedStorage.Common.Level.PlayerLevel)
 type PlayerLevel = PlayerLevel.PlayerLevel
 
+local PlayerLevelRewards = require(ReplicatedStorage.Common.Level.PlayerLevelRewards)
+type PlayerLevelRewards = PlayerLevelRewards.PlayerLevelRewards
+
 local PlayerBombs = require(ReplicatedStorage.Common.Bombs.PlayerBombs)
 type PlayerBombs = PlayerBombs.PlayerBombs
 
@@ -24,6 +27,7 @@ export type ClientPlayer = {
 
     Coins: PlayerCoins,
     Level: PlayerLevel,
+    LevelRewards: PlayerLevelRewards,
     Bombs: PlayerBombs,
     Options: PlayerOptions,
 }
@@ -34,6 +38,7 @@ local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): C
 
         Coins = PlayerCoins(scope, data.Coins),
         Level = PlayerLevel(scope, data.Level),
+        LevelRewards = PlayerLevelRewards(scope, data.LevelRewards),
         Bombs = PlayerBombs(scope, data.Bombs),
         Options = PlayerOptions(scope, data.Options),
     }
