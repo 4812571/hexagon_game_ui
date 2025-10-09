@@ -14,6 +14,7 @@ import "./DailyRewards.blink"
 import "./TimedRewards.blink"
 import "./LevelRewards.blink"
 
+import "./PlayTime.blink"
 import "./Hexagon.blink"
 
 struct InitialData {
