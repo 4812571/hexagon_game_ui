@@ -18,7 +18,7 @@ export type PlayerLevelRewards = {
 }
 
 local function PlayerLevelRewards(scope: Scope, data: LevelRewardsData): PlayerLevelRewards
-    local claimedIndexes = scope:Value(data.ClaimedIndexes or ({} :: BlinkSet<number>))
+    local claimedIndexes = scope:Value(data.ClaimedIndexes)
 
     if RunService:IsServer() then
         scope:Observer(claimedIndexes):onChange(function()
@@ -30,16 +30,10 @@ local function PlayerLevelRewards(scope: Scope, data: LevelRewardsData): PlayerL
         return peek(claimedIndexes)[rewardIndex] == true
     end
 
-    local function Claim(rewardIndex: number): boolean
-        if IsClaimed(rewardIndex) then
-            return false
-        end
-
+    local function Claim(rewardIndex: number)
         local newClaimedIndexes = peek(claimedIndexes)
         newClaimedIndexes[rewardIndex] = true
         claimedIndexes:set(newClaimedIndexes)
-
-        return true
     end
 
     local self: PlayerLevelRewards = {

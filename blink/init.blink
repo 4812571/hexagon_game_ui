@@ -12,6 +12,7 @@ import "./Trails.blink"
 import "./Spins.blink"
 import "./DailyRewards.blink"
 import "./TimedRewards.blink"
+import "./LevelRewards.blink"
 
 import "./Hexagon.blink"
 

@@ -1,3 +1,8 @@
 struct LevelRewardsData {
     ClaimedIndexes: map {[i32]: boolean},
 }
+
+function ClaimReward {
+    Yield: Coroutine,
+    Data: i32,
+}
