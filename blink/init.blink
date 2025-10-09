@@ -13,6 +13,7 @@ import "./Spins.blink"
 import "./DailyRewards.blink"
 import "./TimedRewards.blink"
 import "./LevelRewards.blink"
+import "./Skins.blink"
 
 import "./PlayTime.blink"
 import "./Hexagon.blink"

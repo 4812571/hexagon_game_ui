@@ -9,6 +9,7 @@ import "./Trails.blink"
 import "./Speed.blink"
 import "./Spins.blink"
 import "./DailyRewards.blink"
+import "./Skins.blink"
 
 struct PlayerData {
     Bombs: Bombs.BombsData,
@@ -22,4 +23,5 @@ struct PlayerData {
     Speed: Speed.SpeedData,
     Spins: Spins.SpinsData,
     DailyRewards: DailyRewards.DailyRewardsData,
+    Skins: Skins.SkinsData,
 }

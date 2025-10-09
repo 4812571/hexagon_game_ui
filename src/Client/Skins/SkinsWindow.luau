@@ -8,7 +8,7 @@ local Fusion = require(Packages.Fusion)
 
 local Icons = require(Common.Icons)
 
-local Skins = require(Common.Skins)
+local Skins = require(Common.Skins.Skins)
 type SkinInfo = Skins.SkinInfo
 
 local Window = require(Client.Interface.Window)

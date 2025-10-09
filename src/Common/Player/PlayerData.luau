@@ -13,6 +13,7 @@ local TrailsData = require(Common.Trails.TrailsData)
 local SpeedData = require(Common.Speed.SpeedData)
 local SpinsData = require(Common.Spins.SpinsData)
 local DailyRewardsData = require(Common.DailyRewards.DailyRewardsData)
+local SkinsData = require(Common.Skins.SkinsData)
 
 export type PlayerData = {
     Bombs: BombsData.BombsData,
@@ -26,6 +27,7 @@ export type PlayerData = {
     Speed: SpeedData.SpeedData,
     Spins: SpinsData.SpinsData,
     DailyRewards: DailyRewardsData.DailyRewardsData,
+    Skins: SkinsData.SkinsData,
 }
 
 return nil

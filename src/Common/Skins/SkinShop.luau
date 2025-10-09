@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Common = ReplicatedStorage.Common
 
-local Skins = require(Common.Skins)
+local Skins = require(Common.Skins.Skins)
 export type SkinInfo = Skins.SkinInfo
 
 local Various = {

@@ -23,6 +23,7 @@ local PlayerSpins = require(Common.Spins.PlayerSpins)
 local PlayerDailyRewards = require(Common.DailyRewards.PlayerDailyRewards)
 local PlayerTimedRewards = require(Common.TimedRewards.PlayerTimedRewards)
 local PlayerQuests = require(Common.Quests.PlayerQuests)
+local PlayerSkins = require(Common.Skins.PlayerSkins)
 
 export type CommonPlayer = {
     Scope: Scope<unknown>,
@@ -43,6 +44,7 @@ export type CommonPlayer = {
     DailyRewards: PlayerDailyRewards.PlayerDailyRewards,
     TimedRewards: PlayerTimedRewards.PlayerTimedRewards,
     Quests: PlayerQuests.PlayerQuests,
+    Skins: PlayerSkins.PlayerSkins,
 }
 
 local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTime: number, data: PlayerData): CommonPlayer
@@ -65,6 +67,7 @@ local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTi
         DailyRewards = PlayerDailyRewards(scope, data.DailyRewards),
         TimedRewards = PlayerTimedRewards(scope, joinTime),
         Quests = PlayerQuests(scope, data.Quests),
+        Skins = PlayerSkins(scope, data.Skins),
     }
 
     return self

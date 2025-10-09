@@ -6,7 +6,7 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
-local SkinShop = require(Common.SkinShop)
+local SkinShop = require(Common.Skins.SkinShop)
 
 local SkinsWindow = require(Client.Skins.SkinsWindow)
 type SkinEntry = SkinsWindow.SkinEntry

@@ -1,0 +1,9 @@
+struct SkinsData {
+    OwnedSkins: map {[string]: boolean},
+    ActiveSkinId: string?,
+}
+
+function PurchaseSkin {
+    Yield: Coroutine,
+    Data: string,
+}

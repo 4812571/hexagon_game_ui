@@ -16,6 +16,7 @@ local DefaultTrailsData = require(Common.Trails.DefaultTrailsData)
 local DefaultSpeedData = require(Common.Speed.DefaultSpeedData)
 local DefaultSpinsData = require(Common.Spins.DefaultSpinsData)
 local DefaultDailyRewardsData = require(Common.DailyRewards.DefaultDailyRewardsData)
+local DefaultSkinsData = require(Common.Skins.DefaultSkinsData)
 
 local DefaultPlayerData: PlayerData = {
     Bombs = DefaultBombsData,
@@ -29,6 +30,7 @@ local DefaultPlayerData: PlayerData = {
     Speed = DefaultSpeedData,
     Spins = DefaultSpinsData,
     DailyRewards = DefaultDailyRewardsData,
+    Skins = DefaultSkinsData,
 }
 
 return DefaultPlayerData

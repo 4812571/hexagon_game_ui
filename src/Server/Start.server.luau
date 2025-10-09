@@ -16,6 +16,7 @@ local BombService = require(Server.Bombs.BombService)
 local DailyRewardsService = require(Server.DailyRewards.DailyRewardsService)
 local LevelRewardsService = require(Server.Level.LevelRewardsService)
 local TimedRewardsService = require(Server.TimedRewards.TimedRewardsService)
+local SkinService = require(Server.Skins.SkinService)
 
 local scope = Fusion.scoped(Fusion)
 
@@ -47,6 +48,10 @@ local playerLoadingService = JoinService(scope, {
     HexagonService = hexagonService,
 })
 
+local skinService = SkinService(scope, {
+    PlayerService = playerService,
+})
+
 local services = {
     PlayerService = playerService,
     HexagonService = hexagonService,
@@ -55,6 +60,7 @@ local services = {
     TimedRewardsService = timedRewardsService,
     BombService = bombService,
     JoinService = playerLoadingService,
+    SkinService = skinService,
 }
 
 for _, service: any in services do
