@@ -8,7 +8,7 @@ local Fusion = require(Packages.Fusion)
 
 local Icons = require(Common.Icons)
 
-local DailyRewards = require(Common.DailyRewards)
+local DailyRewards = require(Common.DailyRewards.DailyRewards)
 type DailyReward = DailyRewards.DailyReward
 
 local Window = require(Client.Interface.Window)
