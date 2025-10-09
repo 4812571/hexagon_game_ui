@@ -131,7 +131,7 @@ local function BombService(scope: Scope, services: Services): BombService
 
             HexagonService.FloodTiles(hexPlayer, inBoundsAxials)
             HexagonService.FinishSelection(hexPlayer)
-            task.wait(0.25)
+            task.wait(0.1)
         end
     end
 
