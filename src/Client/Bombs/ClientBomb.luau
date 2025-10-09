@@ -18,7 +18,7 @@ local FLASH_FREQUENCY = 1
 local FLASH_FACTOR = 1.25
 
 local FLASH_COLOR = Color3.fromRGB(255, 0, 0)
-local FLASH_SCALE = 0.1
+local FLASH_SCALE = 0.25
 local MAX_ALPHA = 0.35
 
 local FALL_ACCELERATION = 50
