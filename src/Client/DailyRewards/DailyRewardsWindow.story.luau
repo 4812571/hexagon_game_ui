@@ -7,7 +7,7 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
-local DailyRewards = require(Common.DailyRewards)
+local DailyRewards = require(Common.DailyRewards.DailyRewards)
 
 local DailyRewardsWindow = require(Client.DailyRewards.DailyRewardsWindow)
 type ClaimState = DailyRewardsWindow.ClaimState
