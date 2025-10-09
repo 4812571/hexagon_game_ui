@@ -18,6 +18,7 @@ local Observe = require(Packages.Observe)
 local Count = require(Common.Util.Count)
 local Sequence = require(Common.Util.Sequence)
 local Timer = require(Common.Util.Timer)
+local Signal = require(Common.Signal)
 
 local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 
@@ -89,6 +90,9 @@ export type HexagonService = {
     GetPlayer: (player: ServerPlayer) -> HexagonPlayer?,
     FloodTiles: (player: HexagonPlayer, tiles: {Axial}) -> (),
     FinishSelection: (player: HexagonPlayer) -> SelectionResult?,
+
+    PlayerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer>,
+    PlayerWon: Signal.Signal<HexagonPlayer>,
 }
 
 local function HexagonService(scope: Scope, services: Services): HexagonService
@@ -101,6 +105,18 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     local activePlayers: {[ServerPlayer]: HexagonPlayer} = {}
     
+    local playerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer> = Signal(scope)
+
+    table.insert(scope, playerKilled:Connect(function(killer: HexagonPlayer, victim: HexagonPlayer)
+        NetworkServer.Hexagon.PlayerKilled.FireAll(killer.Player.Player, victim.Player.Player)
+    end))
+
+    local playerWon: Signal.Signal<HexagonPlayer> = Signal(scope)
+
+    table.insert(scope, playerWon:Connect(function(winner: HexagonPlayer)
+        NetworkServer.Hexagon.PlayerWon.FireAll(winner.Player.Player)
+    end))
+
     local function InitialData(): HexagonData
         local owned = {}
 
@@ -200,6 +216,18 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         return partitioned
     end
 
+    local function KillPlayer(killer: HexagonPlayer, victim: HexagonPlayer)
+        playerKilled:Fire(killer, victim)
+
+        local humanoid = victim.Character:FindFirstChildOfClass("Humanoid")
+
+        if humanoid then
+            humanoid.Health = 0
+        end
+
+        RemovePlayer(victim)
+    end
+
     local function FloodTiles(player: HexagonPlayer, tiles: {Axial})
         local playerPositions = PlayerPositions()
 
@@ -224,13 +252,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         world.ClaimTiles(player, tileSet)
 
         for otherPlayer, _ in kills do
-            local humanoid = otherPlayer.Character:FindFirstChildOfClass("Humanoid")
-
-            if humanoid then
-                humanoid.Health = 0
-            end
-
-            RemovePlayer(otherPlayer)
+            KillPlayer(player, otherPlayer)
         end
     end
 
@@ -258,13 +280,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
 
         for otherPlayer, _ in kills do
-            local humanoid = otherPlayer.Character:FindFirstChildOfClass("Humanoid")
-
-            if humanoid then
-                humanoid.Health = 0
-            end
-
-            RemovePlayer(otherPlayer)
+            KillPlayer(player, otherPlayer)
         end
 
         return selectionResult
@@ -285,6 +301,8 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         NetworkServer.Hexagon.WinnerSeconds.FireAll(RobloxPlayer(winnerCandidate), winnerSeconds)
 
         if winnerSeconds <= 0 then
+            playerWon:Fire(winnerCandidate :: HexagonPlayer)
+
             for _, player in activePlayers do
                 RemovePlayer(player)
 
@@ -371,13 +389,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
 
         for player, _ in kills do
-            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-
-            if humanoid then
-                humanoid.Health = 0
-            end
-
-            RemovePlayer(player)
+            KillPlayer(player, player)
         end
 
         for _, player in activePlayers do
@@ -463,6 +475,9 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         Init = Init,
         Start = Start,
         FinishSelection = FinishSelection,
+
+        PlayerKilled = playerKilled,
+        PlayerWon = playerWon,
     }
 
     return self
