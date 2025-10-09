@@ -1,3 +1,8 @@
 struct QuestsData {
     Progress: map {[string]: i32},
 }
+
+function ClaimQuest {
+    Yield: Coroutine,
+    Data: string,
+}

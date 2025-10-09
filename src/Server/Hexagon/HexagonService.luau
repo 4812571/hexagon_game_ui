@@ -37,7 +37,7 @@ local ServerPlayer = require(Server.Player.ServerPlayer)
 type ServerPlayer = ServerPlayer.ServerPlayer
 
 local HexagonPlayer = require(Server.Hexagon.HexagonPlayer)
-type HexagonPlayer = HexagonPlayer.HexagonPlayer
+export type HexagonPlayer = HexagonPlayer.HexagonPlayer
 
 local HexagonInteractionWorld = require(Server.Hexagon.HexagonInteractionWorld)
 local HexagonRenderer = require(Server.Hexagon.HexagonRenderer)
@@ -109,13 +109,17 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local playerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer> = Signal(scope)
 
     table.insert(scope, playerKilled:Connect(function(killer: HexagonPlayer, victim: HexagonPlayer)
-        NetworkServer.Hexagon.PlayerKilled.FireAll(killer.Player.Player, victim.Player.Player)
+        for _, serverPlayer in PlayerService.GetAll() do
+            NetworkServer.Hexagon.PlayerKilled.Fire(serverPlayer.Player, killer.Player.Player, victim.Player.Player)
+        end
     end))
 
     local playerWon: Signal.Signal<HexagonPlayer> = Signal(scope)
 
     table.insert(scope, playerWon:Connect(function(winner: HexagonPlayer)
-        NetworkServer.Hexagon.PlayerWon.FireAll(winner.Player.Player)
+        for _, serverPlayer in PlayerService.GetAll() do
+            NetworkServer.Hexagon.PlayerWon.Fire(serverPlayer.Player, winner.Player.Player)
+        end
     end))
 
     local claimedSignal: Signal.Signal<HexagonPlayer, number, number> = Signal(scope)
@@ -305,7 +309,9 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     end
 
     table.insert(scope, Timer(1, function()
-        NetworkServer.Hexagon.WinnerSeconds.FireAll(RobloxPlayer(winnerCandidate), winnerSeconds)
+        for _, serverPlayer in PlayerService.GetAll() do
+            NetworkServer.Hexagon.WinnerSeconds.Fire(serverPlayer.Player, RobloxPlayer(winnerCandidate), winnerSeconds)
+        end
 
         if winnerSeconds <= 0 then
             playerWon:Fire(winnerCandidate :: HexagonPlayer)
@@ -346,7 +352,9 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             end
         end
 
-        NetworkServer.Hexagon.PlayerCrowned.FireAll(RobloxPlayer(crownPlayer))
+        for _, serverPlayer in PlayerService.GetAll() do
+            NetworkServer.Hexagon.PlayerCrowned.Fire(serverPlayer.Player, RobloxPlayer(crownPlayer))
+        end
 
         if maxTiles < WINNER_TILES then
             winnerCandidate = nil
