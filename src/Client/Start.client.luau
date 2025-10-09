@@ -1,5 +1,6 @@
 --!strict
 
+local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
@@ -23,13 +24,12 @@ local SpinController = require(Client.Spins.SpinController)
 local initialData = NetworkClient.Join.Invoke()
 
 if not initialData then
-    error("[Client] Failed to join the game!")
+    return error("[Client] Failed to join the game!")
 end
 
 local scope = Fusion.scoped(Fusion)
 
-local clientPlayer = ClientPlayer(scope, initialData.JoinTime, initialData.Player)
-print(`[Client] Joined the game at {clientPlayer.JoinTime}!`)
+local clientPlayer = ClientPlayer(scope, Players.LocalPlayer, initialData.JoinTime, initialData.Player)
 
 local binderController = BinderController(scope)
 local hexagonRenderingController = HexagonRenderingController(scope, initialData.Hexagon)
