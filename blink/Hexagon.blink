@@ -50,7 +50,7 @@ event PlayerWon {
     Data: Instance(Player),
 }
 
-event ClaimEffect {
+event Claimed {
     From: Server,
     Type: Reliable,
     Call: SingleAsync,

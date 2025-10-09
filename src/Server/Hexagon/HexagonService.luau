@@ -93,6 +93,7 @@ export type HexagonService = {
 
     PlayerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer>,
     PlayerWon: Signal.Signal<HexagonPlayer>,
+    Claimed: Signal.Signal<HexagonPlayer, number, number>,
 }
 
 local function HexagonService(scope: Scope, services: Services): HexagonService
@@ -115,6 +116,12 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     table.insert(scope, playerWon:Connect(function(winner: HexagonPlayer)
         NetworkServer.Hexagon.PlayerWon.FireAll(winner.Player.Player)
+    end))
+
+    local claimedSignal: Signal.Signal<HexagonPlayer, number, number> = Signal(scope)
+
+    table.insert(scope, claimedSignal:Connect(function(player: HexagonPlayer, outer: number, inner: number)
+        NetworkServer.Hexagon.Claimed.Fire(player.Player.Player, outer, inner)
     end))
 
     local function InitialData(): HexagonData
@@ -263,7 +270,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             return nil
         end
 
-        NetworkServer.Hexagon.ClaimEffect.Fire(player.Player.Player, Count(selectionResult.OuterClaimed), Count(selectionResult.InnerClaimed))
+        claimedSignal:Fire(player, Count(selectionResult.OuterClaimed), Count(selectionResult.InnerClaimed))
 
         local playerPositions = PlayerPositions()
 
@@ -375,7 +382,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
                 continue
             end
 
-            NetworkServer.Hexagon.ClaimEffect.Fire(player.Player.Player, Count(claimed.OuterClaimed), Count(claimed.InnerClaimed))
+            claimedSignal:Fire(player, Count(claimed.OuterClaimed), Count(claimed.InnerClaimed))
 
             for otherPlayer, position in playerPositions do
                 if otherPlayer == player then
@@ -478,6 +485,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
         PlayerKilled = playerKilled,
         PlayerWon = playerWon,
+        Claimed = claimedSignal,
     }
 
     return self

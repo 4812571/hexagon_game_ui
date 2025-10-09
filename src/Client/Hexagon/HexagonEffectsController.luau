@@ -24,7 +24,7 @@ local function HexagonEffectsController(scope: Scope)
     end
 
     local function Start()
-        NetworkClient.Hexagon.ClaimEffect.On(function(exteriorTiles: number, interiorTiles: number)
+        NetworkClient.Hexagon.Claimed.On(function(exteriorTiles: number, interiorTiles: number)
             local totalTiles = exteriorTiles + interiorTiles
 
             if totalTiles <= 0 then
