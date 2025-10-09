@@ -13,25 +13,36 @@ local NetworkServer = require(ServerScriptService.NetworkServer)
 local PlayerService = require(Server.Player.PlayerService)
 type PlayerService = PlayerService.PlayerService
 
+local AuthoritativeTimingService = require(Server.AuthoritativeTimingService)
+type AuthoritativeTimingService = AuthoritativeTimingService.AuthoritativeTimingService
+
 local Terminate = require(Common.Player.Terminate)
 local ApplyReward = require(Common.Rewards.ApplyReward)
 local TimedRewards = require(Common.TimedRewards.TimedRewards)
 
 export type Services = {
     PlayerService: PlayerService,
+    AuthoritativeTimingService: AuthoritativeTimingService,
 }
 
-export type TimedRewardService = {
+export type TimedRewardsService = {
     Start: () -> ()
 }
 
-local function TimedRewardService(scope: Scope, services: Services): TimedRewardService
+local function TimedRewardsService(scope: Scope, services: Services): TimedRewardsService
     local function Start()
+        local PlayerService = services.PlayerService
+        local AuthoritativeTimingService = services.AuthoritativeTimingService
+
         NetworkServer.TimedRewards.ClaimReward.On(function(player: Player, rewardIndex: number, instant: number): ()
-            local serverPlayer = services.PlayerService.Get(player)
+            local serverPlayer = PlayerService:GetPlayer(player)
 
             if not serverPlayer then
                 return Terminate(player, "[TimedRewardService] Player not found")
+            end
+
+            if not AuthoritativeTimingService.Register(player, instant) then
+                return Terminate(player, "[TimedRewardService] Player sent an invalid instant")
             end
 
             if not serverPlayer.TimedRewards.CanClaim(rewardIndex, instant) then
@@ -45,11 +56,11 @@ local function TimedRewardService(scope: Scope, services: Services): TimedReward
         end)
     end
 
-    local self: TimedRewardService = {
+    local self: TimedRewardsService = {
         Start = Start,
     }
 
     return self
 end
 
-return TimedRewardService
+return TimedRewardsService

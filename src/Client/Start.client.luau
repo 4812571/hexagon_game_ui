@@ -20,6 +20,9 @@ local BombController = require(Client.Bombs.BombController)
 local CrownController = require(Client.Crown.CrownController)
 local PlayerSpeedController = require(Client.Player.PlayerSpeedController)
 local SpinController = require(Client.Spins.SpinController)
+local LevelRewardsController = require(Client.Level.LevelRewardsController)
+local DailyRewardsController = require(Client.DailyRewards.DailyRewardsController)
+local TimedRewardsController = require(Client.TimedRewards.TimedRewardsController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -39,6 +42,9 @@ local crownController = CrownController(scope)
 local bombController = BombController(scope, clientPlayer)
 local playerSpeedController = PlayerSpeedController(scope, clientPlayer)
 local spinController = SpinController(scope, clientPlayer)
+local levelRewardsController = LevelRewardsController(scope, clientPlayer)
+local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
+local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 
 local controllers = {
     BinderController = binderController,
@@ -49,6 +55,9 @@ local controllers = {
     HexagonEffectsController = hexagonEffectsController,
     CrownController = crownController,
     PlayerSpeedController = playerSpeedController,
+    LevelRewardsController = levelRewardsController,
+    DailyRewardsController = dailyRewardsController,
+    TimedRewardsController = timedRewardsController,
 }
 
 for _, controller: any in controllers do
