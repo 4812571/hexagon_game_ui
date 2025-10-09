@@ -8,11 +8,13 @@ local function PlayerTiming(joinTime: number): PlayerTiming
     local lastInstant = joinTime
 
     local function Check(instant: number): boolean
+        print(`Time {lastInstant} -> {instant}`)
+
         if instant < lastInstant then
             return false
         end
 
-        if instant - lastInstant > ALLOWED_LATENCY then
+        if math.abs(workspace:GetServerTimeNow() - instant) > ALLOWED_LATENCY then
             return false
         end
 
