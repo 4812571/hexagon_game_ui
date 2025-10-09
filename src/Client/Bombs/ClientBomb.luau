@@ -18,6 +18,7 @@ local FLASH_FREQUENCY = 1
 local FLASH_FACTOR = 1.25
 
 local FLASH_COLOR = Color3.fromRGB(255, 0, 0)
+local FLASH_SCALE = 0.1
 local MAX_ALPHA = 0.35
 
 local FALL_ACCELERATION = 50
@@ -64,6 +65,18 @@ local function ClientBomb(scope: Scope, bombModel: Model, startPosition: Vector3
     for _, part in Parts(bombModel) do
         ColorShift(scope, part, FLASH_COLOR, alpha)
     end
+
+    local bombScale = scope:Computed(function(use)
+        if not use(alpha) then
+            return 1
+        end
+
+        return 1 + use(alpha) * FLASH_SCALE
+    end)
+
+    scope:Observer(bombScale):onBind(function()
+        bombModel:ScaleTo(peek(bombScale))
+    end)
 
     local elapsedFallingTime = scope:Computed(function(use)
         return use(driverTime) - fallingStartTime
