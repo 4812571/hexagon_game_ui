@@ -22,6 +22,7 @@ local PlayerTrails = require(Common.Trails.PlayerTrails)
 local PlayerSpins = require(Common.Spins.PlayerSpins)
 local PlayerDailyRewards = require(Common.DailyRewards.PlayerDailyRewards)
 local PlayerTimedRewards = require(Common.TimedRewards.PlayerTimedRewards)
+local PlayerQuests = require(Common.Quests.PlayerQuests)
 
 export type CommonPlayer = {
     Scope: Scope<unknown>,
@@ -41,6 +42,7 @@ export type CommonPlayer = {
     Spins: PlayerSpins.PlayerSpins,
     DailyRewards: PlayerDailyRewards.PlayerDailyRewards,
     TimedRewards: PlayerTimedRewards.PlayerTimedRewards,
+    Quests: PlayerQuests.PlayerQuests,
 }
 
 local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTime: number, data: PlayerData): CommonPlayer
@@ -62,6 +64,7 @@ local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTi
         Spins = PlayerSpins(scope, data.Spins),
         DailyRewards = PlayerDailyRewards(scope, data.DailyRewards),
         TimedRewards = PlayerTimedRewards(scope, joinTime),
+        Quests = PlayerQuests(scope, data.Quests),
     }
 
     return self

@@ -8,19 +8,16 @@ local Fusion = require(Packages.Fusion)
 
 local Icons = require(Common.Icons)
 
-local EliminationQuest = require(Common.Quests.Quests.EliminationQuest)
-local PlayTimeQuest = require(Common.Quests.Quests.PlayTimeQuest)
-
-export type Quest =
-    | EliminationQuest.EliminationQuest
-    | PlayTimeQuest.PlayTimeQuest
+local Quests = require(Common.Quests.Quests)
+type Quest = Quests.Quest
 
 export type QuestEntry = {
     Quest: Quest,
-    QuestId: string,
     RewardExperience: Fusion.UsedAs<number>,
     Progress: Fusion.UsedAs<number>,
     RequiredProgress: Fusion.UsedAs<number>,
+
+    OnClaim: () -> (),
 }
 
 local Window = require(Client.Interface.Window)
@@ -28,7 +25,6 @@ local Window = require(Client.Interface.Window)
 export type QuestsWindowProps = {
     Scope: Fusion.Scope<typeof(Fusion)>,
     Quests: { QuestEntry },
-    OnClaim: (QuestEntry) -> (),
 }
 
 local function QuestsWindow(props: QuestsWindowProps)
