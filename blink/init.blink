@@ -11,6 +11,7 @@ import "./Quests.blink"
 import "./Trails.blink"
 import "./Spins.blink"
 import "./DailyRewards.blink"
+import "./TimedRewards.blink"
 
 import "./Hexagon.blink"
 

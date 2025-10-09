@@ -37,6 +37,9 @@ type PlayerSpins = PlayerSpins.PlayerSpins
 local PlayerDailyRewards = require(ReplicatedStorage.Common.DailyRewards.PlayerDailyRewards)
 type PlayerDailyRewards = PlayerDailyRewards.PlayerDailyRewards
 
+local PlayerTimedRewards = require(ReplicatedStorage.Common.TimedRewards.PlayerTimedRewards)
+type PlayerTimedRewards = PlayerTimedRewards.PlayerTimedRewards
+
 export type ClientPlayer = {
     JoinTime: number,
 
@@ -50,6 +53,7 @@ export type ClientPlayer = {
     Trails: PlayerTrails,
     Spins: PlayerSpins,
     DailyRewards: PlayerDailyRewards,
+    TimedRewards: PlayerTimedRewards,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
@@ -66,6 +70,7 @@ local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): C
         Trails = PlayerTrails(scope, data.Trails),
         Spins = PlayerSpins(scope, data.Spins),
         DailyRewards = PlayerDailyRewards(scope, data.DailyRewards),
+        TimedRewards = PlayerTimedRewards(scope, joinTime),
     }
 
     return self

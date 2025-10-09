@@ -1,0 +1,4 @@
+function ClaimReward {
+    Yield: Coroutine,
+    Data: (i32, f64),
+}
