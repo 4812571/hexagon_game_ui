@@ -49,7 +49,7 @@ local function ClientBomb(scope: Scope, bombModel: Model, startPosition: Vector3
     local driverTime = Clock(scope)
 
     local flashEnabledTime = scope:Value(nil)
-    local fallingStartTime = workspace:GetServerTimeNow()
+    local fallingStartTime = peek(driverTime)
 
     local alpha = scope:Computed(function(use)
         if not use(flashEnabledTime) then
@@ -88,7 +88,7 @@ local function ClientBomb(scope: Scope, bombModel: Model, startPosition: Vector3
             return
         end
 
-        flashEnabledTime:set(workspace:GetServerTimeNow())
+        flashEnabledTime:set(peek(driverTime))
     end)
 
     local self = {
