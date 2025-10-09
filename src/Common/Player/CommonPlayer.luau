@@ -9,6 +9,8 @@ type Scope<T> = Fusion.Scope<T>
 local PlayerData = require(Common.Player.PlayerData)
 type PlayerData = PlayerData.PlayerData
 
+
+local PlayerTiming = require(Common.Player.PlayerTiming)
 local PlayerCoins = require(Common.Coins.PlayerCoins)
 local PlayerLevel = require(Common.Level.PlayerLevel)
 local PlayerLevelRewards = require(Common.Level.PlayerLevelRewards)
@@ -27,6 +29,7 @@ export type CommonPlayer = {
     Player: Player,
     JoinTime: number,
 
+    Timing: PlayerTiming.PlayerTiming,
     Coins: PlayerCoins.PlayerCoins,
     Level: PlayerLevel.PlayerLevel,
     LevelRewards: PlayerLevelRewards.PlayerLevelRewards,
@@ -40,7 +43,6 @@ export type CommonPlayer = {
     TimedRewards: PlayerTimedRewards.PlayerTimedRewards,
 }
 
-
 local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTime: number, data: PlayerData): CommonPlayer
     local self: CommonPlayer = {
         Scope = scope,
@@ -48,6 +50,7 @@ local function CommonPlayer(scope: Scope<typeof(Fusion)>, player: Player, joinTi
         Player = player,
         JoinTime = joinTime,
 
+        Timing = PlayerTiming(joinTime),
         Coins = PlayerCoins(scope, data.Coins),
         Level = PlayerLevel(scope, data.Level),
         LevelRewards = PlayerLevelRewards(scope, data.LevelRewards),

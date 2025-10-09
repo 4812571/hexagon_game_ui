@@ -13,16 +13,12 @@ local NetworkServer = require(ServerScriptService.NetworkServer)
 local PlayerService = require(Server.Player.PlayerService)
 type PlayerService = PlayerService.PlayerService
 
-local AuthoritativeTimingService = require(Server.AuthoritativeTimingService)
-type AuthoritativeTimingService = AuthoritativeTimingService.AuthoritativeTimingService
-
 local Terminate = require(Common.Player.Terminate)
 local ApplyReward = require(Common.Rewards.ApplyReward)
 local TimedRewards = require(Common.TimedRewards.TimedRewards)
 
 export type Services = {
     PlayerService: PlayerService,
-    AuthoritativeTimingService: AuthoritativeTimingService,
 }
 
 export type TimedRewardsService = {
@@ -32,7 +28,6 @@ export type TimedRewardsService = {
 local function TimedRewardsService(scope: Scope, services: Services): TimedRewardsService
     local function Start()
         local PlayerService = services.PlayerService
-        local AuthoritativeTimingService = services.AuthoritativeTimingService
 
         NetworkServer.TimedRewards.ClaimReward.On(function(player: Player, rewardIndex: number, instant: number): ()
             local serverPlayer = PlayerService:GetPlayer(player)
@@ -41,7 +36,7 @@ local function TimedRewardsService(scope: Scope, services: Services): TimedRewar
                 return Terminate(player, "[TimedRewardService] Player not found")
             end
 
-            if not AuthoritativeTimingService.Register(player, instant) then
+            if not serverPlayer.Timing.Check(instant) then
                 return Terminate(player, "[TimedRewardService] Player sent an invalid instant")
             end
 

@@ -23,11 +23,9 @@ local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 local NetworkServer = require(ServerScriptService.NetworkServer)
 
 local PlayerService = require(Server.Player.PlayerService)
-local AuthoritativeTimingService = require(Server.AuthoritativeTimingService)
 local HexagonService = require(Server.Hexagon.HexagonService)
 
 type PlayerService = PlayerService.PlayerService
-type AuthoritativeTimingService = AuthoritativeTimingService.AuthoritativeTimingService
 type HexagonService = HexagonService.HexagonService
 
 type ServerPlayer = PlayerService.ServerPlayer
@@ -37,7 +35,6 @@ export type BombService = {
 }
 
 type Services = {
-    AuthoritativeTimingService: AuthoritativeTimingService,
     HexagonService: HexagonService,
     PlayerService: PlayerService,
 }
@@ -94,7 +91,6 @@ end
 
 local function BombService(scope: Scope, services: Services): BombService
     local PlayerService = services.PlayerService
-    local AuthoritativeTimingService = services.AuthoritativeTimingService
     local HexagonService = services.HexagonService
 
     PlayerService.ObservePlayers(function(player: ServerPlayer)
@@ -146,7 +142,7 @@ local function BombService(scope: Scope, services: Services): BombService
             return Terminate(player, "[BombService] No player data found.")
         end
 
-        if not AuthoritativeTimingService.Register(player, clientTime) then
+        if not serverPlayer.Timing.Check(clientTime) then
             return Terminate(player, "[BombService] Invalid client time.")
         end
 

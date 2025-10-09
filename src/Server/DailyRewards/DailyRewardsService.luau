@@ -15,11 +15,9 @@ local DailyRewards = require(ReplicatedStorage.Common.DailyRewards.DailyRewards)
 local NetworkServer = require(ServerScriptService.NetworkServer)
 
 local PlayerService = require(Server.Player.PlayerService)
-local AuthoritativeTimingService = require(Server.AuthoritativeTimingService)
 
 export type Services = {
     PlayerService: PlayerService.PlayerService,
-    AuthoritativeTimingService: AuthoritativeTimingService.AuthoritativeTimingService,
 }
 
 export type DailyRewardsService = {
@@ -28,7 +26,6 @@ export type DailyRewardsService = {
 
 local function DailyRewardsService(scope: Scope, services: Services): DailyRewardsService
     local PlayerService = services.PlayerService
-    local AuthoritativeTimingService = services.AuthoritativeTimingService
 
     local function Start()
         NetworkServer.DailyRewards.ClaimReward.On(function(player: Player, instant: number): ()
@@ -38,7 +35,7 @@ local function DailyRewardsService(scope: Scope, services: Services): DailyRewar
                 return Terminate(player, "[DailyRewardsService] Player not found")
             end
 
-            if not AuthoritativeTimingService.Register(player, instant) then
+            if not serverPlayer.Timing.Check(instant) then
                 return Terminate(player, "[DailyRewardsService] Invalid instant")
             end
 
