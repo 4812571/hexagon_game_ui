@@ -24,6 +24,7 @@ type PlayerOptions = PlayerOptions.PlayerOptions
 
 local PlayerSpeed = require(ReplicatedStorage.Common.Speed.PlayerSpeed)
 type PlayerSpeed = PlayerSpeed.PlayerSpeed
+
 local PlayerRevives = require(ReplicatedStorage.Common.Revives.PlayerRevives)
 type PlayerRevives = PlayerRevives.PlayerRevives
 
@@ -32,6 +33,9 @@ type PlayerTrails = PlayerTrails.PlayerTrails
 
 local PlayerSpins = require(ReplicatedStorage.Common.Spins.PlayerSpins)
 type PlayerSpins = PlayerSpins.PlayerSpins
+
+local PlayerDailyRewards = require(ReplicatedStorage.Common.DailyRewards.PlayerDailyRewards)
+type PlayerDailyRewards = PlayerDailyRewards.PlayerDailyRewards
 
 export type ClientPlayer = {
     JoinTime: number,
@@ -45,6 +49,7 @@ export type ClientPlayer = {
     Speed: PlayerSpeed,
     Trails: PlayerTrails,
     Spins: PlayerSpins,
+    DailyRewards: PlayerDailyRewards,
 }
 
 local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): ClientPlayer
@@ -60,6 +65,7 @@ local function ClientPlayer(scope: Scope, joinTime: number, data: PlayerData): C
         Speed = PlayerSpeed(scope, data.Speed),
         Trails = PlayerTrails(scope, data.Trails),
         Spins = PlayerSpins(scope, data.Spins),
+        DailyRewards = PlayerDailyRewards(scope, data.DailyRewards),
     }
 
     return self

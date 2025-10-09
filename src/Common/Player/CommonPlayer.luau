@@ -10,6 +10,7 @@ local PlayerOptions = require(Common.Options.PlayerOptions)
 local PlayerRevives = require(Common.Revives.PlayerRevives)
 local PlayerTrails = require(Common.Trails.PlayerTrails)
 local PlayerSpins = require(Common.Spins.PlayerSpins)
+local PlayerDailyRewards = require(Common.DailyRewards.PlayerDailyRewards)
 
 type PlayerCoins = PlayerCoins.PlayerCoins
 type PlayerLevel = PlayerLevel.PlayerLevel
@@ -19,6 +20,7 @@ type PlayerOptions = PlayerOptions.PlayerOptions
 type PlayerRevives = PlayerRevives.PlayerRevives
 type PlayerTrails = PlayerTrails.PlayerTrails
 type PlayerSpins = PlayerSpins.PlayerSpins
+type PlayerDailyRewards = PlayerDailyRewards.PlayerDailyRewards
 
 export type CommonPlayer = {
     Coins: PlayerCoins,

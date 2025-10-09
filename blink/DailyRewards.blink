@@ -1,0 +1,9 @@
+struct DailyRewardsData {
+    LastClaim: i32,
+    NextClaimIndex: i32,
+}
+
+function ClaimReward {
+    Yield: Coroutine,
+    Data: f64,
+}

@@ -35,6 +35,9 @@ type PlayerTrails = PlayerTrails.PlayerTrails
 local PlayerSpins = require(Common.Spins.PlayerSpins)
 type PlayerSpins = PlayerSpins.PlayerSpins
 
+local PlayerDailyRewards = require(Common.DailyRewards.PlayerDailyRewards)
+type PlayerDailyRewards = PlayerDailyRewards.PlayerDailyRewards
+
 export type ServerPlayer = {
     Scope: UnknownScope,
     Player: Player,
@@ -49,6 +52,7 @@ export type ServerPlayer = {
     Revives: PlayerRevives,
     Trails: PlayerTrails,
     Spins: PlayerSpins,
+    DailyRewards: PlayerDailyRewards,
 }
 
 local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number, data: PlayerData): ServerPlayer
@@ -76,6 +80,7 @@ local function ServerPlayer(scope: FusionScope, player: Player, joinTime: number
         Revives = revives,
         Trails = trails,
         Spins = spins,
+        DailyRewards = PlayerDailyRewards(scope, data.DailyRewards),
     }
 
     return self
