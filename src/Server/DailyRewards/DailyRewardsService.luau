@@ -5,7 +5,6 @@ local Packages = ReplicatedStorage.Packages
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local ApplyReward = require(ReplicatedStorage.Common.Rewards.ApplyReward)
@@ -46,8 +45,8 @@ local function DailyRewardsService(scope: Scope, services: Services): DailyRewar
                 return KickAndError(player, "[DailyRewardsService] Invalid instant")
             end
 
-            if peek(serverPlayer.DailyRewards.LastClaim) >= serverPlayer.DailyRewards.GetDay(instant) then
-                return KickAndError(player, "[DailyRewardsService] Already claimed today")
+            if not serverPlayer.DailyRewards.CanClaim(instant) then
+                return KickAndError(player, "[DailyRewardsService] Player cannot claim reward")
             end
 
             local claimIndex = serverPlayer.DailyRewards.PerformClaim(instant, #DailyRewards)

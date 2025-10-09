@@ -5,7 +5,6 @@ local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local ApplyReward = require(Common.Rewards.ApplyReward)
@@ -22,7 +21,7 @@ export type DailyRewardsController = {
 
 local function DailyRewardsController(scope: Scope, player: ClientPlayer): DailyRewardsController
     local function TryClaim(instant: number): boolean
-        if peek(player.DailyRewards.LastClaim) >= player.DailyRewards.GetDay(instant) then
+        if not player.DailyRewards.CanClaim(instant) then
             return false
         end
 

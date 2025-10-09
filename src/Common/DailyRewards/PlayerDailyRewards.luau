@@ -18,7 +18,7 @@ export type PlayerDailyRewards = {
     LastClaim: Value<number>,
     NextClaimIndex: Value<number>,
 
-    GetDay: (instant: number) -> number,
+    CanClaim: (instant: number) -> boolean,
     PerformClaim: (currentTime: number, totalRewards: number) -> number,
 }
 
@@ -44,6 +44,10 @@ local function PlayerDailyRewards(scope: Scope, data: DailyRewardsData): PlayerD
         return instant // Duration.Day
     end
 
+    local function CanClaim(instant: number): boolean
+        return peek(lastClaim) < GetDay(instant)
+    end
+
     local function PerformClaim(currentTime: number, totalRewards: number)
         lastClaim:set(currentTime)
         nextClaimIndex:set(NextIndex(peek(nextClaimIndex), totalRewards))
@@ -53,7 +57,7 @@ local function PlayerDailyRewards(scope: Scope, data: DailyRewardsData): PlayerD
         LastClaim = lastClaim,
         NextClaimIndex = nextClaimIndex,
 
-        GetDay = GetDay,
+        CanClaim = CanClaim,
         PerformClaim = PerformClaim,
     }
 
