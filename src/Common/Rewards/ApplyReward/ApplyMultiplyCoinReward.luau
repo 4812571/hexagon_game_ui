@@ -4,7 +4,7 @@ local Packages = ReplicatedStorage.Packages
 local Common = ReplicatedStorage.Common
 
 local Fusion = require(Packages.Fusion)
-local peek = require(Fusion.peek)
+local peek = Fusion.peek
 
 local CommonPlayer = require(Common.Player.CommonPlayer)
 type CommonPlayer = CommonPlayer.CommonPlayer
