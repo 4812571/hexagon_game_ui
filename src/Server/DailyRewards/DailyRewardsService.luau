@@ -2,11 +2,13 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Packages = ReplicatedStorage.Packages
+local Common = ReplicatedStorage.Common
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
 
+local Terminate = require(Common.Player.Terminate)
 local ApplyReward = require(ReplicatedStorage.Common.Rewards.ApplyReward)
 local DailyRewards = require(ReplicatedStorage.Common.DailyRewards.DailyRewards)
 
@@ -24,11 +26,6 @@ export type DailyRewardsService = {
     Start: () -> (),
 }
 
-local function KickAndError(player: Player, message: string): never
-    player:Kick(message)
-    return error(message)
-end
-
 local function DailyRewardsService(scope: Scope, services: Services): DailyRewardsService
     local PlayerService = services.PlayerService
     local AuthoritativeTimingService = services.AuthoritativeTimingService
@@ -38,15 +35,15 @@ local function DailyRewardsService(scope: Scope, services: Services): DailyRewar
             local serverPlayer = PlayerService.Get(player)
 
             if not serverPlayer then
-                return KickAndError(player, "[DailyRewardsService] Player not found")
+                return Terminate(player, "[DailyRewardsService] Player not found")
             end
 
             if not AuthoritativeTimingService.Register(player, instant) then
-                return KickAndError(player, "[DailyRewardsService] Invalid instant")
+                return Terminate(player, "[DailyRewardsService] Invalid instant")
             end
 
             if not serverPlayer.DailyRewards.CanClaim(instant) then
-                return KickAndError(player, "[DailyRewardsService] Player cannot claim reward")
+                return Terminate(player, "[DailyRewardsService] Player cannot claim reward")
             end
 
             local claimIndex = serverPlayer.DailyRewards.PerformClaim(instant, #DailyRewards)

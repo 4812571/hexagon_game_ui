@@ -19,6 +19,7 @@ local PlayerService = require(Server.Player.PlayerService)
 local SpinRewards = require(Common.Spins.SpinRewards)
 local WeightedChoice = require(Common.Util.WeightedChoice)
 
+local Terminate = require(Common.Player.Terminate)
 local ApplyReward = require(Common.Rewards.ApplyReward)
 
 type Services = {
@@ -28,11 +29,6 @@ type Services = {
 type SpinService = {
     Start: () -> (),
 }
-
-local function KickAndError(player: Player, message: string): never
-    player:Kick(message)
-    error(message)
-end
 
 local function SpinService(scope: Scope, services: Services): SpinService
     local PlayerService = services.PlayerService
@@ -44,11 +40,11 @@ local function SpinService(scope: Scope, services: Services): SpinService
             local serverPlayer = PlayerService.Get(player)
 
             if not serverPlayer then
-                return KickAndError(player, "[SpinService] Player data not found")
+                return Terminate(player, "[SpinService] Player data not found")
             end
 
             if peek(serverPlayer.Spins.Spins) <= 0 then
-                return KickAndError(player, "[SpinService] Player has no spins left")
+                return Terminate(player, "[SpinService] Player has no spins left")
             end
 
             serverPlayer.Spins.Spins:set(peek(serverPlayer.Spins.Spins) - 1)
@@ -63,13 +59,13 @@ local function SpinService(scope: Scope, services: Services): SpinService
             local serverPlayer = PlayerService.Get(player)
 
             if not serverPlayer then
-                return KickAndError(player, "[SpinService] Player data not found")
+                return Terminate(player, "[SpinService] Player data not found")
             end
 
             local reward = peek(serverPlayer.Spins.PendingReward)
 
             if not reward then
-                return KickAndError(player, "[SpinService] No pending reward to claim")
+                return Terminate(player, "[SpinService] No pending reward to claim")
             end
 
             ApplyReward(serverPlayer, reward)

@@ -13,6 +13,7 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
 
 local Counter = require(Common.Util.Counter)
+local Terminate = require(Common.Player.Terminate)
 local BombsConfig = require(Common.Bombs.BombsConfig)
 type BombConfig = BombsConfig.BombConfig
 
@@ -91,11 +92,6 @@ local function Cooldown(bombType: BombType): number
     error("[BombService] Invalid bomb type: " .. bombType)
 end
 
-local function KickAndError(player: Player, message: string)
-    player:Kick(message)
-    error(message)
-end
-
 local function BombService(scope: Scope, services: Services): BombService
     local PlayerService = services.PlayerService
     local AuthoritativeTimingService = services.AuthoritativeTimingService
@@ -143,17 +139,15 @@ local function BombService(scope: Scope, services: Services): BombService
         end
     end
 
-    local function HandleUse(player: Player, bombType: BombType, clientTime: number)
+    local function HandleUse(player: Player, bombType: BombType, clientTime: number): ()
         local serverPlayer = PlayerService.Get(player)
 
         if not serverPlayer then
-            KickAndError(player, "[BombService] No player data found.")
-            return
+            return Terminate(player, "[BombService] No player data found.")
         end
 
         if not AuthoritativeTimingService.Register(player, clientTime) then
-            KickAndError(player, "[BombService] Client time is out of sync.")
-            return
+            return Terminate(player, "[BombService] Invalid client time.")
         end
 
         local value = BombValue(serverPlayer, bombType)
@@ -163,11 +157,11 @@ local function BombService(scope: Scope, services: Services): BombService
         local passedTime = clientTime - peek(timeValue)
 
         if passedTime < cooldown then
-            KickAndError(player, `[BombService] Tried to use {bombType} before cooldown.`)
+            return Terminate(player, `[BombService] Tried to use {bombType} before cooldown.`)
         end
 
         if peek(value) <= 0 then
-            KickAndError(player, `[BombService] Tried to use {bombType} with none left.`)
+            return Terminate(player, `[BombService] Tried to use {bombType} with none left.`)
         end
 
         value:set(peek(value) - 1)
@@ -194,6 +188,8 @@ local function BombService(scope: Scope, services: Services): BombService
 
             NetworkServer.Bombs.BombExploded.FireAll(bombIndex)
         end)
+
+        return
     end
 
     local function Start()

@@ -13,6 +13,7 @@ local NetworkServer = require(ServerScriptService.NetworkServer)
 local PlayerService = require(Server.Player.PlayerService)
 type PlayerService = PlayerService.PlayerService
 
+local Terminate = require(Common.Player.Terminate)
 local ApplyReward = require(Common.Rewards.ApplyReward)
 local TimedRewards = require(Common.TimedRewards.TimedRewards)
 
@@ -24,22 +25,17 @@ export type TimedRewardService = {
     Start: () -> ()
 }
 
-local function KickAndError(player: Player, message: string)
-    player:Kick(message)
-    error(message)
-end
-
 local function TimedRewardService(scope: Scope, services: Services): TimedRewardService
     local function Start()
         NetworkServer.TimedRewards.ClaimReward.On(function(player: Player, rewardIndex: number, instant: number): ()
             local serverPlayer = services.PlayerService.Get(player)
 
             if not serverPlayer then
-                return KickAndError(player, "[TimedRewardService] Player not found")
+                return Terminate(player, "[TimedRewardService] Player not found")
             end
 
             if not serverPlayer.TimedRewards.CanClaim(rewardIndex, instant) then
-                return KickAndError(player, "[TimedRewardService] Player tried to claim an invalid timed reward")
+                return Terminate(player, "[TimedRewardService] Player tried to claim an invalid timed reward")
             end
 
             serverPlayer.TimedRewards.PerformClaim(rewardIndex)
