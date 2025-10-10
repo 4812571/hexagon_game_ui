@@ -24,7 +24,7 @@ return function(target: Instance)
         Icon = Icons.Rebirth,
         Text = "Rebirth",
         Color = Color3.fromRGB(242, 98, 110),
-        IsNew = true,
+        IsNew = false,
     }
 
     instance.Parent = target

@@ -27,7 +27,9 @@ end
 
 local CORNER_RADIUS = UDim.new(0, 32)
 local STROKE_THICKNESS = 5.5
-local HOVER_SCALE = 1.0425
+
+local HOVER_SCALE = 1.04
+local PRESS_SCALE = 0.965
 
 local NEW_INDICATOR_FREQUENCY = 1
 local NEW_INDICATOR_AMPLITUDE = 0.45
@@ -54,7 +56,15 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
     local guiState = scope:Value(Enum.GuiState.NonInteractable)
 
     local scale = scope:Computed(function(use)
-        return if use(guiState) == Enum.GuiState.Hover then HOVER_SCALE else 1
+        if use (guiState) == Enum.GuiState.Hover then
+            return HOVER_SCALE
+        end
+
+        if use (guiState) == Enum.GuiState.Press then
+            return PRESS_SCALE
+        end
+
+        return 1
     end)
 
     local currentTime = Clock(scope)
@@ -67,7 +77,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
     
     local newLabel = scope:Computed(function(use, scope: Scope<U>): Fusion.Child
         if not use(props.IsNew) then
-            return {}
+            -- return {}
         end
 
         return scope:New "TextLabel" {
@@ -75,7 +85,9 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
             Position = UDim2.fromScale(0.9, 0.1),
             AnchorPoint = Vector2.new(0.5, 0.5),
 
-            Text = "New!",
+            Text = scope:Computed(function(use)
+                return if use(props.IsNew) then "New!" else "Old."
+            end),
             TextSize = 55,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             FontFace = Font.fromEnum(Enum.Font.FredokaOne),
@@ -93,7 +105,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
 
                 scope:New "UIScale" {
                     Scale = scope:Computed(function(use)
-                        return use(newIndicatorScale) * use(scale)
+                        return use(newIndicatorScale)
                     end),
                 },
             }
