@@ -85,20 +85,21 @@ local function BombController(scope: Scope, player: ClientPlayer)
         }
     end
 
+    local function OnBombExploded(index: number)
+        local entry = bombs[index]
+
+        if not entry then
+            warn(`No bomb found with index {index}`)
+            return
+        end
+
+        entry.Scope:doCleanup()
+        bombs[index] = nil
+    end
+
     local function Start()
         NetworkClient.Bombs.BombDeployed.On(OnBombDeployed)
-
-        NetworkClient.Bombs.BombExploded.On(function(index: number)
-            local entry = bombs[index]
-
-            if not entry then
-                warn(`No bomb found with index {index}`)
-                return
-            end
-
-            entry.Scope:doCleanup()
-            bombs[index] = nil
-        end)
+        NetworkClient.Bombs.BombExploded.On(OnBombExploded)
     end
 
     -- 1 to deploy bomb
