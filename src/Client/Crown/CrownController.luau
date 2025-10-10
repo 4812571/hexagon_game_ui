@@ -38,9 +38,7 @@ local function CrownController(scope: Scope)
     end
 
     local function Start()
-        NetworkClient.Hexagon.PlayerCrowned.On(function(player: Player?)
-            CrownPlayer(player)
-        end)
+        NetworkClient.Hexagon.PlayerCrowned.On(CrownPlayer)
     end
 
     local self = {
