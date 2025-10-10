@@ -29,33 +29,53 @@ export type SkinService = {
 local function SkinService(scope: Scope, services: Services): SkinService
     local PlayerService = services.PlayerService
 
+    local function OnPurchase(player: Player, skinId: string): ()
+        local serverPlayer = PlayerService.Get(player)
+
+        if not serverPlayer then
+            return Terminate(player, "[SkinService] PurchaseSkin - Player not found")
+        end
+
+        local skinInfo: SkinInfo? = Skins[skinId]
+
+        if not skinInfo then
+            return Terminate(player, "[SkinService] PurchaseSkin - Invalid skin ID: " .. skinId)
+        end
+
+        if serverPlayer.Skins.HasSkin(skinId) then
+            return Terminate(player, "[SkinService] PurchaseSkin - Player already owns skin: " .. skinId)
+        end
+
+        if serverPlayer.Coins.Coins:get() < skinInfo.Price then
+            return Terminate(player, "[SkinService] PurchaseSkin - Not enough coins for skin: " .. skinId)
+        end
+
+        serverPlayer.Coins.Coins:set(peek(serverPlayer.Coins.Coins) - skinInfo.Price)
+        serverPlayer.Skins.AddSkin(skinId)
+
+        return
+    end
+
+    local function OnEquip(player: Player, skinId: string?): ()
+        local serverPlayer = PlayerService.Get(player)
+
+        if not serverPlayer then
+            return Terminate(player, "[SkinService] EquipSkin - Player not found")
+        end
+
+        if skinId and not serverPlayer.Skins.HasSkin(skinId) then
+            return Terminate(player, "[SkinService] EquipSkin - Player does not own skin: " .. skinId)
+        end
+
+        serverPlayer.Skins.EquippedSkin:set(skinId)
+
+        return
+    end
+
     local function Start()
-        NetworkServer.Skins.PurchaseSkin.On(function(player: Player, skinId: string): ()
-            local serverPlayer = PlayerService.Get(player)
+        NetworkServer.Skins.PurchaseSkin.On(OnPurchase)
+        NetworkServer.Skins.EquipSkin.On(OnEquip)
 
-            if not serverPlayer then
-                return Terminate(player, "[SkinService] PurchaseSkin - Player not found")
-            end
-
-            local skinInfo: SkinInfo? = Skins[skinId]
-
-            if not skinInfo then
-                return Terminate(player, "[SkinService] PurchaseSkin - Invalid skin ID: " .. skinId)
-            end
-
-            if serverPlayer.Skins.HasSkin(skinId) then
-                return Terminate(player, "[SkinService] PurchaseSkin - Player already owns skin: " .. skinId)
-            end
-
-            if serverPlayer.Coins.Coins:get() < skinInfo.Price then
-                return Terminate(player, "[SkinService] PurchaseSkin - Not enough coins for skin: " .. skinId)
-            end
-
-            serverPlayer.Coins.Coins:set(peek(serverPlayer.Coins.Coins) - skinInfo.Price)
-            serverPlayer.Skins.AddSkin(skinId)
-
-            return
-        end)
     end
 
     local self: SkinService = {

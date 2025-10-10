@@ -18,6 +18,7 @@ type ClientPlayer = ClientPlayer.ClientPlayer
 
 export type SkinController = {
     TryPurchase: (skinId: string) -> boolean,
+    TryEquip: (skinId: string?) -> boolean,
 }
 
 local function SkinController(scope: Scope, player: ClientPlayer)
@@ -45,8 +46,19 @@ local function SkinController(scope: Scope, player: ClientPlayer)
         return true
     end
 
+    local function TryEquip(skinId: string?): boolean
+        if skinId and not player.Skins.HasSkin(skinId) then
+            return false
+        end
+
+        player.Skins.ActiveSkinId:set(skinId)
+        NetworkClient.Skins.EquipSkin.Invoke(skinId)
+        return true
+    end
+
     local self: SkinController = {
         TryPurchase = TryPurchase,
+        TryEquip = TryEquip,
     }
 
     return self

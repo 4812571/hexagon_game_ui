@@ -7,3 +7,8 @@ function PurchaseSkin {
     Yield: Coroutine,
     Data: string,
 }
+
+function EquipSkin {
+    Yield: Coroutine,
+    Data: string?,
+}
