@@ -5,3 +5,28 @@ struct OptionsData {
     CameraShake: boolean,
     Minimap: boolean,
 }
+
+function SetMusicVolume {
+    Yield: Coroutine,
+    Data: f64(0..1),
+}
+
+function SetSFXVolume {
+    Yield: Coroutine,
+    Data: f64(0..1),
+}
+
+function SetNightMode {
+    Yield: Coroutine,
+    Data: boolean,
+}
+
+function SetCameraShake {
+    Yield: Coroutine,
+    Data: boolean,
+}
+
+function SetMinimap {
+    Yield: Coroutine,
+    Data: boolean,
+}
