@@ -12,18 +12,20 @@ export type VictoryController = {
 }
 
 local function VictoryController(scope: Scope)
-    local function Start()
-        NetworkClient.Hexagon.WinnerSeconds.On(function(winner: Player?, seconds: number)
-            if winner then
-                if seconds <= 0 then
-                    print(`[VictoryController] {winner.Name} has won the game!`)
-                else
-                    print(`[VictoryController] {winner.Name} will win in {seconds} seconds!`)
-                end
+    local function OnWinnerSeconds(winner: Player?, seconds: number)
+        if winner then
+            if seconds <= 0 then
+                print(`[VictoryController] {winner.Name} has won the game!`)
             else
-                print("[VictoryController] No winner candidate")
+                print(`[VictoryController] {winner.Name} will win in {seconds} seconds!`)
             end
-        end)
+        else
+            print("[VictoryController] No winner candidate")
+        end
+    end
+
+    local function Start()
+        NetworkClient.Hexagon.WinnerSeconds.On(OnWinnerSeconds)
     end
 
     local self = {

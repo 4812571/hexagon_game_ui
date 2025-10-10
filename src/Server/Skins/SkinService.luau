@@ -65,7 +65,6 @@ local function SkinService(scope: Scope, services: Services): SkinService
     local function Start()
         NetworkServer.Skins.PurchaseSkin.On(OnPurchase)
         NetworkServer.Skins.EquipSkin.On(OnEquip)
-
     end
 
     local self: SkinService = {

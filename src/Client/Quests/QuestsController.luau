@@ -51,35 +51,35 @@ local function QuestsController(scope: Scope, player: ClientPlayer): QuestsContr
         return true
     end
 
+    local function OnMinutePassed()
+        ProgressAll(player, "PlayTime", 1)
+    end
+
+    local function OnClaimed(outer: number, inner: number)
+        ProgressAll(player, "Color", outer + inner)
+    end
+
+    local function OnPlayerKilled(killer: Player, victim: Player)
+        if killer ~= player.Player then
+            return
+        end
+
+        ProgressAll(player, "Elimination", 1)
+    end
+
+    local function OnPlayerWon(winner: Player)
+        if winner ~= player.Player then
+            return
+        end
+
+        ProgressAll(player, "Win", 1)
+    end
+
     local function Start()
-        local function OnMinutePassed()
-            ProgressAll(player, "PlayTime", 1)
-        end
-
-        local function OnClaimed(outer: number, inner: number)
-            ProgressAll(player, "Color", outer + inner)
-        end
-
-        local function OnPlayerKilled(killer: Player, victim: Player)
-            if killer ~= player.Player then
-                return
-            end
-
-            ProgressAll(player, "Elimination", 1)
-        end
-
         NetworkClient.PlayTime.MinutePassed.On(OnMinutePassed)
         NetworkClient.Hexagon.Claimed.On(OnClaimed)
         NetworkClient.Hexagon.PlayerKilled.On(OnPlayerKilled)
-
-
-        NetworkClient.Hexagon.PlayerWon.On(function(winner: Player)
-            if winner ~= player.Player then
-                return
-            end
-
-            ProgressAll(player, "Win", 1)
-        end)
+        NetworkClient.Hexagon.PlayerWon.On(OnPlayerWon)
     end
 
     local self: QuestsController = {

@@ -55,7 +55,7 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
 
     local playerDataLoader: PlayerDataLoader<PlayerData> = PlayerDataLoader(scope, "PlayerData_1", DefaultPlayerData)
 
-    local function Join(player: Player): InitialData?
+    local function OnJoin(player: Player): InitialData?
         local profile: Profile<PlayerData>? = playerDataLoader.AwaitProfile(player)
        
         if not profile then
@@ -90,10 +90,7 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
     end
 
     local function Start()
-        NetworkServer.Join.On(function(player: Player)
-            return Join(player)
-        end)
-
+        NetworkServer.Join.On(OnJoin)
         table.insert(scope, Observe.Players(HandlePlayer))
         table.insert(scope, playerDataLoader.ProfileReleased:Connect(OnProfileRelease))
     end

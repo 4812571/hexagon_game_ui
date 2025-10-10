@@ -1,3 +1,4 @@
 struct CoinsData {
     Coins: i32,
+    IncomeMultiplier: f64,
 }

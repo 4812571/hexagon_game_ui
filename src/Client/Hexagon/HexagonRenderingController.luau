@@ -38,7 +38,7 @@ local function LoadHexagons(): {[Axial]: Model}
 end
 
 export type HexagonRenderingController = {
-    Init: () -> (),
+    Start: () -> (),
 }
 
 local function HexagonRenderingController(scope: Scope, initialData: InitialData)
@@ -73,13 +73,13 @@ local function HexagonRenderingController(scope: Scope, initialData: InitialData
         end
     end
 
-    local function Init()
+    local function Start()
         NetworkClient.Hexagon.HexagonsColored.On(OnHexagonsColored)
         NetworkClient.Hexagon.HexagonsSelected.On(OnHexagonsSelected)
     end
 
     local self: HexagonRenderingController = {
-        Init = Init,
+        Start = Start,
     }
 
     return self

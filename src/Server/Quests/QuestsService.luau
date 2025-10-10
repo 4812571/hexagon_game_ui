@@ -67,31 +67,33 @@ local function QuestsService(scope: Scope, services: Services): QuestsService
         table.insert(scope, HexagonService.PlayerWon:Connect(OnWin))
     end
 
+    local function OnClaimQuest(player: Player, questId: string): ()
+        local serverPlayer = PlayerService.Expect(player)
+
+        local questEntry: QuestEntry = Quests[questId]
+
+        if not questEntry then
+            return Terminate(player, "[QuestsService] Invalid quest id: " .. questId)
+        end
+
+        local progress: Value<number>? = serverPlayer.Quests.Progress[questId]
+
+        if not progress then
+            return Terminate(player, "[QuestsService] No progress found for quest id: " .. questId)
+        end
+
+        if peek(progress) < questEntry.RequiredProgress then
+            return Terminate(player, "[QuestsService] Not enough progress for quest id: " .. questId)
+        end
+
+        local totalExperience = serverPlayer.Level.TotalExperience
+
+        progress:set(peek(progress) - questEntry.RequiredProgress)
+        totalExperience:set(peek(totalExperience) + questEntry.RewardExperience)
+    end
+
     local function Start()
-        NetworkServer.Quests.ClaimQuest.On(function(player: Player, questId: string): ()
-            local serverPlayer = PlayerService.Expect(player)
-
-            local questEntry: QuestEntry = Quests[questId]
-
-            if not questEntry then
-                return Terminate(player, "[QuestsService] Invalid quest id: " .. questId)
-            end
-
-            local progress: Value<number>? = serverPlayer.Quests.Progress[questId]
-
-            if not progress then
-                return Terminate(player, "[QuestsService] No progress found for quest id: " .. questId)
-            end
-
-            if peek(progress) < questEntry.RequiredProgress then
-                return Terminate(player, "[QuestsService] Not enough progress for quest id: " .. questId)
-            end
-
-            local totalExperience = serverPlayer.Level.TotalExperience
-
-            progress:set(peek(progress) - questEntry.RequiredProgress)
-            totalExperience:set(peek(totalExperience) + questEntry.RewardExperience)
-        end)
+        NetworkServer.Quests.ClaimQuest.On(OnClaimQuest)
     end
 
     local self: QuestsService = {

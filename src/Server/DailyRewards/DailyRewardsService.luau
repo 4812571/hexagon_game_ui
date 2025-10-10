@@ -27,23 +27,25 @@ export type DailyRewardsService = {
 local function DailyRewardsService(scope: Scope, services: Services): DailyRewardsService
     local PlayerService = services.PlayerService
 
+    local function OnClaimReward(player: Player, instant: number): ()
+        local serverPlayer = PlayerService.Expect(player)
+
+        if not serverPlayer.Timing.Check(instant) then
+            return Terminate(player, "[DailyRewardsService] Invalid instant")
+        end
+
+        if not serverPlayer.DailyRewards.CanClaim(instant) then
+            return Terminate(player, "[DailyRewardsService] Player cannot claim reward")
+        end
+
+        local claimIndex = serverPlayer.DailyRewards.PerformClaim(instant, #DailyRewards)
+        ApplyReward(serverPlayer, DailyRewards[claimIndex] :: DailyRewards.DailyReward)
+
+        return
+    end
+
     local function Start()
-        NetworkServer.DailyRewards.ClaimReward.On(function(player: Player, instant: number): ()
-            local serverPlayer = PlayerService.Expect(player)
-
-            if not serverPlayer.Timing.Check(instant) then
-                return Terminate(player, "[DailyRewardsService] Invalid instant")
-            end
-
-            if not serverPlayer.DailyRewards.CanClaim(instant) then
-                return Terminate(player, "[DailyRewardsService] Player cannot claim reward")
-            end
-
-            local claimIndex = serverPlayer.DailyRewards.PerformClaim(instant, #DailyRewards)
-            ApplyReward(serverPlayer, DailyRewards[claimIndex] :: DailyRewards.DailyReward)
-
-            return
-        end)
+        NetworkServer.DailyRewards.ClaimReward.On(OnClaimReward)
     end
 
     local self: DailyRewardsService = {

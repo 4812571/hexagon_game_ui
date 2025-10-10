@@ -26,29 +26,31 @@ export type LevelRewardsService = {
 }
 
 local function LevelRewardsService(scope: Scope, services: Services): LevelRewardsService
+    local function OnClaimReward(player: Player, rewardIndex: number)
+        local serverPlayer = services.PlayerService.Expect(player)
+
+        if peek(serverPlayer.Level.Level) < rewardIndex then
+            return Terminate(player, "[LevelRewardsService] Player level too low to claim reward")
+        end
+
+        if serverPlayer.LevelRewards.IsClaimed(rewardIndex) then
+            return Terminate(player, "[LevelRewardsService] Player tried to claim an already claimed reward")
+        end
+
+        local reward = LevelRewards[rewardIndex]
+
+        if not reward then
+            return Terminate(player, "[LevelRewardsService] Invalid reward index")
+        end
+
+        serverPlayer.LevelRewards.Claim(rewardIndex)
+        ApplyReward(serverPlayer, reward :: LevelRewards.LevelReward)
+
+        return
+    end
+
     local function Start()
-        NetworkServer.LevelRewards.ClaimReward.On(function(player: Player, rewardIndex: number)
-            local serverPlayer = services.PlayerService.Expect(player)
-
-            if peek(serverPlayer.Level.Level) < rewardIndex then
-                return Terminate(player, "[LevelRewardsService] Player level too low to claim reward")
-            end
-
-            if serverPlayer.LevelRewards.IsClaimed(rewardIndex) then
-                return Terminate(player, "[LevelRewardsService] Player tried to claim an already claimed reward")
-            end
-
-            local reward = LevelRewards[rewardIndex]
-
-            if not reward then
-                return Terminate(player, "[LevelRewardsService] Invalid reward index")
-            end
-
-            serverPlayer.LevelRewards.Claim(rewardIndex)
-            ApplyReward(serverPlayer, reward :: LevelRewards.LevelReward)
-
-            return
-        end)
+        NetworkServer.LevelRewards.ClaimReward.On(OnClaimReward)
     end
 
     local self: LevelRewardsService = {

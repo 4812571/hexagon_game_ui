@@ -26,25 +26,27 @@ export type TimedRewardsService = {
 }
 
 local function TimedRewardsService(scope: Scope, services: Services): TimedRewardsService
+    local PlayerService = services.PlayerService
+
+    local function OnClaimReward(player: Player, rewardIndex: number, instant: number): ()
+        local serverPlayer = PlayerService.Expect(player)
+
+        if not serverPlayer.Timing.Check(instant) then
+            return Terminate(player, "[TimedRewardService] Player sent an invalid instant")
+        end
+
+        if not serverPlayer.TimedRewards.CanClaim(rewardIndex, instant) then
+            return Terminate(player, "[TimedRewardService] Player tried to claim an invalid timed reward")
+        end
+
+        serverPlayer.TimedRewards.PerformClaim(rewardIndex)
+        ApplyReward(serverPlayer, TimedRewards[rewardIndex].Reward :: TimedRewards.TimedReward)
+
+        return
+    end
+
     local function Start()
-        local PlayerService = services.PlayerService
-
-        NetworkServer.TimedRewards.ClaimReward.On(function(player: Player, rewardIndex: number, instant: number): ()
-            local serverPlayer = PlayerService.Expect(player)
-
-            if not serverPlayer.Timing.Check(instant) then
-                return Terminate(player, "[TimedRewardService] Player sent an invalid instant")
-            end
-
-            if not serverPlayer.TimedRewards.CanClaim(rewardIndex, instant) then
-                return Terminate(player, "[TimedRewardService] Player tried to claim an invalid timed reward")
-            end
-
-            serverPlayer.TimedRewards.PerformClaim(rewardIndex)
-            ApplyReward(serverPlayer, TimedRewards[rewardIndex].Reward :: TimedRewards.TimedReward)
-
-            return
-        end)
+        NetworkServer.TimedRewards.ClaimReward.On(OnClaimReward)
     end
 
     local self: TimedRewardsService = {
