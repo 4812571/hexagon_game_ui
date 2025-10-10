@@ -77,7 +77,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
     
     local newLabel = scope:Computed(function(use, scope: Scope<U>): Fusion.Child
         if not use(props.IsNew) then
-            -- return {}
+            return {}
         end
 
         return scope:New "TextLabel" {
@@ -85,9 +85,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
             Position = UDim2.fromScale(0.9, 0.1),
             AnchorPoint = Vector2.new(0.5, 0.5),
 
-            Text = scope:Computed(function(use)
-                return if use(props.IsNew) then "New!" else "Old."
-            end),
+            Text = "New!",
             TextSize = 55,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             FontFace = Font.fromEnum(Enum.Font.FredokaOne),
