@@ -87,9 +87,12 @@ export type HexagonService = {
     Start: () -> (),
 
     GetPlayer: (player: ServerPlayer) -> HexagonPlayer?,
+    JoinPlayer: (player: ServerPlayer, character: Model) -> HexagonPlayer,
+    RemovePlayer: (player: HexagonPlayer) -> (),
     FloodTiles: (player: HexagonPlayer, tiles: {Axial}) -> (),
     FinishSelection: (player: HexagonPlayer) -> SelectionResult?,
 
+    PlayerRemoved: Signal.Signal<HexagonPlayer>,
     PlayerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer>,
     PlayerWon: Signal.Signal<HexagonPlayer>,
     Claimed: Signal.Signal<HexagonPlayer, number, number>,
@@ -104,7 +107,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local colors = Sequence(COLORS)
 
     local activePlayers: {[ServerPlayer]: HexagonPlayer} = {}
-    
+
     local playerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer> = Signal(scope)
 
     Connect(scope, playerKilled, function(killer: HexagonPlayer, victim: HexagonPlayer)
@@ -121,6 +124,12 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
     Connect(scope, claimedSignal, function(player: HexagonPlayer, outer: number, inner: number)
         NetworkServer.Hexagon.Claimed.Fire(player.Player.Player, outer, inner)
+    end)
+
+    local playerRemoved: Signal.Signal<HexagonPlayer> = Signal(scope)
+
+    Connect(scope, playerRemoved, function(player: HexagonPlayer)
+        NetworkServer.Respawn.GameOver.Fire(player.Player.Player)
     end)
 
     local function InitialData(): HexagonData
@@ -148,22 +157,11 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         return activePlayers[player]
     end
 
-    local function JoinPlayer(player: ServerPlayer, character: Model): HexagonPlayer
-        local hexagonPlayer = HexagonPlayer(player, character, colors.Next())
-
-        local spawnPoint = world.FindBestSpawn()
-        world.ClaimRadius(hexagonPlayer, spawnPoint, 3)
-
-        local worldPosition = HexagonUtil.AxialToWorld(spawnPoint) * HexagonConfig.HexagonSize
-        character:PivotTo(CFrame.new(worldPosition + Vector3.yAxis * 5))
-
-        activePlayers[player] = hexagonPlayer
-        return hexagonPlayer
-    end
-
     local function RemovePlayer(player: HexagonPlayer)
         world.RemoveFromGame(player)
         activePlayers[player.Player] = nil
+
+        playerRemoved:Fire(player)
 
         local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
 
@@ -178,6 +176,19 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
 
         tiles.Value = 0
+    end
+
+    local function JoinPlayer(player: ServerPlayer, character: Model): HexagonPlayer
+        local hexagonPlayer = HexagonPlayer(player, character, colors.Next())
+
+        local spawnPoint = world.FindBestSpawn()
+        world.ClaimRadius(hexagonPlayer, spawnPoint, 3)
+
+        local worldPosition = HexagonUtil.AxialToWorld(spawnPoint) * HexagonConfig.HexagonSize
+        character:PivotTo(CFrame.new(worldPosition + Vector3.yAxis * 5))
+
+        activePlayers[player] = hexagonPlayer
+        return hexagonPlayer
     end
 
     local function PlayerPositions(): {[HexagonPlayer]: Axial}
@@ -475,12 +486,14 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local self = {
         InitialData = InitialData,
         JoinPlayer = JoinPlayer,
+        RemovePlayer = RemovePlayer,
         GetPlayer = GetPlayer,
         FloodTiles = FloodTiles,
         Init = Init,
         Start = Start,
         FinishSelection = FinishSelection,
 
+        PlayerRemoved = playerRemoved,
         PlayerKilled = playerKilled,
         PlayerWon = playerWon,
         Claimed = claimedSignal,

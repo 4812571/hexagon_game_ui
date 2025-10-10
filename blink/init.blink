@@ -18,6 +18,7 @@ import "./Skins.blink"
 import "./PlayTime.blink"
 import "./Hexagon.blink"
 import "./Rebirth.blink"
+import "./Respawn.blink"
 
 struct InitialData {
     JoinTime: f64,

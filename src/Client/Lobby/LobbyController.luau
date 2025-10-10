@@ -23,16 +23,15 @@ local function LobbyController(scope: Scope): LobbyController
     local spinDetector = CharacterDetector(scope, workspace.Lobby.SpinDetector)
 
     local function Start()
-        print("Starting lobby controller")
-
         Connect(scope, playDetector.Entered, function(player: Player)
-            print("Playing!")
             NetworkClient.Hexagon.JoinGame.Invoke()
         end)
 
         Connect(scope, spinDetector.Entered, function(player: Player)
             print("Spinner!")
         end)
+
+        print("LobbyController started")
     end
 
     local self: LobbyController = {

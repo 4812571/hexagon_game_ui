@@ -26,6 +26,7 @@ local TimedRewardsController = require(Client.TimedRewards.TimedRewardsControlle
 local TrailsController = require(Client.Trails.TrailsController)
 local MusicController = require(Client.Music.MusicController)
 local LobbyController = require(Client.Lobby.LobbyController)
+local RespawnController = require(Client.Respawn.RespawnController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -51,6 +52,7 @@ local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 local trailsController = TrailsController(scope, clientPlayer)
 local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
+local respawnController = RespawnController(scope, clientPlayer)
 
 local controllers = {
     BinderController = binderController,
@@ -67,6 +69,7 @@ local controllers = {
     TrailsController = trailsController,
     MusicController = musicController,
     LobbyController = lobbyController,
+    RespawnController = respawnController,
 }
 
 for _, controller: any in controllers do

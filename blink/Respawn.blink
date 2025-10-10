@@ -1,0 +1,9 @@
+event GameOver {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+}
+
+function Respawn {
+    Yield: Coroutine,
+}
