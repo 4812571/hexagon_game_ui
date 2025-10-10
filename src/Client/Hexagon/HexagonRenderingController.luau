@@ -61,12 +61,14 @@ local function HexagonRenderingController(scope: Scope, initialData: InitialData
         hexagonModel.Parent = workspace
     end
 
+    local function OnHexagonsColored(color: Color3?, axials: {Axial})
+        for _, axial in axials do
+            renderingWorld.SetHexagonTileColor(axial, color)
+        end
+    end
+
     local function Init()
-        NetworkClient.Hexagon.HexagonsColored.On(function(color: Color3?, axials: {Axial})
-            for _, axial in axials do
-                renderingWorld.SetHexagonTileColor(axial, color)
-            end
-        end)
+        NetworkClient.Hexagon.HexagonsColored.On(OnHexagonsColored)
 
         NetworkClient.Hexagon.HexagonsSelected.On(function(color: Color3?, axials: {Axial})
             for _, axial in axials do
