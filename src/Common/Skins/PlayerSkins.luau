@@ -18,6 +18,7 @@ export type PlayerSkins = {
     OwnedSkins: Value<{[string]: boolean}>,
     ActiveSkinId: Value<string?>,
 
+    HasSkin: (id: string) -> boolean,
     AddSkin: (id: string) -> (),
 }
 
@@ -35,6 +36,10 @@ local function PlayerSkins(scope: Scope, data: SkinsData): PlayerSkins
         end)
     end
 
+    local function HasSkin(id: string): boolean
+        return peek(ownedSkins)[id] == true
+    end
+
     local function AddSkin(id: string)
         local skins = peek(ownedSkins)
         skins[id] = true
@@ -45,6 +50,7 @@ local function PlayerSkins(scope: Scope, data: SkinsData): PlayerSkins
         OwnedSkins = ownedSkins,
         ActiveSkinId = activeSkinId,
 
+        HasSkin = HasSkin,
         AddSkin = AddSkin,
     }
 

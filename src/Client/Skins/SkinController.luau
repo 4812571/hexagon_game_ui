@@ -29,7 +29,7 @@ local function SkinController(scope: Scope, player: ClientPlayer)
             return false
         end
 
-        if peek(player.Skins.OwnedSkins)[skinId] then
+        if player.Skins.HasSkin(skinId) then
             return false
         end
         

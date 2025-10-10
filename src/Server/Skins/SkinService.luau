@@ -43,7 +43,7 @@ local function SkinService(scope: Scope, services: Services): SkinService
                 return Terminate(player, "[SkinService] PurchaseSkin - Invalid skin ID: " .. skinId)
             end
 
-            if serverPlayer.Skins.OwnedSkins[skinId] then
+            if serverPlayer.Skins.HasSkin(skinId) then
                 return Terminate(player, "[SkinService] PurchaseSkin - Player already owns skin: " .. skinId)
             end
 
