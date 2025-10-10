@@ -2,13 +2,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Packages = ReplicatedStorage.Packages
-local Common = ReplicatedStorage.Common
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
-
-local Terminate = require(Common.Player.Terminate)
 
 local NetworkServer = require(ServerScriptService.NetworkServer)
 
