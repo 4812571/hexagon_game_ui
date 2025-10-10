@@ -7,7 +7,7 @@ local function Sequence<T>(elements: {T}): Sequence<T>
     
     local function Next(): T
         index += 1
-        return elements[(index % #elements) + 1]
+        return elements[((index - 1) % #elements) + 1]
     end
 
     local self: Sequence<T> = {
