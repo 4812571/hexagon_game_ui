@@ -69,22 +69,24 @@ local function BombController(scope: Scope, player: ClientPlayer)
     local nextGoldBombTime = scope:Value(0)
     local nextNukeTime = scope:Value(0)
 
+    local function OnBombDeployed(bombType: BombType, position: Axial, index: number)
+        local scope = scope:innerScope()
+        
+        local model = BombModel(scope, bombType)
+        local startPosition = HexagonUtil.AxialToWorld(position) * HexagonConfig.HexagonSize + Vector3.yAxis * BOMB_HEIGHT
+        model:PivotTo(CFrame.new(startPosition))
+        model.Parent = workspace
+
+        local bomb = ClientBomb(scope, model, startPosition)
+
+        bombs[index] = {
+            Scope = scope,
+            Bomb = bomb,
+        }
+    end
+
     local function Start()
-        NetworkClient.Bombs.BombDeployed.On(function(bombType: BombType, position: Axial, index: number)
-            local scope = scope:innerScope()
-            
-            local model = BombModel(scope, bombType)
-            local startPosition = HexagonUtil.AxialToWorld(position) * HexagonConfig.HexagonSize + Vector3.yAxis * BOMB_HEIGHT
-            model:PivotTo(CFrame.new(startPosition))
-            model.Parent = workspace
-
-            local bomb = ClientBomb(scope, model, startPosition)
-
-            bombs[index] = {
-                Scope = scope,
-                Bomb = bomb,
-            }
-        end)
+        NetworkClient.Bombs.BombDeployed.On(OnBombDeployed)
 
         NetworkClient.Bombs.BombExploded.On(function(index: number)
             local entry = bombs[index]
