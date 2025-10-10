@@ -12,99 +12,46 @@ type Value<T> = Fusion.Value<T>
 local TrailsData = require(Common.Trails.TrailsData)
 type TrailsData = TrailsData.TrailsData
 
-type TrailId = string
-
-local function cloneOwnedIds(owned: {TrailId}?): {TrailId}
-    local cloned: {TrailId} = {}
-
-    if owned then
-        for index, trailId in owned do
-            cloned[index] = trailId
-        end
-    end
-
-    return cloned
-end
-
 export type PlayerTrails = {
-    EquippedId: Value<TrailId?>,
-    OwnedIds: Value<{TrailId}>,
+    EquippedId: Value<string?>,
+    OwnedIds: Value<{string}>,
 
-    Equip: (trailId: TrailId) -> (),
-    Unequip: () -> (),
-    Owns: (trailId: TrailId) -> boolean,
-    AddOwnedTrail: (trailId: TrailId) -> (),
+    HasTrail: (trailId: string) -> boolean,
+    AddTrail: (trailId: string) -> (),
 }
 
-local function PlayerTrails(scope: Scope, data: TrailsData): PlayerTrails
-    local equippedId = scope:Value(data.EquippedId)
-    local ownedIds = scope:Value(cloneOwnedIds(data.OwnedIds))
-
-    local function updateEquipped()
-        if not RunService:IsServer() then
-            return
-        end
-
-        data.EquippedId = peek(equippedId)
-    end
-
-    local function updateOwned()
-        if not RunService:IsServer() then
-            return
-        end
-
-        data.OwnedIds = cloneOwnedIds(peek(ownedIds))
-    end
+local function PlayerTrails(scope: Scope, trailsData: TrailsData)
+    local equippedId: Value<string?> = scope:Value(trailsData.EquippedId)
+    local ownedIds: Value<{[string]: boolean}> = scope:Value(trailsData.OwnedIds)
 
     if RunService:IsServer() then
-        updateEquipped()
-        updateOwned()
+        scope:Observer(equippedId):onChange(function()
+            equippedId:set(peek(equippedId))
+        end)
 
-        scope:Observer(equippedId):onChange(updateEquipped)
-        scope:Observer(ownedIds):onChange(updateOwned)
+        scope:Observer(ownedIds):onChange(function()
+            ownedIds:set(peek(ownedIds))
+        end)
     end
 
-    local function Equip(trailId: TrailId)
-        equippedId:set(trailId)
-        updateEquipped()
+    local function HasTrail(trailId: string): boolean
+        return peek(ownedIds)[trailId] == true
     end
 
-    local function Unequip()
-        equippedId:set(nil)
-        updateEquipped()
-    end
-
-    local function Owns(trailId: TrailId): boolean
-        for _, ownedId in peek(ownedIds) do
-            if ownedId == trailId then
-                return true
-            end
-        end
-
-        return false
-    end
-
-    local function AddOwnedTrail(trailId: TrailId)
-        if Owns(trailId) then
-            return
-        end
-
-        local currentOwned = cloneOwnedIds(peek(ownedIds))
-        table.insert(currentOwned, trailId)
-        ownedIds:set(currentOwned)
-        updateOwned()
+    local function AddTrail(trailId: string)
+        local currentOwnedIds = peek(ownedIds)
+        currentOwnedIds[trailId] = true
+        ownedIds:set(currentOwnedIds)
     end
 
     local self: PlayerTrails = {
         EquippedId = equippedId,
         OwnedIds = ownedIds,
 
-        Equip = Equip,
-        Unequip = Unequip,
-        Owns = Owns,
-        AddOwnedTrail = AddOwnedTrail,
+        HasTrail = HasTrail,
+        AddTrail = AddTrail,
     }
-
+    
     return self
 end
 

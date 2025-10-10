@@ -17,6 +17,7 @@ local DailyRewardsService = require(Server.DailyRewards.DailyRewardsService)
 local LevelRewardsService = require(Server.Level.LevelRewardsService)
 local TimedRewardsService = require(Server.TimedRewards.TimedRewardsService)
 local SkinService = require(Server.Skins.SkinService)
+local TrailsService = require(Server.Trails.TrailsService)
 
 local scope = Fusion.scoped(Fusion)
 
@@ -52,9 +53,14 @@ local skinService = SkinService(scope, {
     PlayerService = playerService,
 })
 
+local trailsService = TrailsService(scope, {
+    PlayerService = playerService,
+})
+
 local services = {
     PlayerService = playerService,
     HexagonService = hexagonService,
+    TrailsService = trailsService,
     DailyRewardsService = dailyRewardsService,
     LevelRewardsService = levelRewardsService,
     TimedRewardsService = timedRewardsService,

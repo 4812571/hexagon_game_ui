@@ -1,4 +1,9 @@
 struct TrailsData {
     EquippedId: string?,
-    OwnedIds: string[],
+    OwnedIds: map {[string]: boolean},
+}
+
+function PurchaseTrail {
+    Yield: Coroutine,
+    Data: string,
 }

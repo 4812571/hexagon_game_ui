@@ -23,6 +23,7 @@ local SpinController = require(Client.Spins.SpinController)
 local LevelRewardsController = require(Client.Level.LevelRewardsController)
 local DailyRewardsController = require(Client.DailyRewards.DailyRewardsController)
 local TimedRewardsController = require(Client.TimedRewards.TimedRewardsController)
+local TrailsController = require(Client.Trails.TrailsController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -45,6 +46,7 @@ local spinController = SpinController(scope, clientPlayer)
 local levelRewardsController = LevelRewardsController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
+local trailsController = TrailsController(scope, clientPlayer)
 
 local controllers = {
     BinderController = binderController,
@@ -58,6 +60,7 @@ local controllers = {
     LevelRewardsController = levelRewardsController,
     DailyRewardsController = dailyRewardsController,
     TimedRewardsController = timedRewardsController,
+    TrailsController = trailsController,
 }
 
 for _, controller: any in controllers do

@@ -1,6 +1,6 @@
 export type TrailsData = {
     EquippedId: string?,
-    OwnedIds: {string}
+    OwnedIds: {[string]: boolean},
 }
 
 return nil
