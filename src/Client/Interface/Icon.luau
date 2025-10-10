@@ -43,7 +43,11 @@ local function Icon<U>(scope: Scope<typeof(Fusion) & U>, props: IconProps)
             [Children] = {
                 scope:New "UIScale" {
                     Scale = props.IconScale
-                }
+                },
+
+                scope:New "UIAspectRatioConstraint" {
+                    AspectRatio = 1,
+                },
             }
         }
     }
