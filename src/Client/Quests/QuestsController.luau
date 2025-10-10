@@ -56,19 +56,22 @@ local function QuestsController(scope: Scope, player: ClientPlayer): QuestsContr
             ProgressAll(player, "PlayTime", 1)
         end
 
-        NetworkClient.PlayTime.MinutePassed.On(OnMinutePassed)
-
-        NetworkClient.Hexagon.Claimed.On(function(outer: number, inner: number)
+        local function OnClaimed(outer: number, inner: number)
             ProgressAll(player, "Color", outer + inner)
-        end)
+        end
 
-        NetworkClient.Hexagon.PlayerKilled.On(function(killer: Player, victim: Player)
+        local function OnPlayerKilled(killer: Player, victim: Player)
             if killer ~= player.Player then
                 return
             end
 
             ProgressAll(player, "Elimination", 1)
-        end)
+        end
+
+        NetworkClient.PlayTime.MinutePassed.On(OnMinutePassed)
+        NetworkClient.Hexagon.Claimed.On(OnClaimed)
+        NetworkClient.Hexagon.PlayerKilled.On(OnPlayerKilled)
+
 
         NetworkClient.Hexagon.PlayerWon.On(function(winner: Player)
             if winner ~= player.Player then
