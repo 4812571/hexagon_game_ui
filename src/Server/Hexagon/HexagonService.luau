@@ -109,17 +109,13 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     local playerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer> = Signal(scope)
 
     table.insert(scope, playerKilled:Connect(function(killer: HexagonPlayer, victim: HexagonPlayer)
-        for _, serverPlayer in PlayerService.GetAll() do
-            NetworkServer.Hexagon.PlayerKilled.Fire(serverPlayer.Player, killer.Player.Player, victim.Player.Player)
-        end
+        PlayerService.FireAll(NetworkServer.Hexagon.PlayerKilled, killer.Player.Player, victim.Player.Player)
     end))
 
     local playerWon: Signal.Signal<HexagonPlayer> = Signal(scope)
 
     table.insert(scope, playerWon:Connect(function(winner: HexagonPlayer)
-        for _, serverPlayer in PlayerService.GetAll() do
-            NetworkServer.Hexagon.PlayerWon.Fire(serverPlayer.Player, winner.Player.Player)
-        end
+        PlayerService.FireAll(NetworkServer.Hexagon.PlayerWon, winner.Player.Player)
     end))
 
     local claimedSignal: Signal.Signal<HexagonPlayer, number, number> = Signal(scope)
@@ -309,9 +305,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     end
 
     table.insert(scope, Timer(1, function()
-        for _, serverPlayer in PlayerService.GetAll() do
-            NetworkServer.Hexagon.WinnerSeconds.Fire(serverPlayer.Player, RobloxPlayer(winnerCandidate), winnerSeconds)
-        end
+        PlayerService.FireAll(NetworkServer.Hexagon.WinnerSeconds, RobloxPlayer(winnerCandidate), winnerSeconds)
 
         if winnerSeconds <= 0 then
             playerWon:Fire(winnerCandidate :: HexagonPlayer)
@@ -352,9 +346,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             end
         end
 
-        for _, serverPlayer in PlayerService.GetAll() do
-            NetworkServer.Hexagon.PlayerCrowned.Fire(serverPlayer.Player, RobloxPlayer(crownPlayer))
-        end
+        PlayerService.FireAll(NetworkServer.Hexagon.PlayerCrowned, RobloxPlayer(crownPlayer))
 
         if maxTiles < WINNER_TILES then
             winnerCandidate = nil
@@ -469,15 +461,11 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end))
         
         table.insert(scope, renderer.TilesChanged:Connect(function(color: Color3?, axials: {Axial})
-            for _, serverPlayer in PlayerService.GetAll() do
-                NetworkServer.Hexagon.HexagonsColored.Fire(serverPlayer.Player, color, axials)
-            end
+            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsColored, color, axials)
         end))
 
         table.insert(scope, renderer.SelectionsChanged:Connect(function(color: Color3?, axials: {Axial})
-            for _, serverPlayer in PlayerService.GetAll() do
-                NetworkServer.Hexagon.HexagonsSelected.Fire(serverPlayer.Player, color, axials)
-            end
+            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsSelected, color, axials)
         end))
 
         table.insert(scope, RunService.Heartbeat:Connect(Update))

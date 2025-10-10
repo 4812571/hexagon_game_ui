@@ -38,9 +38,7 @@ local function PlayTimeService(scope: Scope, services: Services): PlayTimeServic
         end))
 
         table.insert(scope, minuteSignal:Connect(function()
-            for _, serverPlayer in PlayerService.GetAll() do
-                NetworkServer.PlayTime.MinutePassed.Fire(serverPlayer.Player)
-            end
+            PlayerService.FireAll(NetworkServer.PlayTime.MinutePassed)
         end))
     end
 

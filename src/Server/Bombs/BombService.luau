@@ -169,10 +169,7 @@ local function BombService(scope: Scope, services: Services): BombService
 
         local axial = HexagonUtil.WorldToNearestAxial(character:GetPivot().Position / HexagonConfig.HexagonSize)
         local playerAxial = HexagonUtil.ClampToBounds(axial, HexagonConfig.WorldRadius)
-        
-        for _, otherPlayer in PlayerService.GetAll() do
-            NetworkServer.Bombs.BombDeployed.Fire(otherPlayer.Player, bombType, playerAxial, bombIndex)
-        end
+        PlayerService.FireAll(NetworkServer.Bombs.BombDeployed, bombType, playerAxial, bombIndex) 
 
         local bomb: BombConfig = BombsConfig[bombType]
 
@@ -181,9 +178,7 @@ local function BombService(scope: Scope, services: Services): BombService
                 BombTask(serverPlayer, bomb, playerAxial)
             end)
 
-            for _, otherPlayer in PlayerService.GetAll() do
-                NetworkServer.Bombs.BombExploded.Fire(otherPlayer.Player, bombIndex)
-            end
+            PlayerService.FireAll(NetworkServer.Bombs.BombExploded, bombIndex)
         end)
 
         return

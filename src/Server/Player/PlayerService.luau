@@ -35,7 +35,12 @@ export type PlayerService = {
     PlayerAdded: Signal<ServerPlayer>,
     PlayerRemoving: Signal<ServerPlayer>,
 
+    FireAll: <T...>(event: BlinkEvent<T...>, T...) -> (),
     ObservePlayers: (handler: Handler<ServerPlayer>) -> Cleanup,
+}
+
+type BlinkEvent<T...> = {
+    Fire: (player: Player, T...) -> (),
 }
 
 local function PlayerService(scope: Scope): PlayerService
@@ -90,6 +95,12 @@ local function PlayerService(scope: Scope): PlayerService
         return all
     end
 
+    local function FireAll<T...>(event: BlinkEvent<T...>, ...: T...)
+        for _, player in players do
+            event.Fire(player.Player, ...)
+        end
+    end
+
     local function ObservePlayers(handler: Handler<ServerPlayer>): Cleanup
         return Observe.AddedRemovedSignal(GetAll(), playerAdded, playerRemoving, handler)
     end
@@ -105,6 +116,7 @@ local function PlayerService(scope: Scope): PlayerService
         PlayerAdded = playerAdded,
         PlayerRemoving = playerRemoving,
 
+        FireAll = FireAll,
         ObservePlayers = ObservePlayers,
     }
 
