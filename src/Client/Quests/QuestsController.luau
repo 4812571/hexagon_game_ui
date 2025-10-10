@@ -52,9 +52,11 @@ local function QuestsController(scope: Scope, player: ClientPlayer): QuestsContr
     end
 
     local function Start()
-        NetworkClient.PlayTime.MinutePassed.On(function()
+        local function OnMinutePassed()
             ProgressAll(player, "PlayTime", 1)
-        end)
+        end
+
+        NetworkClient.PlayTime.MinutePassed.On(OnMinutePassed)
 
         NetworkClient.Hexagon.Claimed.On(function(outer: number, inner: number)
             ProgressAll(player, "Color", outer + inner)
