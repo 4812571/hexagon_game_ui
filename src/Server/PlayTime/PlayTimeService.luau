@@ -11,6 +11,7 @@ local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Signal = require(Common.Signal)
+local Connect = require(Common.Connect)
 local Timer = require(Common.Util.Timer)
 
 local NetworkServer = require(ServerScriptService.NetworkServer)
@@ -37,9 +38,9 @@ local function PlayTimeService(scope: Scope, services: Services): PlayTimeServic
             minuteSignal:Fire()
         end))
 
-        table.insert(scope, minuteSignal:Connect(function()
+        Connect(scope, minuteSignal, function()
             PlayerService.FireAll(NetworkServer.PlayTime.MinutePassed)
-        end))
+        end)
     end
 
     local self: PlayTimeService = {

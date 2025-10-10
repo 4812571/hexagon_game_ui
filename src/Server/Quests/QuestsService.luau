@@ -12,6 +12,8 @@ local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
 
+local Connect = require(Common.Connect)
+
 local Terminate = require(Common.Player.Terminate)
 local ProgressAll = require(Common.Quests.ProgressAll)
 
@@ -61,10 +63,10 @@ local function QuestsService(scope: Scope, services: Services): QuestsService
     end
 
     local function Init()
-        table.insert(scope, PlayTimeService.MinuteSignal:Connect(OnMinute))
-        table.insert(scope, HexagonService.Claimed:Connect(OnClaim))
-        table.insert(scope, HexagonService.PlayerKilled:Connect(OnKill))
-        table.insert(scope, HexagonService.PlayerWon:Connect(OnWin))
+        Connect(scope, PlayTimeService.MinuteSignal, OnMinute)
+        Connect(scope, HexagonService.Claimed, OnClaim)
+        Connect(scope, HexagonService.PlayerKilled, OnKill)
+        Connect(scope, HexagonService.PlayerWon, OnWin)
     end
 
     local function OnClaimQuest(player: Player, questId: string): ()

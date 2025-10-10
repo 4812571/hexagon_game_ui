@@ -22,6 +22,10 @@ event HexagonsSelected {
     Data: (Color3?, Axial[]),
 }
 
+function JoinGame {
+    Yield: Coroutine,
+}
+
 event PlayerKilled {
     From: Server,
     Type: Reliable,

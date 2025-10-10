@@ -1,6 +1,6 @@
 local RunService = game:GetService("RunService")
 
-local function UpdateSignal(): RBXScriptSignal
+local function UpdateSignal(): RBXScriptSignal<number>
     if RunService:IsClient() then
         return RunService.RenderStepped
     end

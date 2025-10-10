@@ -3,6 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Packages = ReplicatedStorage.Packages
 local Common = ReplicatedStorage.Common
 
+local Connect = require(Common.Connect)
 local Signal = require(Common.Signal)
 type Signal<T...> = Signal.Signal<T...>
 
@@ -96,7 +97,7 @@ local function PlayerDataLoader<T>(scope: Scope, profileStoreKey: string, defaul
 
     local awaitingThreads: Map<Player, {thread}> = {}
 
-    table.insert(scope, profileLoaded:Connect(function(player: Player, profile: Profile<T>)
+    Connect(scope, profileLoaded, function(player: Player, profile: Profile<T>)
         local threads = awaitingThreads[player]
 
         if not threads then
@@ -108,9 +109,9 @@ local function PlayerDataLoader<T>(scope: Scope, profileStoreKey: string, defaul
         end
 
         awaitingThreads[player] = nil
-    end))
+    end)
 
-    table.insert(scope, profileReleased:Connect(function(player: Player, profile: Profile<T>)
+    Connect(scope, profileReleased, function(player: Player, profile: Profile<T>)
         local threads = awaitingThreads[player]
 
         if not threads then
@@ -122,7 +123,7 @@ local function PlayerDataLoader<T>(scope: Scope, profileStoreKey: string, defaul
         end
 
         awaitingThreads[player] = nil
-    end))
+    end)
 
     local function AwaitProfile(player: Player): Profile<T>?
         local loaded = profiles[player]

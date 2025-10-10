@@ -10,7 +10,11 @@ export type Signal<T...> = Signal.Signal<T...>
 
 local function NewSignal<T...>(scope: Scope): Signal<T...>
     local signal = Signal.new()
-    table.insert(scope, signal)
+
+    table.insert(scope, function()
+        signal:Destroy()
+    end)
+
     return signal
 end
 

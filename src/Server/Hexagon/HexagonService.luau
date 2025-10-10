@@ -13,12 +13,11 @@ type Set<T> = { [T]: true }
 local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<unknown>
 
-local Observe = require(Packages.Observe)
-
 local Count = require(Common.Util.Count)
 local Sequence = require(Common.Util.Sequence)
 local Timer = require(Common.Util.Timer)
 local Signal = require(Common.Signal)
+local Connect = require(Common.Connect)
 
 local HexagonConfig = require(Common.Hexagon.HexagonConfig)
 
@@ -108,21 +107,21 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     
     local playerKilled: Signal.Signal<HexagonPlayer, HexagonPlayer> = Signal(scope)
 
-    table.insert(scope, playerKilled:Connect(function(killer: HexagonPlayer, victim: HexagonPlayer)
+    Connect(scope, playerKilled, function(killer: HexagonPlayer, victim: HexagonPlayer)
         PlayerService.FireAll(NetworkServer.Hexagon.PlayerKilled, killer.Player.Player, victim.Player.Player)
-    end))
+    end)
 
     local playerWon: Signal.Signal<HexagonPlayer> = Signal(scope)
 
-    table.insert(scope, playerWon:Connect(function(winner: HexagonPlayer)
+    Connect(scope, playerWon, function(winner: HexagonPlayer)
         PlayerService.FireAll(NetworkServer.Hexagon.PlayerWon, winner.Player.Player)
-    end))
+    end)
 
     local claimedSignal: Signal.Signal<HexagonPlayer, number, number> = Signal(scope)
 
-    table.insert(scope, claimedSignal:Connect(function(player: HexagonPlayer, outer: number, inner: number)
+    Connect(scope, claimedSignal, function(player: HexagonPlayer, outer: number, inner: number)
         NetworkServer.Hexagon.Claimed.Fire(player.Player.Player, outer, inner)
-    end))
+    end)
 
     local function InitialData(): HexagonData
         local owned = {}
@@ -421,16 +420,28 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
     end
 
     local function Init()
-        table.insert(scope, world.OwnerChanged:Connect(function(axial: Axial, owner: HexagonPlayer?)
+        Connect(scope, world.OwnerChanged, function(axial: Axial, owner: HexagonPlayer?)
             renderer.SetTileColor(axial, Color(owner))
-        end))
+        end)
 
-        table.insert(scope, world.SelectionChanged:Connect(function(axial: Axial, selector: HexagonPlayer?)
+        Connect(scope, world.SelectionChanged, function(axial: Axial, selector: HexagonPlayer?)
             renderer.SetSelectionColor(axial, Color(selector))
-        end))
+        end)
+    end
+
+    local function OnJoin(player: Player)
+        local character = player.Character
+
+        if not character then
+            return
+        end
+
+        JoinPlayer(PlayerService.Expect(player), character)
     end
 
     local function Start()
+        NetworkServer.Hexagon.JoinGame.On(OnJoin)
+
         table.insert(scope, PlayerService.ObservePlayers(function(serverPlayer: ServerPlayer)
             local leaderstats = Instance.new("Folder")
             leaderstats.Name = "leaderstats"
@@ -447,32 +458,23 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
             wins.Parent = leaderstats
             leaderstats.Parent = serverPlayer.Player
 
-            return Observe.Character(serverPlayer.Player, function(character: Model?)
-                if not character then
-                    return
-                end
-
-                local hexagonPlayer = JoinPlayer(serverPlayer, character)
-
-                return function()
-                    RemovePlayer(hexagonPlayer)
-                end
-            end)
+            return nil
         end))
-        
-        table.insert(scope, renderer.TilesChanged:Connect(function(color: Color3?, axials: {Axial})
+
+        Connect(scope, renderer.TilesChanged, function(color: Color3?, axials: {Axial})
             PlayerService.FireAll(NetworkServer.Hexagon.HexagonsColored, color, axials)
-        end))
+        end)
 
-        table.insert(scope, renderer.SelectionsChanged:Connect(function(color: Color3?, axials: {Axial})
+        Connect(scope, renderer.SelectionsChanged, function(color: Color3?, axials: {Axial})
             PlayerService.FireAll(NetworkServer.Hexagon.HexagonsSelected, color, axials)
-        end))
+        end)
 
         table.insert(scope, RunService.Heartbeat:Connect(Update))
     end
 
     local self = {
         InitialData = InitialData,
+        JoinPlayer = JoinPlayer,
         GetPlayer = GetPlayer,
         FloodTiles = FloodTiles,
         Init = Init,

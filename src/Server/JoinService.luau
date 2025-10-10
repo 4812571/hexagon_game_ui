@@ -13,6 +13,8 @@ local innerScope = Fusion.innerScope
 
 local Observe = require(Packages.Observe)
 
+local Connect = require(Common.Connect)
+
 local PlayerData = require(Common.Player.PlayerData)
 type PlayerData = PlayerData.PlayerData
 
@@ -92,7 +94,7 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
     local function Start()
         NetworkServer.Join.On(OnJoin)
         table.insert(scope, Observe.Players(HandlePlayer))
-        table.insert(scope, playerDataLoader.ProfileReleased:Connect(OnProfileRelease))
+        Connect(scope, playerDataLoader.ProfileReleased, OnProfileRelease)
     end
 
     local self = {
