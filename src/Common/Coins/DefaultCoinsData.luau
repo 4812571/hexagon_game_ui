@@ -7,6 +7,7 @@ type CoinsData = CoinsData.CoinsData
 
 local DefaultCoinsData: CoinsData = {
     Coins = 0,
+    IncomeMultiplier = 1,
 }
 
 return DefaultCoinsData

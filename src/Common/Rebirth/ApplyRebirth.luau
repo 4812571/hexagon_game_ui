@@ -16,6 +16,10 @@ local function Add(value: Value<number>, amount: number)
     value:set(peek(value) + amount)
 end
 
+local function Percent(n: number): number
+    return n * 0.01
+end
+
 local function ApplyRebirth(player: CommonPlayer)
     player.Coins.Rebirth()
     player.Level.Rebirth()
@@ -25,8 +29,8 @@ local function ApplyRebirth(player: CommonPlayer)
     Add(player.Bombs.GoldBombs, RebirthConfig.Rewards.Bombs.GoldBombs)
     Add(player.Bombs.Nukes, RebirthConfig.Rewards.Bombs.Nukes)
 
-    Add(player.Speed.RebirthSpeedMultiplier, RebirthConfig.Rewards.SpeedPercent / 100)
-    -- TODO: income
+    Add(player.Coins.IncomeMultiplier, Percent(RebirthConfig.Rewards.IncomePercent))
+    Add(player.Speed.RebirthSpeedMultiplier, Percent(RebirthConfig.Rewards.SpeedPercent))
 end
 
 return ApplyRebirth

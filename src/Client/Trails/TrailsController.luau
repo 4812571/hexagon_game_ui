@@ -5,7 +5,6 @@ local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Trails = require(Common.Trails.Trails)
@@ -38,13 +37,10 @@ local function TrailsController(scope: Scope, player: ClientPlayer)
             return false
         end
 
-        local coins = player.Coins.Coins
-
-        if peek(coins) < trailEntry.Price.Amount then
+        if not player.Coins.ConsumeCoins(trailEntry.Price.Amount) then
             return false
         end
 
-        coins:set(peek(coins) - trailEntry.Price.Amount)
         player.Trails.AddTrail(trailId)
 
         NetworkClient.Trails.PurchaseTrail.Invoke(trailId)

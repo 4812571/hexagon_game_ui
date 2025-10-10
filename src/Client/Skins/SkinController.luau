@@ -5,7 +5,6 @@ local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Skins = require(Common.Skins.Skins)
@@ -33,14 +32,12 @@ local function SkinController(scope: Scope, player: ClientPlayer)
         if player.Skins.HasSkin(skinId) then
             return false
         end
-        
-        if peek(player.Coins.Coins) < skinInfo.Price then
+
+        if not player.Coins.ConsumeCoins(skinInfo.Price) then
             return false
         end
-
-        player.Coins.Coins:set(peek(player.Coins.Coins) - skinInfo.Price)
+        
         player.Skins.AddSkin(skinId)
-
         NetworkClient.Skins.PurchaseSkin.Invoke(skinId)
 
         return true

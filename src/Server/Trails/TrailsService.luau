@@ -6,7 +6,6 @@ local Common = ReplicatedStorage.Common
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Terminate = require(Common.Player.Terminate)
@@ -45,13 +44,10 @@ local function TrailsService(scope: Scope, services: Services): TrailsService
             return Terminate(player, "[TrailsService] Cannot purchase non-coin trails directly")
         end
 
-        local coins = serverPlayer.Coins.Coins
-
-        if peek(coins) < trailEntry.Price.Amount then
-            return Terminate(player, "[TrailsService] Player does not have enough coins to purchase trail: " .. trailId)
+        if not serverPlayer.Coins.ConsumeCoins(trailEntry.Price.Amount) then
+            return Terminate(player, "[TrailsService] Not enough coins for trail: " .. trailId)
         end
-
-        coins:set(peek(coins) - trailEntry.Price.Amount)
+        
         serverPlayer.Trails.AddTrail(trailId)
 
         return

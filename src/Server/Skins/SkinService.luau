@@ -6,7 +6,6 @@ local Common = ReplicatedStorage.Common
 local Server = ServerScriptService.Server
 
 local Fusion = require(Packages.Fusion)
-local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Terminate = require(Common.Player.Terminate)
@@ -42,11 +41,10 @@ local function SkinService(scope: Scope, services: Services): SkinService
             return Terminate(player, "[SkinService] PurchaseSkin - Player already owns skin: " .. skinId)
         end
 
-        if serverPlayer.Coins.Coins:get() < skinInfo.Price then
+        if not serverPlayer.Coins.ConsumeCoins(skinInfo.Price) then
             return Terminate(player, "[SkinService] PurchaseSkin - Not enough coins for skin: " .. skinId)
         end
 
-        serverPlayer.Coins.Coins:set(peek(serverPlayer.Coins.Coins) - skinInfo.Price)
         serverPlayer.Skins.AddSkin(skinId)
 
         return
