@@ -28,39 +28,58 @@ export type TrailsService = {
 local function TrailsService(scope: Scope, services: Services): TrailsService
     local PlayerService = services.PlayerService
 
+    local function OnPurchase(player: Player, trailId: string): ()
+        local serverPlayer = PlayerService.Get(player)
+        
+        if not serverPlayer then
+            return Terminate(player, "[TrailsService] Player not found")
+        end
+
+        if serverPlayer.Trails.HasTrail(trailId) then
+            return Terminate(player, "[TrailsService] Player already owns trail: " .. trailId)
+        end
+
+        local trailEntry: Trails.TrailEntry? = Trails[trailId]
+
+        if not trailEntry then
+            return Terminate(player, "[TrailsService] Invalid trail id: " .. trailId)
+        end
+
+        if trailEntry.Price.Currency ~= "Coins" then
+            return Terminate(player, "[TrailsService] Cannot purchase non-coin trails directly")
+        end
+
+        local coins = serverPlayer.Coins.Coins
+
+        if peek(coins) < trailEntry.Price.Amount then
+            return Terminate(player, "[TrailsService] Player does not have enough coins to purchase trail: " .. trailId)
+        end
+
+        coins:set(peek(coins) - trailEntry.Price.Amount)
+        serverPlayer.Trails.AddTrail(trailId)
+
+        return
+    end
+
+    local function OnEquip(player: Player, trailId: string?): ()
+        local serverPlayer = PlayerService.Get(player)
+
+        if not serverPlayer then
+            return Terminate(player, "[TrailsService] Player not found")
+        end
+
+        if trailId and not serverPlayer.Trails.HasTrail(trailId) then
+            return Terminate(player, "[TrailsService] Player does not own trail: " .. trailId)
+        end
+
+        serverPlayer.Trails.EquipTrail(trailId)
+
+        return
+    end
+
     local function Start()
-        NetworkServer.Trails.PurchaseTrail.On(function(player: Player, trailId: string): ()
-            local serverPlayer = PlayerService.Get(player)
-            
-            if not serverPlayer then
-                return Terminate(player, "[TrailsService] Player not found")
-            end
-
-            if serverPlayer.Trails.HasTrail(trailId) then
-                return Terminate(player, "[TrailsService] Player already owns trail: " .. trailId)
-            end
-
-            local trailEntry: Trails.TrailEntry? = Trails[trailId]
-
-            if not trailEntry then
-                return Terminate(player, "[TrailsService] Invalid trail id: " .. trailId)
-            end
-
-            if trailEntry.Price.Currency ~= "Coins" then
-                return Terminate(player, "[TrailsService] Cannot purchase non-coin trails directly")
-            end
-
-            local coins = serverPlayer.Coins.Coins
-
-            if peek(coins) < trailEntry.Price.Amount then
-                return Terminate(player, "[TrailsService] Player does not have enough coins to purchase trail: " .. trailId)
-            end
-
-            coins:set(peek(coins) - trailEntry.Price.Amount)
-            serverPlayer.Trails.AddTrail(trailId)
-
-            return
-        end)
+        NetworkServer.Trails.PurchaseTrail.On(OnPurchase)
+        NetworkServer.Trails.EquipTrail.On(OnEquip)
     end
 
     local self: TrailsService = {

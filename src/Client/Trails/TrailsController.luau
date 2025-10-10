@@ -17,6 +17,7 @@ type ClientPlayer = ClientPlayer.ClientPlayer
 
 export type TrailsController = {
     TryPurchase: (trailId: string) -> boolean,
+    TryEquip: (trailId: string?) -> boolean,
 }
 
 local function TrailsController(scope: Scope, player: ClientPlayer)
@@ -51,8 +52,19 @@ local function TrailsController(scope: Scope, player: ClientPlayer)
         return true
     end
 
+    local function TryEquip(trailId: string?): boolean
+        if trailId and not player.Trails.HasTrail(trailId) then
+            return false
+        end
+
+        player.Trails.EquippedId:set(trailId)
+        NetworkClient.Trails.EquipTrail.Invoke(trailId)
+        return true
+    end
+
     local self: TrailsController = {
         TryPurchase = TryPurchase,
+        TryEquip = TryEquip,
     }
 
     return self

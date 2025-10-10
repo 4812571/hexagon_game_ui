@@ -7,3 +7,8 @@ function PurchaseTrail {
     Yield: Coroutine,
     Data: string,
 }
+
+function EquipTrail {
+    Yield: Coroutine,
+    Data: string?,
+}
