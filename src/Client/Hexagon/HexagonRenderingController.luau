@@ -67,14 +67,15 @@ local function HexagonRenderingController(scope: Scope, initialData: InitialData
         end
     end
 
+    local function OnHexagonsSelected(color: Color3?, axials: {Axial})
+        for _, axial in axials do
+            renderingWorld.SetHexagonSelectionColor(axial, color)
+        end
+    end
+
     local function Init()
         NetworkClient.Hexagon.HexagonsColored.On(OnHexagonsColored)
-
-        NetworkClient.Hexagon.HexagonsSelected.On(function(color: Color3?, axials: {Axial})
-            for _, axial in axials do
-                renderingWorld.SetHexagonSelectionColor(axial, color)
-            end
-        end)
+        NetworkClient.Hexagon.HexagonsSelected.On(OnHexagonsSelected)
     end
 
     local self: HexagonRenderingController = {
