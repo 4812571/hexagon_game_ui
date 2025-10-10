@@ -12,7 +12,7 @@ local UpdateSignal = require(Common.Util.UpdateSignal)
 local function Clock(scope: Scope): UsedAs<number>
     local currentTime = scope:Value(workspace:GetServerTimeNow())
 
-    table.insert(scope, UpdateSignal():Connect(function(deltaTime)
+    table.insert(scope, UpdateSignal():Connect(function()
         currentTime:set(workspace:GetServerTimeNow())
     end))
 

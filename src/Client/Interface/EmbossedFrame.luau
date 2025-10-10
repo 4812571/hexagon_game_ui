@@ -42,6 +42,8 @@ local function EmbossedFrame<U>(scope: Scope<typeof(Fusion) & U>, props: Embosse
         Position = props.Position,
         AnchorPoint = props.AnchorPoint,
 
+        BackgroundTransparency = 0,
+
         BackgroundColor3 = scope:Computed(function(use)
             return use(props.Color):Lerp(BLACK, DARKEN_FACTOR)
         end),

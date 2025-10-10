@@ -16,6 +16,7 @@ export type IconProps = {
     AnchorPoint: UsedAs<Vector2>?,
 
     LayoutOrder: UsedAs<number>?,
+    ZIndex: UsedAs<number>?,
 
     Icon: UsedAs<string>,
     IconScale: UsedAs<number>?,
@@ -28,6 +29,7 @@ local function Icon<U>(scope: Scope<typeof(Fusion) & U>, props: IconProps)
         AnchorPoint = props.AnchorPoint,
 
         LayoutOrder = props.LayoutOrder,
+        ZIndex = props.ZIndex,
 
         BackgroundTransparency = 1,
 
