@@ -1,5 +1,5 @@
 {
-  "Service Template": {
+  "Story Template": {
     "prefix": ".story",
     "body": [
       "local ReplicatedStorage = game:GetService(\"ReplicatedStorage\")",
@@ -8,13 +8,15 @@
       "",
       "local Fusion = require(Packages.Fusion)",
       "",
-      "local ${1:ComponentName} = require(script.Parent.${1:ComponentName})",
+      "local ${1:FusionComponent} = require(script.Parent.${1:FusionComponent})",
       "",
       "return function(target: Instance)",
-      "    local scope = Fusion.scoped(Fusion)",
+      "    local scope = Fusion.scoped(Fusion, {",
+      "        ${1:FusionComponent} = ${1:FusionComponent},",
+      "    })",
       "    ",
-      "    local instance = ${1:ComponentName} {",
-      "        Scope = scope,",
+      "    local instance = scope:${1:FusionComponent} {",
+      "",
       "    }",
       "",
       "    instance.Parent = target",
