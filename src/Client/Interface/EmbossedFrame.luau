@@ -16,6 +16,8 @@ export type EmbossedFrameProps = {
     Position: UsedAs<UDim2>?,
     AnchorPoint: UsedAs<Vector2>?,
 
+    LayoutOrder: UsedAs<number>?,
+
     Color: UsedAs<Color3>?,
     CornerRadius: UsedAs<UDim>?,
     

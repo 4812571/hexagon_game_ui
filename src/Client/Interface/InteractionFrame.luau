@@ -19,6 +19,8 @@ export type InteractionFrameProps = {
     AnchorPoint: UsedAs<Vector2>?,
     Rotation: UsedAs<number>?,
 
+    LayoutOrder: UsedAs<number>?,
+
     BackgroundColor3: UsedAs<Color3>?,
     BackgroundTransparency: UsedAs<number>?,
 
