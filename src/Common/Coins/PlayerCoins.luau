@@ -14,6 +14,8 @@ type CoinsData = CoinsData.CoinsData
 
 export type PlayerCoins = {
     Coins: Value<number>,
+
+    Rebirth: () -> (),
 }
 
 local function PlayerCoins(scope: Scope, data: CoinsData): PlayerCoins
@@ -25,8 +27,14 @@ local function PlayerCoins(scope: Scope, data: CoinsData): PlayerCoins
         end)
     end
 
+    local function Rebirth()
+        coins:set(0)
+    end
+
     local self = {
         Coins = coins,
+
+        Rebirth = Rebirth,
     }
 
     return self

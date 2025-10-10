@@ -21,6 +21,8 @@ export type PlayerLevel = {
     Level: UsedAs<number>,
     Experience: UsedAs<number>,
     RequiredExperience: UsedAs<number>,
+
+    Rebirth: () -> (),
 }
 
 local function PlayerLevel(scope: Scope, data: LevelData): PlayerLevel
@@ -48,12 +50,18 @@ local function PlayerLevel(scope: Scope, data: LevelData): PlayerLevel
         return use(levelInfo).RequiredExperience
     end)
 
+    local function Rebirth()
+        totalExperience:set(0)
+    end
+
     local self = {
         TotalExperience = totalExperience,
 
         Level = level,
         Experience = experience,
         RequiredExperience = requiredExperience,
+
+        Rebirth = Rebirth,
     }
 
     return self

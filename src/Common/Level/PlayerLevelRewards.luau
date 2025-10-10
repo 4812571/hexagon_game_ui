@@ -15,6 +15,7 @@ type LevelRewardsData = LevelRewardsData.LevelRewardsData
 export type PlayerLevelRewards = {
     IsClaimed: (rewardIndex: number) -> boolean,
     Claim: (rewardIndex: number) -> boolean,
+    Rebirth: () -> (),
 }
 
 local function PlayerLevelRewards(scope: Scope, data: LevelRewardsData): PlayerLevelRewards
@@ -36,9 +37,14 @@ local function PlayerLevelRewards(scope: Scope, data: LevelRewardsData): PlayerL
         claimedIndexes:set(newClaimedIndexes)
     end
 
+    local function Rebirth()
+        claimedIndexes:set({})
+    end
+
     local self: PlayerLevelRewards = {
         IsClaimed = IsClaimed,
         Claim = Claim,
+        Rebirth = Rebirth,
     }
 
     return self
