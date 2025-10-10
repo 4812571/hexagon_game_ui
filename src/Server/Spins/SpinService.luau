@@ -37,11 +37,7 @@ local function SpinService(scope: Scope, services: Services): SpinService
     
     local function Start()
         NetworkServer.Spins.PerformSpin.On(function(player: Player)
-            local serverPlayer = PlayerService.Get(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[SpinService] Player data not found")
-            end
+            local serverPlayer = PlayerService.Expect(player)
 
             if peek(serverPlayer.Spins.Spins) <= 0 then
                 return Terminate(player, "[SpinService] Player has no spins left")
@@ -56,11 +52,7 @@ local function SpinService(scope: Scope, services: Services): SpinService
         end)
 
         NetworkServer.Spins.ClaimReward.On(function(player: Player): ()
-            local serverPlayer = PlayerService.Get(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[SpinService] Player data not found")
-            end
+            local serverPlayer = PlayerService.Expect(player)
 
             local reward = peek(serverPlayer.Spins.PendingReward)
 

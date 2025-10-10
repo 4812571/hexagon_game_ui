@@ -30,12 +30,8 @@ local function SkinService(scope: Scope, services: Services): SkinService
     local PlayerService = services.PlayerService
 
     local function OnPurchase(player: Player, skinId: string): ()
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "[SkinService] PurchaseSkin - Player not found")
-        end
-
+        local serverPlayer = PlayerService.Expect(player)
+        
         local skinInfo: SkinInfo? = Skins[skinId]
 
         if not skinInfo then
@@ -57,11 +53,7 @@ local function SkinService(scope: Scope, services: Services): SkinService
     end
 
     local function OnEquip(player: Player, skinId: string?): ()
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "[SkinService] EquipSkin - Player not found")
-        end
+        local serverPlayer = PlayerService.Expect(player)
 
         if skinId and not serverPlayer.Skins.HasSkin(skinId) then
             return Terminate(player, "[SkinService] EquipSkin - Player does not own skin: " .. skinId)

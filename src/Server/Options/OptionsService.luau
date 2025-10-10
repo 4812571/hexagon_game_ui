@@ -26,58 +26,23 @@ local function OptionsService(scope: Scope, services: Services): OptionsService
     local PlayerService = services.PlayerService
 
     local function OnSetMusicVolume(player: Player, volume: number)
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "Player not found in OptionsService.OnSetMusicVolume")
-        end
-
-        serverPlayer.Options.MusicVolume:set(volume)
-        return
+        PlayerService.Expect(player).Options.MusicVolume:set(volume)
     end
 
     local function OnSetSFXVolume(player: Player, volume: number)
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "Player not found in OptionsService.OnSetSFXVolume")
-        end
-
-        serverPlayer.Options.SFXVolume:set(volume)
-        return
+        PlayerService.Expect(player).Options.SFXVolume:set(volume)
     end
 
     local function OnSetNightMode(player: Player, nightMode: boolean)
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "Player not found in OptionsService.OnSetNightMode")
-        end
-
-        serverPlayer.Options.NightMode:set(nightMode)
-        return
+        PlayerService.Expect(player).Options.NightMode:set(nightMode)
     end
 
     local function OnSetCameraShake(player: Player, cameraShake: boolean)
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "Player not found in OptionsService.OnSetCameraShake")
-        end
-
-        serverPlayer.Options.CameraShake:set(cameraShake)
-        return
+        PlayerService.Expect(player).Options.CameraShake:set(cameraShake)
     end
 
     local function OnSetMinimap(player: Player, minimap: boolean)
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "Player not found in OptionsService.OnSetMinimap")
-        end
-
-        serverPlayer.Options.Minimap:set(minimap)
-        return
+        PlayerService.Expect(player).Options.Minimap:set(minimap)
     end
 
     local function Start()

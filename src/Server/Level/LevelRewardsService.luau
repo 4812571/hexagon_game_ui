@@ -28,11 +28,7 @@ export type LevelRewardsService = {
 local function LevelRewardsService(scope: Scope, services: Services): LevelRewardsService
     local function Start()
         NetworkServer.LevelRewards.ClaimReward.On(function(player: Player, rewardIndex: number)
-            local serverPlayer = services.PlayerService.Get(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[LevelRewardsService] Player not found")
-            end
+            local serverPlayer = services.PlayerService.Expect(player)
 
             if peek(serverPlayer.Level.Level) < rewardIndex then
                 return Terminate(player, "[LevelRewardsService] Player level too low to claim reward")

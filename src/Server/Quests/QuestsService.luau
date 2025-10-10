@@ -69,11 +69,7 @@ local function QuestsService(scope: Scope, services: Services): QuestsService
 
     local function Start()
         NetworkServer.Quests.ClaimQuest.On(function(player: Player, questId: string): ()
-            local serverPlayer = PlayerService.Get(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[QuestsService] Player not found")
-            end
+            local serverPlayer = PlayerService.Expect(player)
 
             local questEntry: QuestEntry = Quests[questId]
 

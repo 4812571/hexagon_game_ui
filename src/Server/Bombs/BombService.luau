@@ -136,11 +136,7 @@ local function BombService(scope: Scope, services: Services): BombService
     end
 
     local function HandleUse(player: Player, bombType: BombType, clientTime: number): ()
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "[BombService] No player data found.")
-        end
+        local serverPlayer = PlayerService.Expect(player)
 
         if not serverPlayer.Timing.Check(clientTime) then
             return Terminate(player, "[BombService] Invalid client time.")

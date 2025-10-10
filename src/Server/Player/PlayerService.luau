@@ -13,6 +13,8 @@ type Scope = Fusion.Scope<unknown>
 local Signal = require(Common.Signal)
 type Signal<T...> = Signal.Signal<T...>
 
+local Terminate = require(Common.Player.Terminate)
+
 local Observe = require(Packages.Observe)
 type Handler<T...> = Observe.Handler<T...>
 type Cleanup = Observe.Cleanup
@@ -27,6 +29,7 @@ export type PlayerService = {
     Unmount: (player: Player) -> (),
 
     Get: (player: Player) -> ServerPlayer?,
+    Expect: (player: Player) -> ServerPlayer,
     GetAll: () -> { ServerPlayer },
 
     PlayerAdded: Signal<ServerPlayer>,
@@ -67,6 +70,16 @@ local function PlayerService(scope: Scope): PlayerService
         return players[player]
     end
 
+    local function Expect(player: Player): ServerPlayer
+        local serverPlayer = Get(player)
+
+        if not serverPlayer then
+            return Terminate(player, "Expected player to be loaded!", 2)
+        end
+
+        return serverPlayer
+    end
+
     local function GetAll(): { ServerPlayer }
         local all = {}
 
@@ -86,6 +99,7 @@ local function PlayerService(scope: Scope): PlayerService
         Unmount = Unmount,
 
         Get = Get,
+        Expect = Expect,
         GetAll = GetAll,
 
         PlayerAdded = playerAdded,

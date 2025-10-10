@@ -29,11 +29,7 @@ local function DailyRewardsService(scope: Scope, services: Services): DailyRewar
 
     local function Start()
         NetworkServer.DailyRewards.ClaimReward.On(function(player: Player, instant: number): ()
-            local serverPlayer = PlayerService.Get(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[DailyRewardsService] Player not found")
-            end
+            local serverPlayer = PlayerService.Expect(player)
 
             if not serverPlayer.Timing.Check(instant) then
                 return Terminate(player, "[DailyRewardsService] Invalid instant")

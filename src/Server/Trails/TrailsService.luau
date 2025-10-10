@@ -29,11 +29,7 @@ local function TrailsService(scope: Scope, services: Services): TrailsService
     local PlayerService = services.PlayerService
 
     local function OnPurchase(player: Player, trailId: string): ()
-        local serverPlayer = PlayerService.Get(player)
-        
-        if not serverPlayer then
-            return Terminate(player, "[TrailsService] Player not found")
-        end
+        local serverPlayer = PlayerService.Expect(player)
 
         if serverPlayer.Trails.HasTrail(trailId) then
             return Terminate(player, "[TrailsService] Player already owns trail: " .. trailId)
@@ -62,11 +58,7 @@ local function TrailsService(scope: Scope, services: Services): TrailsService
     end
 
     local function OnEquip(player: Player, trailId: string?): ()
-        local serverPlayer = PlayerService.Get(player)
-
-        if not serverPlayer then
-            return Terminate(player, "[TrailsService] Player not found")
-        end
+        local serverPlayer = PlayerService.Expect(player)
 
         if trailId and not serverPlayer.Trails.HasTrail(trailId) then
             return Terminate(player, "[TrailsService] Player does not own trail: " .. trailId)

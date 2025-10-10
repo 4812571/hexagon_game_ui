@@ -30,11 +30,7 @@ local function TimedRewardsService(scope: Scope, services: Services): TimedRewar
         local PlayerService = services.PlayerService
 
         NetworkServer.TimedRewards.ClaimReward.On(function(player: Player, rewardIndex: number, instant: number): ()
-            local serverPlayer = PlayerService:GetPlayer(player)
-
-            if not serverPlayer then
-                return Terminate(player, "[TimedRewardService] Player not found")
-            end
+            local serverPlayer = PlayerService.Expect(player)
 
             if not serverPlayer.Timing.Check(instant) then
                 return Terminate(player, "[TimedRewardService] Player sent an invalid instant")
