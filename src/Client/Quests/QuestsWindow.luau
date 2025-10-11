@@ -6,6 +6,8 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Quests = require(Common.Quests.Quests)
@@ -23,13 +25,15 @@ export type QuestEntry = {
 local Window = require(Client.Interface.Window)
 
 export type QuestsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
     Quests: { QuestEntry },
 }
 
-local function QuestsWindow(props: QuestsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function QuestsWindow<U>(scope: Scope<U>, props: QuestsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Quests",
         Icon = Icons.Scroll,
     }

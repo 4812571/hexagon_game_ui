@@ -6,6 +6,8 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Skins = require(Common.Skins.Skins)
@@ -21,16 +23,17 @@ export type SkinEntry = {
 }
 
 export type SkinsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     Section: Fusion.UsedAs<SkinSection>,
     Skins: Fusion.UsedAs<{SkinEntry}>,
     Selected: Fusion.UsedAs<SkinEntry>,
 }
 
-local function SkinsWindow(props: SkinsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Skins",
         Icon = Icons.Pencil,
     }

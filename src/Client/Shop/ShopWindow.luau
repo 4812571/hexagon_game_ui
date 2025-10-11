@@ -6,17 +6,17 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Window = require(Client.Interface.Window)
 
 export type ShopWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     OnStarterPackPurchase: () -> (),
     OnBombsPackPurchase: () -> (),
     OnHundredBombsPackPurchase: () -> (),
-   
+
     OnMaxSpeedPurchase: () -> (),
     OnDoubleCashPurchase: () -> (),
     OnDoubleStartTilesPurchase: () -> (),
@@ -25,9 +25,12 @@ export type ShopWindowProps = {
     OnCashPurchase: (tier: number) -> (),
 }
 
-local function ShopWindow(props: ShopWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function ShopWindow<U>(scope: Scope<U>, props: ShopWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Shop",
         Icon = Icons.ShoppingCart,
     }

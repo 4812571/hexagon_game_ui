@@ -6,6 +6,8 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local LevelRewards = require(Common.LevelRewards)
@@ -22,20 +24,21 @@ export type LevelRewardEntry = {
 }
 
 export type LevelWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     Level: Fusion.UsedAs<number>,
     Experience: Fusion.UsedAs<number>,
     ExperienceToNextLevel: Fusion.UsedAs<number>,
     Speed: Fusion.UsedAs<number>,
     Rewards: Fusion.UsedAs<{LevelRewardEntry}>,
-    
+
     OnClaim: (level: number) -> (),
 }
 
-local function LevelWindow(props: LevelWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Level Up",
         Icon = Icons.UpArrow,
     }
