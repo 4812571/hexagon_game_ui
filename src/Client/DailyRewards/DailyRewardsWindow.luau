@@ -1,3 +1,6 @@
+--!strict
+--!nolint LocalShadow
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
@@ -5,6 +8,8 @@ local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
+
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 local Icons = require(Common.Icons)
 
@@ -22,15 +27,16 @@ export type DailyRewardEntry = {
 }
 
 export type DailyRewardsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     Rewards: Fusion.UsedAs<{DailyRewardEntry}>,
     OnClaim: (day: number) -> (),
 }
 
-local function DailyRewardsWindow(props: DailyRewardsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function DailyRewardsWindow<U>(scope: Scope<U>, props: DailyRewardsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+    
+    return scope:Window {
         Title = "Daily",
         Icon = Icons.Calendar,
         IconScale = 0.95,
