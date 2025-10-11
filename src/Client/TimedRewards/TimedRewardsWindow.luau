@@ -6,6 +6,8 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local TimedRewards = require(Common.TimedRewards.TimedRewards)
@@ -20,16 +22,17 @@ export type TimedRewardEntry = {
 }
 
 export type TimedRewardsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     Rewards: Fusion.UsedAs<{TimedRewardEntry}>,
 
     OnClaim: (index: number, entry: TimedRewardEntry) -> (),
 }
 
-local function TimedRewardsWindow(props: TimedRewardsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Rewards",
         Icon = Icons.Gift,
         IconScale = 1.2,

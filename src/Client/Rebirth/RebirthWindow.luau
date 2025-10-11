@@ -6,13 +6,13 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Window = require(Client.Interface.Window)
 
 export type RebirthWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     SpeedGain: Fusion.UsedAs<number>,
     IncomeGain: Fusion.UsedAs<number>,
 
@@ -27,9 +27,12 @@ export type RebirthWindowProps = {
     RequiredCoins: Fusion.UsedAs<number>,
 }
 
-local function RebirthWindow(props: RebirthWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Rebirth",
         Icon = Icons.Rebirth,
     }

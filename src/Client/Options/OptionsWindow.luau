@@ -6,13 +6,13 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Window = require(Client.Interface.Window)
 
 export type OptionsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-
     MusicVolume: Fusion.Value<number>,
     SoundEffectsVolume: Fusion.Value<number>,
     NightModeEnabled: Fusion.Value<boolean>,
@@ -20,9 +20,12 @@ export type OptionsWindowProps = {
     MinimapEnabled: Fusion.Value<boolean>,
 }
 
-local function OptionsWindow(props: OptionsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function OptionsWindow<U>(scope: Scope<U>, props: OptionsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Options",
         Icon = Icons.Gear,
         IconScale = 1.05,

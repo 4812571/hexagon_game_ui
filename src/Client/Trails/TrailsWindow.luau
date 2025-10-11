@@ -6,17 +6,20 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
 local Icons = require(Common.Icons)
 
 local Window = require(Client.Interface.Window)
 
-export type TrailsWindowProps = {
-    Scope: Fusion.Scope<typeof(Fusion)>,
-}
+export type TrailsWindowProps = {}
 
-local function TrailsWindow(props: TrailsWindowProps)
-    return Window {
-        Scope = props.Scope,
+local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
+    local scope = scope:innerScope {
+        Window = Window,
+    }
+
+    return scope:Window {
         Title = "Trails",
         Icon = Icons.Aura,
         IconScale = 1.1,
