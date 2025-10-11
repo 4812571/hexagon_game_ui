@@ -33,24 +33,24 @@ local function Icon<U>(scope: Scope<typeof(Fusion) & U>, props: IconProps)
 
         BackgroundTransparency = 1,
 
-        [Children] = scope:New "ImageLabel" {
-            Size = UDim2.fromScale(1, 1),
-            Position = UDim2.fromScale(0.5, 0.5),
-            AnchorPoint = Vector2.new(0.5, 0.5),
+        [Children] = {
+            scope:New "ImageLabel" {
+                Size = UDim2.fromScale(1, 1),
+                Position = UDim2.fromScale(0.5, 0.5),
+                AnchorPoint = Vector2.new(0.5, 0.5),
 
-            BackgroundTransparency = 1,
+                BackgroundTransparency = 1,
 
-            Image = props.Icon,
+                Image = props.Icon,
 
-            [Children] = {
-                scope:New "UIScale" {
+                [Children] = scope:New "UIScale" {
                     Scale = props.IconScale
                 },
+            },
 
-                scope:New "UIAspectRatioConstraint" {
-                    AspectRatio = 1,
-                },
-            }
+            scope:New "UIAspectRatioConstraint" {
+                AspectRatio = 1,
+            },
         }
     }
 end
