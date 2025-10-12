@@ -24,7 +24,9 @@ local function StateFromDay(day: number, currentDay: number): ClaimState
 end
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        DailyRewardsWindow = DailyRewardsWindow,
+    })
 
     local entries = {}
 
@@ -38,8 +40,7 @@ return function(target: Instance)
         table.insert(entries, entry)
     end
 
-    local window = DailyRewardsWindow {
-        Scope = scope,
+    local window = scope:DailyRewardsWindow {
         Rewards = entries,
 
         OnClaim = function(day: number)
