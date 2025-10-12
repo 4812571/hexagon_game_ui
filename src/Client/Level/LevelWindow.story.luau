@@ -23,7 +23,9 @@ local function StateFromLevel(level: number, currentLevel: number): ClaimState
 end
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        LevelWindow = LevelWindow,
+    })
 
     local currentLevel = 5
 
@@ -39,9 +41,7 @@ return function(target: Instance)
         table.insert(entries, entry)
     end
 
-    local window = LevelWindow {
-        Scope = scope,
-        
+    local window = scope:LevelWindow {
         Level = currentLevel,
         Experience = 40,
         ExperienceToNextLevel = 95,

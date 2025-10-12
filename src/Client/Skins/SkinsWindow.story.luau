@@ -12,7 +12,9 @@ local SkinsWindow = require(Client.Skins.SkinsWindow)
 type SkinEntry = SkinsWindow.SkinEntry
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        SkinsWindow = SkinsWindow,
+    })
 
     local entries = {}
     
@@ -27,8 +29,7 @@ return function(target: Instance)
         table.insert(entries, entry)
     end
 
-    local window = SkinsWindow {
-        Scope = scope,
+    local window = scope:SkinsWindow {
         Section = "Various",
         Skins = entries,
         Selected = entries[1],

@@ -8,10 +8,11 @@ local Fusion = require(Packages.Fusion)
 local ShopWindow = require(Client.Shop.ShopWindow)
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        ShopWindow = ShopWindow,
+    })
 
-    local window = ShopWindow {
-        Scope = scope,
+    local window = scope:ShopWindow {
 
         OnStarterPackPurchase = function()
             print("Purchasing starter pack...")
