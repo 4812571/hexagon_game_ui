@@ -13,7 +13,7 @@ type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 local Icons = require(Common.Icons)
 
-local LevelRewards = require(Common.LevelRewards)
+local LevelRewards = require(Common.Level.LevelRewards)
 type LevelReward = typeof(LevelRewards)
 
 local Window = require(Client.Interface.Window)

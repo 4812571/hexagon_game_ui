@@ -4,7 +4,7 @@ local Packages = ReplicatedStorage.Packages
 local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
-local LevelRewards = require(Common.LevelRewards)
+local LevelRewards = require(Common.Level.LevelRewards)
 
 local Fusion = require(Packages.Fusion)
 
