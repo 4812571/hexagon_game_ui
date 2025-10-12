@@ -14,7 +14,9 @@ local TimedRewardsWindow = require(Client.TimedRewards.TimedRewardsWindow)
 type TimedRewardEntry = TimedRewardsWindow.TimedRewardEntry
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        TimedRewardsWindow = TimedRewardsWindow,
+    })
 
     local passedTime = scope:Value(0)
     
@@ -33,8 +35,7 @@ return function(target: Instance)
         table.insert(entries, entry)
     end
 
-    local window = TimedRewardsWindow {
-        Scope = scope,
+    local window = scope:TimedRewardsWindow {
 
         Rewards = entries,
 

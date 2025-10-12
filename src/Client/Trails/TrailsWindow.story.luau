@@ -8,10 +8,11 @@ local Fusion = require(Packages.Fusion)
 local TrailsWindow = require(Client.Trails.TrailsWindow)
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        TrailsWindow = TrailsWindow,
+    })
 
-    local window = TrailsWindow {
-        Scope = scope,
+    local window = scope:TrailsWindow {
     }
 
     window.Parent = target

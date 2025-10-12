@@ -8,10 +8,11 @@ local Fusion = require(Packages.Fusion)
 local RebirthWindow = require(Client.Rebirth.RebirthWindow)
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        RebirthWindow = RebirthWindow,
+    })
 
-    local window = RebirthWindow {
-        Scope = scope,
+    local window = scope:RebirthWindow {
 
         SpeedGain = 0.25,
         IncomeGain = 0.2,

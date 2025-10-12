@@ -17,7 +17,9 @@ local function Enabled(bool: boolean): string
 end
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        OptionsWindow = OptionsWindow,
+    })
 
     local musicVolume = scope:Value(0.5)
     local soundEffectsVolume = scope:Value(0.5)
@@ -45,9 +47,7 @@ return function(target: Instance)
         print(`Minimap {Enabled(peek(minimapEnabled))}`)
     end)
 
-    local window = OptionsWindow {
-        Scope = scope,
-
+    local window = scope:OptionsWindow {
         MusicVolume = musicVolume,
         SoundEffectsVolume = soundEffectsVolume,
         NightModeEnabled = nightModeEnabled,

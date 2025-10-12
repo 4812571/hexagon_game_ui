@@ -9,7 +9,9 @@ local QuestsWindow = require(Client.Quests.QuestsWindow)
 type QuestEntry = QuestsWindow.QuestEntry
 
 return function(target: Instance)
-    local scope = Fusion.scoped(Fusion)
+    local scope = Fusion.scoped(Fusion, {
+        QuestsWindow = QuestsWindow,
+    })
 
     local elimination = {
         Quest = "Elimination",
@@ -33,8 +35,7 @@ return function(target: Instance)
         end,
     }
 
-    local window = QuestsWindow {
-        Scope = scope,
+    local window = scope:QuestsWindow {
         Quests = { elimination, playTime },
     }
 
