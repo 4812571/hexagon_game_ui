@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type Quest =
     | "PlayTime"
     | "Color"

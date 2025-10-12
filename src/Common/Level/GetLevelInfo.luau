@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type LevelInfo = {
     Level: number,
     Experience: number,

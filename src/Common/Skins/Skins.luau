@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type SkinInfo = {
     Name: string,
     ImageId: string,

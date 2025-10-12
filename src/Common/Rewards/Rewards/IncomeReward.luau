@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type IncomeReward = {
     Type: "Income",
     Percent: number,

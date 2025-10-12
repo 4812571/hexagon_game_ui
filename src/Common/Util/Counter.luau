@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local function Counter(): () -> number
     local currentValue = 0
 

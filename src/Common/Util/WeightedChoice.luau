@@ -1,4 +1,5 @@
 --!strict
+--!native
 
 export type Choice<T> = {
     Weight: number,

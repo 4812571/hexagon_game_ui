@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type SkinsData = {
     OwnedSkins: { [string]: boolean},
     ActiveSkinId: string?,

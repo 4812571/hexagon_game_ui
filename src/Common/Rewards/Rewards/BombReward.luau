@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type BombType = "Bomb" | "GoldBomb" | "Nuke"
 
 export type BombReward = {

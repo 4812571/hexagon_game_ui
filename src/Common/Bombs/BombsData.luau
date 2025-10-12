@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type BombsData = {
     Bombs: number,
     GoldBombs: number,

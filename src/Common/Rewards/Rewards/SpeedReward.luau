@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type SpeedReward = {
     Type: "Speed",
     Percent: number,

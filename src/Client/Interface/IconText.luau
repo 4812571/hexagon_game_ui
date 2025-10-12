@@ -1,4 +1,5 @@
 --!strict
+--!native
 --!nolint LocalShadow
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

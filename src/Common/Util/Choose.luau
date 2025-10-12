@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local function Choose<T>(random: Random, collection: {T})
     local collectionSize = #collection
 

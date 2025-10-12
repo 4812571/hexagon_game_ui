@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 type Node<T> = {
     Value: T,
     Next: Node<T>?,

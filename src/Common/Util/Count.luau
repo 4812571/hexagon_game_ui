@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 type Map<K, V> = { [K]: V }
 
 local function Count<K, V>(map: Map<K, V>): number

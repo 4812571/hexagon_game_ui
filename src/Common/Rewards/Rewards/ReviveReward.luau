@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type ReviveReward = {
     Type: "Revive",
     Amount: number,
