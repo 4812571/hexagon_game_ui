@@ -39,6 +39,9 @@ return function(target: Instance)
             Level = level,
             Reward = reward,
             ClaimState = StateFromLevel(level, currentLevel),
+            OnClaim = function()
+                print("Claimed level", level)
+            end,
         }
 
         table.insert(entries, entry)

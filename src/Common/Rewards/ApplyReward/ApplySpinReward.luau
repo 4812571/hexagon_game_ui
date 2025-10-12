@@ -16,7 +16,7 @@ local Rewards = require(Common.Rewards.Rewards)
 type SpinReward = Rewards.SpinReward
 
 local function ApplySpinReward(player: CommonPlayer, reward: SpinReward)
-    player.Spins.Spins:set(peek(player.Spins) + reward.Amount)
+    player.Spins.Spins:set(peek(player.Spins.Spins) + reward.Amount)
 end
 
 return ApplySpinReward

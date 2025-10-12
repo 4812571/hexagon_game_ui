@@ -25,6 +25,7 @@ export type IconTextProps = {
     IconSide: UsedAs<IconSide>,
 
     Icon: UsedAs<string>,
+    IconScale: UsedAs<number>?,
     
     Text: UsedAs<string>,
     TextSize: UsedAs<number>,
@@ -63,6 +64,7 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                     scope:Icon {
                         Size = UDim2.fromScale(1, 1),
                         Icon = props.Icon,
+                        IconScale = props.IconScale,
                     },
 
                     scope:New "UIAspectRatioConstraint" {
@@ -76,7 +78,7 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                 
                 Text = props.Text,
                 TextColor3 = Color3.fromRGB(255, 255, 255),
-                TextSize = 92,
+                TextSize = props.TextSize,
                 TextXAlignment = scope:Computed(function(use)
                     return if use(props.IconSide) == "Left" then Enum.TextXAlignment.Left else Enum.TextXAlignment.Right
                 end),
@@ -90,7 +92,7 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                 [Children] = {
                     scope:New "UIStroke" {
                         Color = Color3.fromRGB(0, 0, 0),
-                        Thickness = 4,
+                        Thickness = props.TextStrokeThickness,
                     },
 
                     scope:New "UIFlexItem" {

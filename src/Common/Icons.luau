@@ -22,6 +22,8 @@ local Icons = {
     Galaxy = "rbxassetid://96443305469862",
     Robux = "rbxassetid://103401564850388",
     Close = "rbxassetid://125071103691465",
+    Check = "rbxassetid://82027982067789",
+    Lock = "rbxassetid://132976135153699",
 
     CoinBag = "rbxassetid://129417199230918",
     CoinChest = "rbxassetid://106844640408324",

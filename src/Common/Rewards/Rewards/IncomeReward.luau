@@ -7,7 +7,7 @@ export type IncomeReward = {
 }
 
 local function IncomeReward(percent: number): IncomeReward
-    local reward = {
+    local reward: IncomeReward = {
         Type = "Income",
         Percent = percent,
     }
