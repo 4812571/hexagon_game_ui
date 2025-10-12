@@ -1,3 +1,6 @@
+--!strict
+--!nolint LocalShadow
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
