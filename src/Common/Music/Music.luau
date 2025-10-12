@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type Music = {
     Name: string,
     Link: string,

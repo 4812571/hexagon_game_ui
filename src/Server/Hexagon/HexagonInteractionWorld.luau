@@ -1,6 +1,6 @@
 --!strict
---!optimize 2
 --!native
+--!optimize 2
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerScriptService = game:GetService("ServerScriptService")

@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type MultiplyCoinReward = {
     Type: "MultiplyCoin",
     Multiplier: number,

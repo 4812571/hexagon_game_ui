@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type Currency = "Coins" | "Robux"
 
 export type TrailPrice = {

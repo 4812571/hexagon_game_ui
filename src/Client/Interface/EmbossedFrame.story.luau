@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 -- Inline “story” that renders a static, unpressable EmbossedButton.
 -- Looks like the OG button in its non-pressed state (no hover/press logic).
 

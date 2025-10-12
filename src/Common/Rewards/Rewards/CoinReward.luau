@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type CoinReward = {
     Type: "Coin",
     Amount: number,

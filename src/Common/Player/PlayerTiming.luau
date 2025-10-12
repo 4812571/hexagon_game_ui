@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type PlayerTiming = {
     Check: (instant: number) -> boolean,
 }

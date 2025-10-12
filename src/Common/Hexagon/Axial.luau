@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type Axial = {
     Q: number,
     R: number,

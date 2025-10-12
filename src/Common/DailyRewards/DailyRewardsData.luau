@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type DailyRewardsData = {
     LastClaim: number,
     NextClaimIndex: number,

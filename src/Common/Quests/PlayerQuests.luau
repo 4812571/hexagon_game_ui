@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

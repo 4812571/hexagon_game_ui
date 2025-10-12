@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type BombConfig = {
     Cooldown: number,
     FuseTime: number,

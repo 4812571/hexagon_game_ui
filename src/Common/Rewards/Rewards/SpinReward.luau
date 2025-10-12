@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type SpinReward = {
     Type: "Spin",
     Amount: number,

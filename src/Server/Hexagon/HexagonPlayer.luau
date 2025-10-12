@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local ServerScriptService = game:GetService("ServerScriptService")
 
 local Server = ServerScriptService.Server

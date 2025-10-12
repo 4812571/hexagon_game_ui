@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type Sequence<T> = {
     Next: () -> T,
 }

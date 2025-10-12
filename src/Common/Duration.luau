@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local SECOND = 1
 local MINUTE = 60 * SECOND
 local HOUR = 60 * MINUTE

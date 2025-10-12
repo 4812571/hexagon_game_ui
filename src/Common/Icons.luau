@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local Icons = {
     Rocket = "rbxassetid://137451340767109",
     Pencil = "rbxassetid://99601675276185",

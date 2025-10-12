@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local BombReward = require(script.BombReward)
 local CoinReward = require(script.CoinReward)
 local IncomeReward = require(script.IncomeReward)

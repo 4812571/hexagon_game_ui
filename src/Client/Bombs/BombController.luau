@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ContextActionService = game:GetService("ContextActionService")
 

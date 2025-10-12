@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 local RebirthBombs = {
     Bombs = 6,
     GoldBombs = 4,

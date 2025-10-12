@@ -1,3 +1,6 @@
+--!strict
+--!native
+
 export type OptionsData = {
     MusicVolume: number,
     SFXVolume: number,
