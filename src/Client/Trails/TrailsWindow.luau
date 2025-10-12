@@ -25,7 +25,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
     return scope:Window {
         Title = "Trails",
         Icon = Icons.Aura,
-        IconScale = 1.1,
+        IconScale = 1.45,
     }
 end
 

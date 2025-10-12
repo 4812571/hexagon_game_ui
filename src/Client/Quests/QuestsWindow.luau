@@ -39,6 +39,7 @@ local function QuestsWindow<U>(scope: Scope<U>, props: QuestsWindowProps)
     return scope:Window {
         Title = "Quests",
         Icon = Icons.Scroll,
+        IconScale = 1.20,
     }
 end
 

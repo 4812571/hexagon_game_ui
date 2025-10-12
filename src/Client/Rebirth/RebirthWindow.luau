@@ -38,6 +38,7 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
     return scope:Window {
         Title = "Rebirth",
         Icon = Icons.Rebirth,
+        IconScale = 1.35,
     }
 end
 
