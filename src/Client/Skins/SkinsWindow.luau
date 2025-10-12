@@ -39,6 +39,7 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
     return scope:Window {
         Title = "Skins",
         Icon = Icons.Pencil,
+        IconScale = 1.35,
     }
 end
 

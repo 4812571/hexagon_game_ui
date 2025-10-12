@@ -39,7 +39,7 @@ local function DailyRewardsWindow<U>(scope: Scope<U>, props: DailyRewardsWindowP
     return scope:Window {
         Title = "Daily",
         Icon = Icons.Calendar,
-        IconScale = 0.95,
+        IconScale = 1.25,
     }
 end
 

@@ -44,6 +44,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
     return scope:Window {
         Title = "Level",
         Icon = Icons.UpArrow,
+        IconScale = 1.35,
     }
 end
 

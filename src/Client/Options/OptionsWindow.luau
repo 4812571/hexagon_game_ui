@@ -31,7 +31,7 @@ local function OptionsWindow<U>(scope: Scope<U>, props: OptionsWindowProps)
     return scope:Window {
         Title = "Options",
         Icon = Icons.Gear,
-        IconScale = 1.05,
+        IconScale = 1.35,
     }
 end
 

@@ -36,6 +36,7 @@ local function ShopWindow<U>(scope: Scope<U>, props: ShopWindowProps)
     return scope:Window {
         Title = "Shop",
         Icon = Icons.ShoppingCart,
+        IconScale = 1.35,
     }
 end
 

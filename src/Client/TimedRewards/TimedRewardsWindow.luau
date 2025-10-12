@@ -38,7 +38,7 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
     return scope:Window {
         Title = "Rewards",
         Icon = Icons.Gift,
-        IconScale = 1.2,
+        IconScale = 1.65,
     }
 end
 
