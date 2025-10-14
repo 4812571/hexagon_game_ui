@@ -37,6 +37,7 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
         Size = UDim2.fromOffset(550, 350),
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.5),
+        BackgroundTransparency = 1,
 
         BackgroundTransparency = 1,
 

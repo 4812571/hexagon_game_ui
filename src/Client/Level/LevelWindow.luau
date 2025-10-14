@@ -343,6 +343,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
                 scope:New "Frame" {
                     Size = UDim2.fromScale(1, 0.20),
+                    BackgroundTransparency = 1,
                     LayoutOrder = 3,
 
                     [Children] = {
