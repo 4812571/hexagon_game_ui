@@ -168,7 +168,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                         },
 
                         scope:ProgressBar {
-                            Size = UDim2.fromScale(0.6, 0.3),
+                            Size = UDim2.fromScale(0.6, 0.35),
                             Position = UDim2.fromScale(0.30, 0.91),
                             AnchorPoint = Vector2.new(0, 1),
 
@@ -178,6 +178,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                             Text = scope:Computed(function(use)
                                 return `{use(props.Experience)} / {use(props.ExperienceToNextLevel)} XP`
                             end),
+                            TextSize = 22,
 
                             BarAlpha = scope:Computed(function(use)
                                 return (use(props.Experience) :: number) / (use(props.ExperienceToNextLevel) :: number)
