@@ -24,6 +24,7 @@ export type IconProps = {
 
     Icon: UsedAs<string>,
     IconScale: UsedAs<number>?,
+    ResampleMode: UsedAs<Enum.ResamplerMode>?,
 
     Children: Fusion.Child?,
 }
@@ -52,6 +53,8 @@ local function Icon<U>(scope: Scope<typeof(Fusion) & U>, props: IconProps)
                 BackgroundTransparency = 1,
 
                 Image = props.Icon,
+
+                ResampleMode = props.ResampleMode,
 
                 [Children] = scope:New "UIScale" {
                     Scale = props.IconScale,

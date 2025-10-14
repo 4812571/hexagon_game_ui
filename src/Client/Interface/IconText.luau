@@ -26,7 +26,8 @@ export type IconTextProps = {
 
     Icon: UsedAs<string>,
     IconScale: UsedAs<number>?,
-    
+    ResampleMode: UsedAs<Enum.ResamplerMode>?,
+
     Text: UsedAs<string>,
     TextSize: UsedAs<number>,
     TextStrokeThickness: UsedAs<number>,
@@ -65,6 +66,7 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                         Size = UDim2.fromScale(1, 1),
                         Icon = props.Icon,
                         IconScale = props.IconScale,
+                        ResampleMode = props.ResampleMode,
                     },
 
                     scope:New "UIAspectRatioConstraint" {
