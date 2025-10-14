@@ -96,20 +96,23 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                         scope:New "Frame" {
                             Position = UDim2.fromScale(0, 0.5),
                             AnchorPoint = Vector2.new(0, 0.5),
-                            Size = UDim2.fromScale(0.4, 1),
+                            Size = UDim2.fromScale(0.4, 0.9),
                             BackgroundTransparency = 1,
-                            
+
                             [Children] = {
                                 scope:New "UIListLayout" {
                                     FillDirection = Enum.FillDirection.Vertical,
                                     SortOrder = Enum.SortOrder.LayoutOrder,
 
                                     HorizontalAlignment = Enum.HorizontalAlignment.Center,
-                                    VerticalAlignment = Enum.VerticalAlignment.Center,
+                                    VerticalAlignment = Enum.VerticalAlignment.Bottom,
+
+                                    Padding = UDim.new(0, 0),
                                 },
 
                                 scope:New "TextLabel" {
-                                    Size = UDim2.fromScale(1, 0.5),
+                                    Size = UDim2.fromScale(1, 0),
+                                    AutomaticSize = Enum.AutomaticSize.Y,
 
                                     BackgroundTransparency = 1,
                                     TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -119,7 +122,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
                                     [Children] = {
                                         scope:New "UIStroke" {
-                                            Thickness = 3,
+                                            Thickness = 2.15,
                                             Color = Color3.fromRGB(0, 0, 0),
                                             LineJoinMode = Enum.LineJoinMode.Miter,
                                         },
@@ -137,7 +140,8 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                 },
 
                                 scope:New "TextLabel" {
-                                    Size = UDim2.fromScale(1, 0.5),
+                                    Size = UDim2.fromScale(1, 0),
+                                    AutomaticSize = Enum.AutomaticSize.Y,
 
                                     BackgroundTransparency = 1,
                                     TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -145,10 +149,9 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                     TextXAlignment = Enum.TextXAlignment.Left,
                                     TextSize = 24,
 
-                                
                                     [Children] = {
                                         scope:New "UIStroke" {
-                                            Thickness = 3,
+                                            Thickness = 2.15,
                                             Color = Color3.fromRGB(0, 0, 0),
                                             LineJoinMode = Enum.LineJoinMode.Miter,
                                         },
@@ -355,7 +358,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                         },
 
                         scope:InteractionFrame {
-                            Size = UDim2.fromScale(0.35, 0.7),
+                            Size = UDim2.fromScale(0.3, 0.7),
                             BackgroundTransparency = 1,
 
                             Children = {
@@ -398,17 +401,17 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                             },
 
                                             scope:IconText {
-                                                Size = UDim2.fromScale(0.6, 1),
+                                                Size = UDim2.fromScale(1, 1),
                                                 Position = UDim2.fromScale(1, 0.5),
                                                 AnchorPoint = Vector2.new(1, 0.5),
 
                                                 Icon = Icons.Coin,
                                                 IconScale = 1.4,
 
-                                                Text = "5,000,000",
-                                                TextSize = 15.5,
+                                                Text = "5M",
+                                                TextSize = 30,
                                                 IconSide = "Right",
-                                                TextStrokeThickness = 1,
+                                                TextStrokeThickness = 2,
                                             }
                                         }
                                     },
@@ -417,7 +420,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                         },
 
                         scope:InteractionFrame {
-                            Size = UDim2.fromScale(0.35, 0.7),
+                            Size = UDim2.fromScale(0.32, 0.7),
                             BackgroundTransparency = 1,
 
                             Children = {
@@ -466,11 +469,12 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
                                                 Icon = Icons.Robux,
                                                 IconScale = 1.4,
+                                                ResampleMode = Enum.ResamplerMode.Pixelated,
 
-                                                Text = "5,000,000",
-                                                TextSize = 15.5,
+                                                Text = "500",
+                                                TextSize = 30,
                                                 IconSide = "Right",
-                                                TextStrokeThickness = 1,
+                                                TextStrokeThickness = 2,
                                             }
                                         }
                                     },
