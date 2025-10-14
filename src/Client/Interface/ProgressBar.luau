@@ -17,6 +17,7 @@ type ProgressBarProps = {
     BackgroundColor: Fusion.UsedAs<Color3>,
 
     Text: Fusion.UsedAs<string>,
+    TextSize: Fusion.UsedAs<number>?,
     BarAlpha: Fusion.UsedAs<number>,
 
     Children: Fusion.Child?,
@@ -79,7 +80,7 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
                 Size = UDim2.fromScale(1, 1),
                 BackgroundTransparency = 1,
                 Text = props.Text,
-                TextSize = 24,
+                TextSize = props.TextSize or 24,
                 Font = Enum.Font.FredokaOne,
                 TextColor3 = Color3.fromRGB(255, 255, 255),
 
