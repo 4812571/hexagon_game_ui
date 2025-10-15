@@ -17,6 +17,8 @@ export type EmbossedFrameProps = {
     Position: UsedAs<UDim2>?,
     AnchorPoint: UsedAs<Vector2>?,
 
+    LayoutOrder: UsedAs<number>?,
+
     SizeConstraint: UsedAs<Enum.SizeConstraint>?,
     ClipsDescendants: UsedAs<boolean>?,
 
@@ -44,10 +46,10 @@ local function EmbossedFrame<U>(scope: Scope<typeof(Fusion) & U>, props: Embosse
         Position = props.Position,
         AnchorPoint = props.AnchorPoint,
 
+        LayoutOrder = props.LayoutOrder,
+
         SizeConstraint = props.SizeConstraint,
         ClipsDescendants = props.ClipsDescendants,
-
-        BackgroundTransparency = 0,
 
         BackgroundColor3 = scope:Computed(function(use)
             return use(props.Color):Lerp(BLACK, DARKEN_FACTOR)
