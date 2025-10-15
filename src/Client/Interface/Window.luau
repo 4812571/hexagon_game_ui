@@ -34,7 +34,7 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
     }
 
     return scope:New "Frame" {
-        Size = UDim2.fromOffset(550, 350),
+        Size = UDim2.fromOffset(880, 560),
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.fromScale(0.5, 0.5),
 
@@ -118,12 +118,12 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
                                         scope:Icon {
                                             Icon = props.Icon,
                                             IconScale = props.IconScale,
-                                            Size = UDim2.fromOffset(30, 30),
+                                            Size = UDim2.fromOffset(48, 48),
                                         },
 
                                         scope:New "TextLabel" {
                                             Text = props.Title,
-                                            TextSize = 30,
+                                            TextSize = 48,
                                             AutomaticSize = Enum.AutomaticSize.XY,
                                             Font = Enum.Font.FredokaOne,
                                             BackgroundTransparency = 1,

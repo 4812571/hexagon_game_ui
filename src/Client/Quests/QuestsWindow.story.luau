@@ -16,22 +16,26 @@ return function(target: Instance)
         QuestsWindow = QuestsWindow,
     })
 
-    local elimination = {
+    local elimination: QuestEntry = {
         Quest = "Elimination",
         RewardExperience = 25,
-        Progress = 15,
+        Progress = 197,
         RequiredProgress = 100,
+
+        LayoutOrder = 1,
 
         OnClaim = function()
             print("Claimed elimination quest")
         end,
     }
 
-    local playTime = {
+    local playTime: QuestEntry = {
         Quest = "PlayTime",
         RewardExperience = 50,
-        Progress = 5,
+        Progress = 123,
         RequiredProgress = 10,
+
+        LayoutOrder = 2,
 
         OnClaim = function()
             print("Claimed play time quest")

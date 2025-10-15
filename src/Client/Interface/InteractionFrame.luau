@@ -49,6 +49,8 @@ local function InteractionFrame<U>(scope: Scope<typeof(Fusion) & U>, props: Inte
         Size = props.Size,
         AnchorPoint = props.AnchorPoint,
         Rotation = props.Rotation,
+        
+        LayoutOrder = props.LayoutOrder,
 
         BackgroundColor3 = props.BackgroundColor3,
         BackgroundTransparency = props.BackgroundTransparency,

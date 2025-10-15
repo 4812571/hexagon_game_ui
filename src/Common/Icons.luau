@@ -13,7 +13,7 @@ local Icons = {
     ShoppingCart = "rbxassetid://111900069109448",
     Rebirth = "rbxassetid://16378422621",
     Calendar = "rbxassetid://16378449814",
-    Clock = "rbxassetid://16378484213",
+    Clock = "rbxassetid://104602611008015",
     Gear = "rbxassetid://82920272387173",
     Devil = "rbxassetid://87459473178251",
     Gift = "rbxassetid://119015680957808",
@@ -24,6 +24,8 @@ local Icons = {
     Close = "rbxassetid://125071103691465",
     Check = "rbxassetid://82027982067789",
     Lock = "rbxassetid://132976135153699",
+    Sword = "rbxassetid://134935494415215",
+    Trophy = "rbxassetid://98963639572691",
 
     CoinBag = "rbxassetid://129417199230918",
     CoinChest = "rbxassetid://106844640408324",

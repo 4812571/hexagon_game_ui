@@ -13,10 +13,13 @@ type ProgressBarProps = {
     Position: Fusion.UsedAs<UDim2>?,
     AnchorPoint: Fusion.UsedAs<Vector2>?,
 
+    LayoutOrder: Fusion.UsedAs<number>?,
+
     BarColor: Fusion.UsedAs<Color3>,
     BackgroundColor: Fusion.UsedAs<Color3>,
 
     Text: Fusion.UsedAs<string>,
+    TextSize: Fusion.UsedAs<number>?,
     BarAlpha: Fusion.UsedAs<number>,
 
     Children: Fusion.Child?,
@@ -46,6 +49,7 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
         Position = props.Position,
         AnchorPoint = props.AnchorPoint,
         BackgroundColor3 = props.BackgroundColor,
+        LayoutOrder = props.LayoutOrder,
 
         [Out "AbsoluteSize"] = absoluteSize,
 
@@ -77,11 +81,17 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
 
             scope:New "TextLabel" {
                 Size = UDim2.fromScale(1, 1),
+                AnchorPoint = Vector2.new(0.5, 0.5),
+                Position = UDim2.fromScale(0.5, 0.5),
+
                 BackgroundTransparency = 1,
                 Text = props.Text,
-                TextSize = 24,
+                TextSize = props.TextSize,
                 Font = Enum.Font.FredokaOne,
                 TextColor3 = Color3.fromRGB(255, 255, 255),
+
+                TextXAlignment = Enum.TextXAlignment.Center,
+                TextYAlignment = Enum.TextYAlignment.Center,
 
                 [Children] = scope:New "UIStroke" {
                     Thickness = 2,
