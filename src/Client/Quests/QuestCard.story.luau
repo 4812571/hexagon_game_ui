@@ -23,7 +23,7 @@ return function(target: Instance)
     local requiredProgress = 5
 
     local card = scope:QuestCard {
-        Size = UDim2.fromOffset(352, 57),
+        Size = UDim2.fromOffset(668, 78),
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
 
