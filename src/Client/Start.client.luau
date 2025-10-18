@@ -25,7 +25,7 @@ local LevelRewardsController = require(Client.Level.LevelRewardsController)
 local DailyRewardsController = require(Client.DailyRewards.DailyRewardsController)
 local TimedRewardsController = require(Client.TimedRewards.TimedRewardsController)
 local TrailsController = require(Client.Trails.TrailsController)
-local MusicController = require(Client.Music.MusicController)
+-- local MusicController = require(Client.Music.MusicController)
 local LobbyController = require(Client.Lobby.LobbyController)
 local RespawnController = require(Client.Respawn.RespawnController)
 
@@ -51,7 +51,7 @@ local levelRewardsController = LevelRewardsController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 local trailsController = TrailsController(scope, clientPlayer)
-local musicController = MusicController(scope, clientPlayer)
+-- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
 local respawnController = RespawnController(scope, clientPlayer)
 
@@ -68,7 +68,7 @@ local controllers = {
     DailyRewardsController = dailyRewardsController,
     TimedRewardsController = timedRewardsController,
     TrailsController = trailsController,
-    MusicController = musicController,
+    -- MusicController = musicController,
     LobbyController = lobbyController,
     RespawnController = respawnController,
 }
