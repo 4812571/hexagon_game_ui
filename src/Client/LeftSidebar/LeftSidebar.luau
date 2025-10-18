@@ -29,6 +29,8 @@ type ButtonProps = {
 }
 
 type LeftSidebarProps = {
+    Scale: Fusion.UsedAs<number>,
+
     Position: Fusion.UsedAs<UDim2>?,
     AnchorPoint: Fusion.UsedAs<Vector2>?,
 
@@ -130,6 +132,10 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
             scope:New "UIListLayout" {
                 Padding = UDim.new(0, 25),
                 FillDirection = Enum.FillDirection.Vertical,
+            },
+
+            scope:New "UIScale" {
+                Scale = props.Scale,
             },
 
             scope:New "Frame" {
