@@ -14,6 +14,7 @@ local NetworkClient = require(ReplicatedStorage.NetworkClient)
 local ClientPlayer = require(Client.Player.ClientPlayer)
 
 local BinderController = require(Client.BinderController)
+local WindowController = require(Client.Window.WindowController)
 local HexagonRenderingController = require(Client.Hexagon.HexagonRenderingController)
 local HexagonEffectsController = require(Client.Hexagon.HexagonEffectsController)
 local VictoryController = require(Client.Victory.VictoryController)
@@ -41,6 +42,7 @@ local scope = Fusion.scoped(Fusion)
 local clientPlayer = ClientPlayer(scope, Players.LocalPlayer, initialData.JoinTime, initialData.Player)
 
 local binderController = BinderController(scope)
+local windowController = WindowController(scope)
 local hexagonRenderingController = HexagonRenderingController(scope, initialData.Hexagon)
 local hexagonEffectsController = HexagonEffectsController(scope)
 local victoryController = VictoryController(scope)
@@ -55,9 +57,13 @@ local trailsController = TrailsController(scope, clientPlayer)
 -- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
 local respawnController = RespawnController(scope, clientPlayer)
-local leftSidebarController = LeftSidebarController(scope, clientPlayer)
+
+local leftSidebarController = LeftSidebarController(scope, clientPlayer, {
+    WindowController = windowController,
+})
 
 local controllers = {
+    WindowController = windowController,
     BinderController = binderController,
     HexagonRenderingController = hexagonRenderingController,
     VictoryController = victoryController,

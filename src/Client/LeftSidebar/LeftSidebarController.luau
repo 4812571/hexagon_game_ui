@@ -13,13 +13,21 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
+local WindowController = require(Client.Window.WindowController)
+
 local LeftSidebar = require(Client.LeftSidebar.LeftSidebar)
+
+export type Controllers = {
+    WindowController: WindowController.WindowController,
+}
 
 export type LeftSidebarController = {
     Start: () -> (),
 }
 
-local function LeftSidebarController(scope: Scope, player: ClientPlayer): LeftSidebarController
+local function LeftSidebarController(scope: Scope, player: ClientPlayer, controllers: Controllers): LeftSidebarController
+    local WindowController = controllers.WindowController
+    
     local scope = scope:innerScope {
         LeftSidebar = LeftSidebar,
     }
@@ -34,7 +42,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer): LeftSi
 
         LevelButton = {
             Activated = function()
-                print("Level Button Activated")
+                WindowController.OpenWindow("Level")
             end,
 
             IsNew = false,
@@ -42,7 +50,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer): LeftSi
 
         QuestsButton = {
             Activated = function()
-                print("Quests Button Activated")
+                WindowController.OpenWindow("Quests")
             end,
 
             IsNew = false,
@@ -50,7 +58,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer): LeftSi
 
         RebirthButton = {
             Activated = function()
-                print("Rebirth Button Activated")
+                WindowController.OpenWindow("Rebirth")
             end,
 
             IsNew = false,
