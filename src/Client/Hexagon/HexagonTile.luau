@@ -21,18 +21,22 @@ local function HexagonTile(scope: Scope, instance: Instance): HexagonTile
 
     table.insert(scope, Observe.Attribute(instance, "TileColor", function(color: Color3)
         hexagon.Color = color
+        return
     end))
 
     table.insert(scope, Observe.Attribute(instance, "IsOwned", function(isOwned: boolean)
         hexagon.Transparency = if isOwned then 0 else 1
+        return
     end))
 
     table.insert(scope, Observe.Attribute(instance, "SelectionColor", function(color: Color3)
         selector.Color = color
+        return
     end))
 
     table.insert(scope, Observe.Attribute(instance, "IsSelected", function(isSelected: boolean)
         selector.Transparency = if isSelected then 0 else 1
+        return
     end))
 
     local self = {
