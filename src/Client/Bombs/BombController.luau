@@ -34,23 +34,23 @@ local BOMB_HEIGHT = 50
 
 type BombType = "Bomb" | "GoldBomb" | "Nuke"
 
-local function Clone(scope: Scope, instance: Instance): Instance
+local function Clone<T>(scope: Scope, instance: T & Instance): T
     local clone = instance:Clone()
     table.insert(scope, clone)
     return clone
 end
 
-local function BombModel(scope: Scope, bombType: BombType)
+local function BombModel(scope: Scope, bombType: BombType): Model
     if bombType == "Bomb" then
-        return Clone(scope, BombTemplate)
+        return Clone(scope, BombTemplate :: Model)
     end
 
     if bombType == "GoldBomb" then
-        return Clone(scope, GoldBombTemplate)
+        return Clone(scope, GoldBombTemplate :: Model)
     end
 
     if bombType == "Nuke" then
-        return Clone(scope, NukeTemplate)
+        return Clone(scope, NukeTemplate :: Model)
     end
 
     error("Invalid bomb type: " .. bombType)

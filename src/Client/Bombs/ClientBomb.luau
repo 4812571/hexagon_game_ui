@@ -55,12 +55,14 @@ local function ClientBomb(scope: Scope, bombModel: Model, startPosition: Vector3
     local flashEnabledTime = scope:Value(nil)
     local fallingStartTime = peek(driverTime)
 
-    local alpha = scope:Computed(function(use)
-        if not use(flashEnabledTime) then
+    local alpha = scope:Computed(function(use): number
+        local flashEnabledTime: number? = use(flashEnabledTime)
+
+        if not flashEnabledTime then
             return 0
         end
 
-        local elapsed = use(driverTime) - use(flashEnabledTime)
+        local elapsed = (use(driverTime) :: number) - flashEnabledTime
 
         return UnitSin((elapsed ^ FLASH_FACTOR) * TAU * FLASH_FREQUENCY) * MAX_ALPHA
     end)
@@ -82,7 +84,7 @@ local function ClientBomb(scope: Scope, bombModel: Model, startPosition: Vector3
     end)
 
     local elapsedFallingTime = scope:Computed(function(use)
-        return use(driverTime) - fallingStartTime
+        return (use(driverTime) :: number) - fallingStartTime
     end)
 
     local startHeight = bombModel:GetPivot().Y

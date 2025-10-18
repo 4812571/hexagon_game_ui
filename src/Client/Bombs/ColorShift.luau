@@ -9,7 +9,7 @@ local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
 type UsedAs<T> = Fusion.UsedAs<T>
 
-local function ColorShift(scope: Scope, part: BasePart, shiftTo: Color3, alpha: UsedAs<Color3>)
+local function ColorShift(scope: Scope, part: BasePart, shiftTo: Color3, alpha: UsedAs<number>)
     local initialColor = part.Color
     
     local color = scope:Computed(function(use)
