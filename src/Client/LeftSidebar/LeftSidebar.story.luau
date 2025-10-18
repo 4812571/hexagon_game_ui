@@ -4,134 +4,74 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
-local Common = ReplicatedStorage.Common
-local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local Children = Fusion.Children
 
-local Icons = require(Common.Icons)
-
-local SidebarSquareButton = require(Client.LeftSidebar.SidebarSquareButton)
+local LeftSidebar = require(script.Parent.LeftSidebar)
 
 return function(target: Instance)
     local scope = Fusion.scoped(Fusion, {
-        SidebarSquareButton = SidebarSquareButton,
+        LeftSidebar = LeftSidebar,
     })
 
-    local levelButton = scope:SidebarSquareButton {
-        Name = "LevelButton",
-        Size = UDim2.fromOffset(150, 150),
-
-        Text = "Level",
-        Icon = Icons.UpArrow,
-        Color = Color3.new(0.933333, 0.203922, 0.203922),
-        IsNew = true,
-    }
-
-    local questsButton = scope:SidebarSquareButton {
-        Name = "QuestsButton",
-        Size = UDim2.fromOffset(150, 150),
-        Position = UDim2.fromOffset(0, 175),
-
-        Text = "Quests",
-        Icon = Icons.Scroll,
-        Color = Color3.fromRGB(255, 165, 0),
-        IsNew = false,
-    }
-
-    local rebirthButton = scope:SidebarSquareButton {
-        Name = "RebirthButton",
-        Size = UDim2.fromOffset(150, 150),
-        Position = UDim2.fromOffset(0, 350),
-
-        Text = "Rebirth",
-        Icon = Icons.Rebirth,
-        Color = Color3.fromRGB(242, 98, 110),
-        IsNew = true,
-    }
-
-    local trailsButton = scope:SidebarSquareButton {
-        Name = "TrailsButton",
-        Size = UDim2.fromOffset(150, 150),
-        Position = UDim2.fromOffset(0, 525),
-
-        Text = "Trails",
-        Icon = Icons.Aura,
-        Color = Color3.fromRGB(136, 128, 221),
-        IsNew = false,
-    }
-
-    local skinsButton = scope:SidebarSquareButton {
-        Name = "SkinsButton",
-        Size = UDim2.fromOffset(150, 150),
-        Position = UDim2.fromOffset(0, 700),
-
-        Text = "Skins",
-        Icon = Icons.Pencil,
-        Color = Color3.fromRGB(101, 246, 24),
-        IsNew = false,
-    }
-
-    local trollButton = scope:SidebarSquareButton {
-        Name = "TrollButton",
-        Size = UDim2.fromOffset(150, 150),
-        Position = UDim2.fromOffset(0, 875),
-
-        Text = "Troll",
-        Icon = Icons.Devil,
-        Color = Color3.fromRGB(154, 9, 227),
-        IsNew = true,
-    }
-
-    local container = scope:New "Frame" {
+    local random = Random.new()
+    
+    local instance = scope:LeftSidebar {
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
 
-        AutomaticSize = Enum.AutomaticSize.XY,
-        BackgroundTransparency = 1,
+        Revives = random:NextInteger(0, 10),
+    
+        LevelButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Level button activated!")
+            end,
+        },
 
-        [Children] = {
-            scope:New "UIListLayout" {
-                Padding = UDim.new(0, 25),
-                FillDirection = Enum.FillDirection.Vertical,
-            },
+        QuestsButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Quests button activated!")
+            end,
+        },
 
-            scope:New "Frame" {
-                AutomaticSize = Enum.AutomaticSize.XY,
-                BackgroundTransparency = 1,
+        RebirthButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Rebirth button activated!")
+            end,
+        },
 
-                [Children] = {
-                    scope:New "UIListLayout" {
-                        Padding = UDim.new(0, 25),
-                        FillDirection = Enum.FillDirection.Horizontal,
-                    },
+        TrailsButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Trails button activated!")
+            end,
+        },
 
-                    levelButton,
-                    questsButton,
-                    rebirthButton,
-                },
-            },
+        SkinsButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Skins button activated!")
+            end,
+        },
 
-            scope:New "Frame" {
-                AutomaticSize = Enum.AutomaticSize.XY,
-                BackgroundTransparency = 1,
-
-                [Children] = {
-                    scope:New "UIListLayout" {
-                        Padding = UDim.new(0, 25),
-                        FillDirection = Enum.FillDirection.Horizontal,
-                    },
-
-                    trailsButton,
-                    skinsButton,
-                    trollButton,
-                }
-            },
+        TrollButton = {
+            IsNew = random:NextNumber() < 0.5,
+            
+            Activated = function()
+                print("Troll button activated!")
+            end,
         },
     }
 
-    container.Parent = target
+    instance.Parent = target
 
     return function()
         scope:doCleanup()

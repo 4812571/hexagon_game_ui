@@ -45,6 +45,8 @@ export type SidebarSquareButtonProps = {
     Text: Fusion.UsedAs<string>,
     Color: Fusion.UsedAs<Color3>,
     IsNew: Fusion.UsedAs<boolean>?,
+
+    Activated: () -> (),
 }
 
 local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButtonProps)
@@ -133,6 +135,8 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
                 GuiStateChanged = function(state: Enum.GuiState)
                     guiState:set(state)
                 end,
+
+                Activated = props.Activated,
 
                 Children = {
                     newLabel,

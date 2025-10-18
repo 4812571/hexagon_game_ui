@@ -28,6 +28,10 @@ return function(target: Instance)
         Text = "Rebirth",
         Color = Color3.fromRGB(242, 98, 110),
         IsNew = false,
+
+        Activated = function()
+            print("SidebarSquareButton activated!")
+        end,
     }
 
     instance.Parent = target
