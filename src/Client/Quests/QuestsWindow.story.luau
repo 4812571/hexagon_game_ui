@@ -42,8 +42,15 @@ return function(target: Instance)
         end,
     }
 
+    local scale = scope:Value(1)
+
     local window = scope:QuestsWindow {
+        Scale = scope:Spring(scale, 25),
         Quests = { elimination, playTime },
+
+        OnClose = function()
+            scale:set(0)
+        end,
     }
 
     window.Parent = target

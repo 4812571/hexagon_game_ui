@@ -29,7 +29,7 @@ export type LevelRewardsService = {
 }
 
 local function LevelRewardsService(scope: Scope, services: Services): LevelRewardsService
-    local function OnClaimReward(player: Player, rewardIndex: number)
+    local function OnClaimReward(player: Player, rewardIndex: number): ()
         local serverPlayer = services.PlayerService.Expect(player)
 
         if peek(serverPlayer.Level.Level) < rewardIndex then
@@ -48,8 +48,6 @@ local function LevelRewardsService(scope: Scope, services: Services): LevelRewar
 
         serverPlayer.LevelRewards.Claim(rewardIndex)
         ApplyReward(serverPlayer, reward :: LevelRewards.LevelReward)
-
-        return
     end
 
     local function Start()

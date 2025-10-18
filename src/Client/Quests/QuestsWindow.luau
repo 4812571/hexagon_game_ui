@@ -37,7 +37,12 @@ export type Components = {
 }
 
 export type QuestsWindowProps = {
+    Scale: Fusion.UsedAs<number>,
+    Visible: Fusion.UsedAs<boolean>?,
+
     Quests: { QuestEntry },
+
+    OnClose: () -> (),
 }
 
 local function Pluralize(word: string, count: number): string
@@ -55,9 +60,14 @@ local function QuestsWindow<U>(scope: Scope<U>, props: QuestsWindowProps)
         Icon = Icons.Scroll,
         IconScale = 1.20,
 
+        OnClose = props.OnClose,
+
         Children = {
+            scope:New "UIScale" {
+                Scale = props.Scale,
+            },
+
             scope:New "ScrollingFrame" {
-                AutomaticSize = Enum.AutomaticSize.Y,
                 Size = UDim2.fromScale(0.8, 0.8),
                 Position = UDim2.fromScale(0.5, 0.5),
                 AnchorPoint = Vector2.new(0.5, 0.5),

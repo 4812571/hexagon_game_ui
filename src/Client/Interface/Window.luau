@@ -21,7 +21,6 @@ export type WindowProps = {
     Icon: Fusion.UsedAs<string>,
     IconScale: Fusion.UsedAs<number>?,
 
-    WindowScale: Fusion.UsedAs<number>?,
     OnClose: () -> ()?,
 
     Children: Fusion.Child?,
@@ -50,10 +49,6 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
                 ZIndex = 0,
 
                 [Children] = {
-                    scope:New "UIScale" {
-                        Scale = props.WindowScale or 1,
-                    },
-
                     scope:New "UIStroke" {
                         Thickness = 4,
                     },

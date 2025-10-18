@@ -6,7 +6,12 @@ local Fusion = require(Packages.Fusion)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
-local function WindowSpring<U>(scope: Scope<U>, windowName: string, currentWindow: Fusion.UsedAs<string?>)
+type WindowType = 
+    | "Level"
+    | "Quests"
+    | "Rebirth"
+
+local function WindowSpring<U>(scope: Scope<U>, windowName: WindowType, currentWindow: Fusion.UsedAs<WindowType?>)
     local controlValue = scope:Computed(function(use)
         return if use(currentWindow) == windowName then 1 else 0
     end)

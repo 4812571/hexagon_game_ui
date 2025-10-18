@@ -42,7 +42,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
         LevelButton = {
             Activated = function()
-                WindowController.OpenWindow("Level")
+                WindowController.ToggleWindow("Level")
             end,
 
             IsNew = false,
@@ -50,7 +50,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
         QuestsButton = {
             Activated = function()
-                WindowController.OpenWindow("Quests")
+                WindowController.ToggleWindow("Quests")
             end,
 
             IsNew = false,
@@ -58,7 +58,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
         RebirthButton = {
             Activated = function()
-                WindowController.OpenWindow("Rebirth")
+                WindowController.ToggleWindow("Rebirth")
             end,
 
             IsNew = false,

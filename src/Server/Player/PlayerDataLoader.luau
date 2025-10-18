@@ -26,6 +26,7 @@ export type Profile<T> = {
     Data: T,
 
     Release: (Profile<T>) -> (),
+    Reconcile: (Profile<T>) -> (),
     ListenToRelease: (Profile<T>, () -> ()) -> (),
 }
 
