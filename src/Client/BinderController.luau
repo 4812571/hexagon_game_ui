@@ -17,7 +17,7 @@ local Binders = require(Client.Binders)
 
 local function BinderController(scope: Scope)
     for name, binder in Binders do
-        (binder :: CollectionBinder<any>).Bind(scope, name)
+        (binder :: CollectionBinder<any>).Bind(scope, name :: string)
     end
 end
 
