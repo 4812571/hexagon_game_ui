@@ -30,23 +30,23 @@ return function(target: Instance)
     local cameraShakeEnabled = scope:Value(true)
     local minimapEnabled = scope:Value(true)
 
-    scope:Observer(musicVolume, function()
+    scope:Observer(musicVolume):onChange(function()
         print(`Music volume set to {Percent(peek(musicVolume))}`)
     end)
 
-    scope:Observer(soundEffectsVolume, function()
+    scope:Observer(soundEffectsVolume):onChange(function()
         print(`Sound effects volume set to {Percent(peek(soundEffectsVolume))}`)
     end)
 
-    scope:Observer(nightModeEnabled, function()
+    scope:Observer(nightModeEnabled):onChange(function()
         print(`Night mode {Enabled(peek(nightModeEnabled))}`)
     end)
 
-    scope:Observer(cameraShakeEnabled, function()
+    scope:Observer(cameraShakeEnabled):onChange(function()
         print(`Camera shake {Enabled(peek(cameraShakeEnabled))}`)
     end)
 
-    scope:Observer(minimapEnabled, function()
+    scope:Observer(minimapEnabled):onChange(function()
         print(`Minimap {Enabled(peek(minimapEnabled))}`)
     end)
 
