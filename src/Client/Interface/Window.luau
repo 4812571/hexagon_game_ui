@@ -17,6 +17,8 @@ local Children = Fusion.Children
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type WindowProps = {
+    Visible: Fusion.UsedAs<boolean>?,
+
     Title: Fusion.UsedAs<string>,
     Icon: Fusion.UsedAs<string>,
     IconScale: Fusion.UsedAs<number>?,
@@ -38,6 +40,7 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
         Position = UDim2.fromScale(0.5, 0.5),
 
         BackgroundTransparency = 1,
+        Visible = props.Visible,
 
         [Children] = {
             props.Children,

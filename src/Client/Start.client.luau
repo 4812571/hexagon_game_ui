@@ -51,7 +51,6 @@ local crownController = CrownController(scope)
 local bombController = BombController(scope, clientPlayer)
 local playerSpeedController = PlayerSpeedController(scope, clientPlayer)
 local spinController = SpinController(scope, clientPlayer)
-local levelRewardsController = LevelRewardsController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 local trailsController = TrailsController(scope, clientPlayer)
@@ -65,6 +64,10 @@ local leftSidebarController = LeftSidebarController(scope, clientPlayer, {
 })
 
 local questsController = QuestsController(scope, clientPlayer, {
+    WindowController = windowController,
+})
+
+local levelRewardsController = LevelRewardsController(scope, clientPlayer, {
     WindowController = windowController,
 })
 

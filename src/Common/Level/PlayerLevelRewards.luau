@@ -16,8 +16,9 @@ type BlinkSet<T> = LevelRewardsData.BlinkSet<T>
 type LevelRewardsData = LevelRewardsData.LevelRewardsData
 
 export type PlayerLevelRewards = {
+    ClaimedIndexes: Fusion.UsedAs<BlinkSet<number>>,
     IsClaimed: (rewardIndex: number) -> boolean,
-    Claim: (rewardIndex: number) -> boolean,
+    Claim: (rewardIndex: number) -> (),
     Rebirth: () -> (),
 }
 
@@ -45,6 +46,7 @@ local function PlayerLevelRewards(scope: Scope, data: LevelRewardsData): PlayerL
     end
 
     local self: PlayerLevelRewards = {
+        ClaimedIndexes = claimedIndexes,
         IsClaimed = IsClaimed,
         Claim = Claim,
         Rebirth = Rebirth,

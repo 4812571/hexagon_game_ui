@@ -60,6 +60,8 @@ local function QuestsWindow<U>(scope: Scope<U>, props: QuestsWindowProps)
         Icon = Icons.Scroll,
         IconScale = 1.20,
 
+        Visible = props.Visible,
+
         OnClose = props.OnClose,
 
         Children = {
@@ -116,7 +118,7 @@ local function QuestsWindow<U>(scope: Scope<U>, props: QuestsWindowProps)
                             end
 
                             if quest == "Color" then
-                                return `Collect {use(questEntry.RequiredProgress)} {Pluralize("coin", use(questEntry.RequiredProgress))}`
+                                return `Color in {use(questEntry.RequiredProgress)} {Pluralize("tile", use(questEntry.RequiredProgress))}`
                             end
 
                             if quest == "Elimination" then

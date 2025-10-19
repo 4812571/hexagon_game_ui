@@ -47,7 +47,10 @@ return function(target: Instance)
         table.insert(entries, entry)
     end
 
+    local scale = scope:Value(1)
+
     local window = scope:LevelWindow {
+        Scale = scope:Spring(scale, 25),
         Level = currentLevel,
         Experience = 40,
         ExperienceToNextLevel = 95,
@@ -56,6 +59,10 @@ return function(target: Instance)
 
         OnClaim = function(level: number)
             print("Claimed level", level)
+        end,
+
+        OnClose = function()
+           scale:set(0)
         end,
     }
 
