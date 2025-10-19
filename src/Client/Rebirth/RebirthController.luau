@@ -1,5 +1,6 @@
 --!strict
 --!native
+--!nolint LocalShadow
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -12,17 +13,35 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 
 local CanRebirth = require(Common.Rebirth.CanRebirth)
 local ApplyRebirth = require(Common.Rebirth.ApplyRebirth)
+local RebirthConfig = require(Common.Rebirth.RebirthConfig)
 
 local NetworkClient = require(ReplicatedStorage.NetworkClient)
 
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
+local WindowController = require(Client.Window.WindowController)
+local WindowSpring = require(Client.Window.WindowSpring)
+
+local RebirthWindow = require(Client.Rebirth.RebirthWindow)
+
+export type Controllers = {
+    WindowController: WindowController.WindowController,
+}
+
 export type RebirthController = {
+    Start: () -> (),
     TryRebirth: () -> boolean,
 }
 
-local function RebirthController(scope: Scope, player: ClientPlayer): RebirthController
+local function RebirthController(scope: Scope, player: ClientPlayer, controllers: Controllers): RebirthController
+    local WindowController = controllers.WindowController
+    
+    local scope = scope:innerScope {
+        WindowSpring = WindowSpring,
+        RebirthWindow = RebirthWindow,
+    }
+    
     local function TryRebirth(): boolean
         if not CanRebirth(player) then
             return false
@@ -33,7 +52,45 @@ local function RebirthController(scope: Scope, player: ClientPlayer): RebirthCon
         return true
     end
 
+    local windowScale = scope:WindowSpring("Rebirth", WindowController.CurrentWindow)
+
+    local rebirthWindow = scope:RebirthWindow {
+        Scale = windowScale,
+
+        Visible = scope:Computed(function(use)
+            return use(windowScale) > 0
+        end),
+
+        Level = player.Level.Level,
+        Coins = player.Coins.Coins,
+
+        RequiredCoins = RebirthConfig.Costs.Coins,
+        RequiredLevel = RebirthConfig.Costs.Level,
+
+        BombGain = RebirthConfig.Rewards.Bombs.Bombs,
+        GoldBombGain = RebirthConfig.Rewards.Bombs.GoldBombs,
+        NukeGain = RebirthConfig.Rewards.Bombs.Nukes,
+
+        IncomeGain = RebirthConfig.Rewards.IncomePercent,
+        SpeedGain = RebirthConfig.Rewards.SpeedPercent,
+
+        RebirthClicked = TryRebirth,
+
+        OnClose = function()
+            WindowController.CloseWindow()
+        end,
+    }
+
+    local function Start()
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        
+        rebirthWindow.Parent = screenGui
+        screenGui.Parent = player.Player.PlayerGui
+    end
+
     local self: RebirthController = {
+        Start = Start,
         TryRebirth = TryRebirth,
     }
 

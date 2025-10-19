@@ -15,7 +15,11 @@ return function(target: Instance)
         RebirthWindow = RebirthWindow,
     })
 
+    local windowScale = scope:Value(1.0)
+
     local window = scope:RebirthWindow {
+        Scale = scope:Spring(windowScale, 25),
+
         SpeedGain = 25,
         IncomeGain = 20,
 
@@ -31,6 +35,10 @@ return function(target: Instance)
 
         RebirthClicked = function()
             print("Rebirth button clicked")
+        end,
+
+        OnClose = function()
+            windowScale:set(0)
         end,
     }
 

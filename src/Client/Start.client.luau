@@ -31,6 +31,7 @@ local LobbyController = require(Client.Lobby.LobbyController)
 local RespawnController = require(Client.Respawn.RespawnController)
 local LeftSidebarController = require(Client.LeftSidebar.LeftSidebarController)
 local QuestsController = require(Client.Quests.QuestsController)
+local RebirthController = require(Client.Rebirth.RebirthController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -71,6 +72,10 @@ local levelRewardsController = LevelRewardsController(scope, clientPlayer, {
     WindowController = windowController,
 })
 
+local rebirthController = RebirthController(scope, clientPlayer, {
+    WindowController = windowController,
+})
+
 local controllers = {
     WindowController = windowController,
     BinderController = binderController,
@@ -90,6 +95,7 @@ local controllers = {
     RespawnController = respawnController,
     LeftSidebarController = leftSidebarController,
     QuestsController = questsController,
+    RebirthController = rebirthController,
 }
 
 for _, controller: any in controllers do
