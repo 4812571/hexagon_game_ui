@@ -30,6 +30,7 @@ local TrailsController = require(Client.Trails.TrailsController)
 local LobbyController = require(Client.Lobby.LobbyController)
 local RespawnController = require(Client.Respawn.RespawnController)
 local LeftSidebarController = require(Client.LeftSidebar.LeftSidebarController)
+local TopbarController = require(Client.Topbar.TopbarController)
 local QuestsController = require(Client.Quests.QuestsController)
 local RebirthController = require(Client.Rebirth.RebirthController)
 
@@ -55,6 +56,7 @@ local spinController = SpinController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 local trailsController = TrailsController(scope, clientPlayer)
+local topbarController = TopbarController(scope, clientPlayer)
 
 -- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
@@ -93,6 +95,7 @@ local controllers = {
     LobbyController = lobbyController,
     RespawnController = respawnController,
     LeftSidebarController = leftSidebarController,
+    TopbarController = topbarController,
     QuestsController = questsController,
     RebirthController = rebirthController,
 }

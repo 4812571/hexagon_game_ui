@@ -49,11 +49,15 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
         BackgroundTransparency = 1,
 
         [Children] = {
+            scope:New "UIScale" {
+                Scale = props.Scale,
+            },
+
             scope:New "UIListLayout" {
                 FillDirection = Enum.FillDirection.Vertical,
                 HorizontalAlignment = Enum.HorizontalAlignment.Center,
                 VerticalAlignment = Enum.VerticalAlignment.Top,
-                Padding = UDim.new(0, 26),
+                Padding = UDim.new(0, 16),
             },
 
             scope:New "Frame" {
@@ -66,7 +70,7 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
                         FillDirection = Enum.FillDirection.Horizontal,
                         HorizontalAlignment = Enum.HorizontalAlignment.Center,
                         VerticalAlignment = Enum.VerticalAlignment.Top,
-                        Padding = UDim.new(0, 50),
+                        Padding = UDim.new(0, 100),
                     },
 
                     scope:TopbarItem {
