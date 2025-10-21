@@ -12,7 +12,8 @@ local Server = ServerScriptService.Server
 type Set<T> = { [T]: true }
 
 local Fusion = require(Packages.Fusion)
-type Scope = Fusion.Scope<unknown>
+local peek = Fusion.peek
+local Children = Fusion.Children
 
 local Count = require(Common.Util.Count)
 local Sequence = require(Common.Util.Sequence)
@@ -99,7 +100,7 @@ export type HexagonService = {
     Claimed: Signal.Signal<HexagonPlayer, number, number>,
 }
 
-local function HexagonService(scope: Scope, services: Services): HexagonService
+local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Services): HexagonService
     local PlayerService = services.PlayerService
 
     local world = HexagonInteractionWorld(scope, HexagonConfig.WorldRadius)
@@ -162,21 +163,10 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         world.RemoveFromGame(player)
         activePlayers[player.Player] = nil
 
+        player.Player.Hexagons.IsInGame:set(false)
+        player.Player.Hexagons.Tiles:set(0)
+
         playerRemoved:Fire(player)
-
-        local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
-
-        if not leaderstats then
-            return
-        end
-
-        local tiles = leaderstats:FindFirstChild("Tiles") :: IntValue?
-
-        if not tiles then
-            return
-        end
-
-        tiles.Value = 0
     end
 
     local function JoinPlayer(player: ServerPlayer, character: Model): HexagonPlayer
@@ -187,6 +177,9 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
 
         local worldPosition = HexagonUtil.AxialToWorld(spawnPoint) * HexagonConfig.HexagonSize
         character:PivotTo(CFrame.new(worldPosition + Vector3.yAxis * 5))
+
+        player.Hexagons.IsInGame:set(true)
+        player.Hexagons.Tiles:set(world.GetCount(hexagonPlayer))
 
         activePlayers[player] = hexagonPlayer
         return hexagonPlayer
@@ -411,21 +404,7 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         end
 
         for _, player in activePlayers do
-            local count = world.GetCount(player)
-
-            local leaderstats = player.Player.Player:FindFirstChild("leaderstats")
-
-            if not leaderstats then
-                continue
-            end
-
-            local tiles = leaderstats:FindFirstChild("Tiles") :: IntValue?
-
-            if not tiles then
-                continue
-            end
-
-            tiles.Value = count
+            player.Player.Hexagons.Tiles:set(world.GetCount(player))
         end
 
         UpdateCrowned()
@@ -455,22 +434,37 @@ local function HexagonService(scope: Scope, services: Services): HexagonService
         NetworkServer.Hexagon.JoinGame.On(OnJoin)
 
         table.insert(scope, PlayerService.ObservePlayers(function(serverPlayer: ServerPlayer)
-            local leaderstats = Instance.new("Folder")
-            leaderstats.Name = "leaderstats"
+            local scope = scope:innerScope()
 
-            local tiles = Instance.new("IntValue")
-            tiles.Name = "Tiles"
-            tiles.Value = 0
+            local leaderstats = scope:New "Folder" {
+                Name = "leaderstats",
 
-            local wins = Instance.new("IntValue")
-            wins.Name = "Wins"
-            wins.Value = 0
-            
-            tiles.Parent = leaderstats
-            wins.Parent = leaderstats
+                [Children] = {
+                    scope:New "IntValue" {
+                        Name = "Tiles",
+                        Value = serverPlayer.Hexagons.Tiles,
+                    },
+
+                    scope:New "IntValue" {
+                        Name = "Wins",
+                        Value = 0,
+                    },
+                }
+            }
+
+            scope:Observer(serverPlayer.Hexagons.Tiles):onBind(function()
+                NetworkServer.Hexagon.TileCountChanged.Fire(serverPlayer.Player, peek(serverPlayer.Hexagons.Tiles))
+            end)
+
+            scope:Observer(serverPlayer.Hexagons.Tiles):onBind(function()
+                NetworkServer.Hexagon.IsInGameChanged.Fire(serverPlayer.Player, peek(serverPlayer.Hexagons.IsInGame))
+            end)
+
             leaderstats.Parent = serverPlayer.Player
 
-            return nil
+            return function()
+                scope:doCleanup()
+            end
         end))
 
         Connect(scope, renderer.TilesChanged, function(color: Color3?, axials: {Axial})

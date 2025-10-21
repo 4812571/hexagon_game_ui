@@ -13,10 +13,16 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 
 local Icons = require(Common.Icons)
 
+local WindowController = require(Client.Window.WindowController)
+
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
 local Topbar = require(Client.Topbar.Topbar)
+
+export type Controllers = {
+    WindowController: WindowController.WindowController,
+}
 
 export type TopbarController = {
     Start: () -> (),
@@ -38,11 +44,14 @@ local function CommaFormatNumber(number: number): string
     return result
 end
 
-local function TopbarController(scope: Scope, player: ClientPlayer): TopbarController
+local function TopbarController(scope: Scope, player: ClientPlayer, controllers: Controllers): TopbarController
+    local WindowController = controllers.WindowController
+    
     local scope = scope:innerScope {
         Topbar = Topbar,
     }
 
+    local coinsSmooth = scope:Spring(player.Coins.Coins, 25)
     local coinsBounce = scope:Spring(scope:Value(1), 32)
     
     scope:Observer(player.Coins.Coins):onChange(function()
@@ -52,7 +61,7 @@ local function TopbarController(scope: Scope, player: ClientPlayer): TopbarContr
     local coinsProps: Topbar.ItemProps = {
         Icon = Icons.Coin,
         Text = scope:Computed(function(use)
-            return CommaFormatNumber(use(player.Coins.Coins))
+            return CommaFormatNumber(math.round(use(coinsSmooth)))
         end),
         BounceScale = coinsBounce,
         OnPurchase = function()
@@ -60,6 +69,7 @@ local function TopbarController(scope: Scope, player: ClientPlayer): TopbarContr
         end,
     }
 
+    local tilesSmooth = scope:Spring(player.Hexagons.Tiles, 25)
     local tilesBounce = scope:Spring(scope:Value(1), 32)
 
     scope:Observer(0):onChange(function()
@@ -69,7 +79,7 @@ local function TopbarController(scope: Scope, player: ClientPlayer): TopbarContr
     local tilesProps: Topbar.ItemProps = {
         Icon = Icons.Globe,
         Text = scope:Computed(function(use)
-            return CommaFormatNumber(use(0))
+            return CommaFormatNumber(math.round(use(tilesSmooth)))
         end),
         BounceScale = tilesBounce,
         OnPurchase = function()
@@ -78,15 +88,15 @@ local function TopbarController(scope: Scope, player: ClientPlayer): TopbarContr
     }
 
     local remainingTiles = scope:Computed(function(use)
-        return 10000 - use(0)
+        return 10000 - math.round(use(tilesSmooth) :: number)
     end)
 
     local completion = scope:Computed(function(use)
-        return math.clamp(use(0) / 10000, 0, 1)
+        return math.clamp(math.round(use(tilesSmooth) :: number) / 10000, 0, 1)
     end)
 
     local completionString = scope:Computed(function(use)
-        return string.format("%.1f", use(completion) * 100)
+        return `{string.format("%.1f", use(completion) * 100)}%`
     end)
 
     local bar = scope:Topbar {
@@ -99,7 +109,11 @@ local function TopbarController(scope: Scope, player: ClientPlayer): TopbarContr
         RightBar = coinsProps,
 
         Text = scope:Computed(function(use): string?
-            if (use(false)) then
+            if use(WindowController.CurrentWindow) then
+                return nil
+            end
+            
+            if not use(player.Hexagons.IsInGame) then
                 return nil
             end
 

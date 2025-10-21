@@ -33,6 +33,7 @@ local LeftSidebarController = require(Client.LeftSidebar.LeftSidebarController)
 local TopbarController = require(Client.Topbar.TopbarController)
 local QuestsController = require(Client.Quests.QuestsController)
 local RebirthController = require(Client.Rebirth.RebirthController)
+local HexagonController = require(Client.Hexagon.HexagonController)
 
 local initialData = NetworkClient.Join.Invoke()
 
@@ -56,13 +57,17 @@ local spinController = SpinController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
 local trailsController = TrailsController(scope, clientPlayer)
-local topbarController = TopbarController(scope, clientPlayer)
+local hexagonController = HexagonController(scope, clientPlayer)
 
 -- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
 local respawnController = RespawnController(scope, clientPlayer)
 
 local leftSidebarController = LeftSidebarController(scope, clientPlayer, {
+    WindowController = windowController,
+})
+
+local topbarController = TopbarController(scope, clientPlayer, {
     WindowController = windowController,
 })
 
@@ -98,6 +103,7 @@ local controllers = {
     TopbarController = topbarController,
     QuestsController = questsController,
     RebirthController = rebirthController,
+    HexagonController = hexagonController,
 }
 
 for _, controller: any in controllers do
