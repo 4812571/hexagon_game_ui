@@ -26,6 +26,7 @@ local Icons = {
     Lock = "rbxassetid://132976135153699",
     Sword = "rbxassetid://134935494415215",
     Trophy = "rbxassetid://98963639572691",
+    Globe = "rbxassetid://70617823597429",
 
     CoinBag = "rbxassetid://129417199230918",
     CoinChest = "rbxassetid://106844640408324",
