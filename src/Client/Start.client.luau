@@ -43,7 +43,7 @@ local scope = Fusion.scoped(Fusion)
 
 local clientPlayer = ClientPlayer(scope, Players.LocalPlayer, initialData.JoinTime, initialData.Player)
 
-local binderController = BinderController(scope)
+BinderController(scope)
 local windowController = WindowController(scope)
 local hexagonRenderingController = HexagonRenderingController(scope, initialData.Hexagon)
 local hexagonEffectsController = HexagonEffectsController(scope)
@@ -78,7 +78,6 @@ local rebirthController = RebirthController(scope, clientPlayer, {
 
 local controllers = {
     WindowController = windowController,
-    BinderController = binderController,
     HexagonRenderingController = hexagonRenderingController,
     VictoryController = victoryController,
     SpinController = spinController,
