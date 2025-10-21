@@ -23,6 +23,7 @@ export type InteractionFrameProps = {
     Rotation: UsedAs<number>?,
 
     LayoutOrder: UsedAs<number>?,
+    SizeConstraint: UsedAs<Enum.SizeConstraint>?,
 
     BackgroundColor3: UsedAs<Color3>?,
     BackgroundTransparency: UsedAs<number>?,
@@ -51,6 +52,7 @@ local function InteractionFrame<U>(scope: Scope<typeof(Fusion) & U>, props: Inte
         Rotation = props.Rotation,
         
         LayoutOrder = props.LayoutOrder,
+        SizeConstraint = props.SizeConstraint,
 
         BackgroundColor3 = props.BackgroundColor3,
         BackgroundTransparency = props.BackgroundTransparency,

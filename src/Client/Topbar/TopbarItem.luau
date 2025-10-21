@@ -8,7 +8,6 @@ local Packages = ReplicatedStorage.Packages
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local Out = Fusion.Out
 local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
@@ -39,8 +38,6 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
         InteractionFrame = InteractionFrame,
     }
 
-    local absoluteSize = scope:Value(Vector2.new(0, 0))
-
     local purchaseButtonState = scope:Value(Enum.GuiState.NonInteractable)
 
     local purchaseButtonScale = scope:Computed(function(use)
@@ -63,8 +60,6 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
         BackgroundTransparency = 1,
         LayoutOrder = props.LayoutOrder,
 
-        [Out "AbsoluteSize"] = absoluteSize,
-
         [Children] = scope:New "Frame" {
             Size = UDim2.fromScale(1, 1),
 
@@ -84,10 +79,8 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
 
                 scope:Icon {
                     Size = UDim2.fromScale(1.2, 1.2),
-                    Position = scope:Computed(function(use)
-                        return UDim2.fromOffset(use(absoluteSize).Y / 2, use(absoluteSize).Y / 2)
-                    end),
-                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Position = UDim2.fromScale(0, 0.5),
+                    AnchorPoint = Vector2.new(0.25, 0.5),
 
                     Icon = props.Icon,
                   
@@ -116,12 +109,9 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
                 },
 
                 scope:InteractionFrame {
-                    Size = scope:Computed(function(use)
-                        return UDim2.fromOffset(use(absoluteSize).Y * 0.65, use(absoluteSize).Y * 0.65)
-                    end),
-                    Position = scope:Computed(function(use)
-                        return UDim2.fromOffset(use(absoluteSize).X - use(absoluteSize).Y * 0.125, use(absoluteSize).Y / 2)
-                    end),
+                    Size = UDim2.fromScale(0.65, 0.65),
+                    SizeConstraint = Enum.SizeConstraint.RelativeYY,
+                    Position = UDim2.fromScale(1, 0.5),
                     AnchorPoint = Vector2.new(0.5, 0.5),
 
                     BackgroundTransparency = 1,
