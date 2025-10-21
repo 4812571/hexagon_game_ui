@@ -111,6 +111,7 @@ local function LevelRewardsController(scope: Scope, player: ClientPlayer, contro
 
     local function Start()
         local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
         screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         
         levelWindow.Parent = screenGui

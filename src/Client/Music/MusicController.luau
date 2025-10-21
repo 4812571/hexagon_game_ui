@@ -130,6 +130,7 @@ local function MusicController(scope: Scope, player: ClientPlayer): MusicControl
         }
 
         local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
         screenGui.Name = "Music"
 
         musicPlayer.Parent = screenGui

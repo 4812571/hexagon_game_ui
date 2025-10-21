@@ -91,6 +91,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
     local function Start()
         local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
         screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         
         leftSidebar.Parent = screenGui

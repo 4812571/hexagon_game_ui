@@ -143,6 +143,7 @@ local function QuestsController(scope: Scope, player: ClientPlayer, controllers:
         NetworkClient.Hexagon.PlayerWon.On(OnPlayerWon)
 
         local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
         screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
         questsWindow.Parent = screenGui

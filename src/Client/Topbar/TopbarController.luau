@@ -129,6 +129,7 @@ local function TopbarController(scope: Scope, player: ClientPlayer, controllers:
 
     local function Start()
         local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
         screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
         
         bar.Parent = screenGui
