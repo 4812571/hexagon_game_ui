@@ -7,7 +7,7 @@ export type SpeedReward = {
 }
 
 local function SpeedReward(percent: number): SpeedReward
-    local reward = {
+    local reward: SpeedReward = {
         Type = "Speed",
         Percent = percent,
     }
