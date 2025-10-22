@@ -1,7 +1,7 @@
 --!strict
 --!native
 
-local function Choose<T>(random: Random, collection: {T})
+local function Choose<T>(random: Random, collection: {T}): T?
     local collectionSize = #collection
 
     if collectionSize == 0 then
