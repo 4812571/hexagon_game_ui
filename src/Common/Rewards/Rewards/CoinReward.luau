@@ -7,7 +7,7 @@ export type CoinReward = {
 }
 
 local function CoinReward(amount: number): CoinReward
-    local reward = {
+    local reward: CoinReward = {
         Type = "Coin",
         Amount = amount,
     }
