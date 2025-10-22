@@ -7,7 +7,7 @@ export type MultiplyCoinReward = {
 }
 
 local function MultiplyCoinReward(multiplier: number): MultiplyCoinReward
-    local reward = {
+    local reward: MultiplyCoinReward = {
         Type = "MultiplyCoin",
         Multiplier = multiplier,
     }
