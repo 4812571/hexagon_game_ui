@@ -10,7 +10,7 @@ export type BombReward = {
 }
 
 local function BombReward(bombType: BombType, amount: number): BombReward
-    local reward = {
+    local reward: BombReward = {
         Type = "Bomb",
         BombType = bombType,
         Amount = amount,
