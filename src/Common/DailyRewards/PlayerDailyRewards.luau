@@ -22,7 +22,7 @@ export type PlayerDailyRewards = {
     NextClaimIndex: Value<number>,
 
     CanClaim: (instant: number) -> boolean,
-    PerformClaim: (currentTime: number, totalRewards: number) -> number,
+    PerformClaim: (currentTime: number, totalRewards: number) -> (),
 }
 
 local function NextIndex(currentIndex: number, indexCount: number): number
