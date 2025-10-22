@@ -165,6 +165,8 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
 
         player.Player.Hexagons.IsInGame:set(false)
         player.Player.Hexagons.Tiles:set(0)
+        print("Firing TilesCleared for", player.Player.Player.Name)
+        NetworkServer.Hexagon.TilesCleared.Fire(player.Player.Player)
 
         playerRemoved:Fire(player)
     end
@@ -404,7 +406,15 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
         end
 
         for _, player in activePlayers do
-            player.Player.Hexagons.Tiles:set(world.GetCount(player))
+            local previousTiles = peek(player.Player.Hexagons.Tiles)
+            local currentTiles = world.GetCount(player)
+
+            if previousTiles == currentTiles then
+                continue
+            end
+
+            player.Player.Hexagons.Tiles:set(currentTiles)
+            NetworkServer.Hexagon.TileChanged.Fire(player.Player.Player, currentTiles - previousTiles)
         end
 
         UpdateCrowned()
@@ -451,10 +461,6 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
                     },
                 }
             }
-
-            scope:Observer(serverPlayer.Hexagons.Tiles):onBind(function()
-                NetworkServer.Hexagon.TileCountChanged.Fire(serverPlayer.Player, peek(serverPlayer.Hexagons.Tiles))
-            end)
 
             scope:Observer(serverPlayer.Hexagons.Tiles):onBind(function()
                 NetworkServer.Hexagon.IsInGameChanged.Fire(serverPlayer.Player, peek(serverPlayer.Hexagons.IsInGame))

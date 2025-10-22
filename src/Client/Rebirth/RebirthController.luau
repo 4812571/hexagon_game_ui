@@ -21,7 +21,7 @@ local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
 local WindowController = require(Client.Window.WindowController)
-local WindowSpring = require(Client.Window.WindowSpring)
+local WindowScaling = require(Client.Window.WindowScaling)
 
 local RebirthWindow = require(Client.Rebirth.RebirthWindow)
 
@@ -38,7 +38,7 @@ local function RebirthController(scope: Scope, player: ClientPlayer, controllers
     local WindowController = controllers.WindowController
     
     local scope = scope:innerScope {
-        WindowSpring = WindowSpring,
+        WindowScaling = WindowScaling,
         RebirthWindow = RebirthWindow,
     }
     
@@ -52,14 +52,11 @@ local function RebirthController(scope: Scope, player: ClientPlayer, controllers
         return true
     end
 
-    local windowScale = scope:WindowSpring("Rebirth", WindowController.CurrentWindow)
+    local windowScaling = scope:WindowScaling("Rebirth", WindowController.CurrentWindow)
 
     local rebirthWindow = scope:RebirthWindow {
-        Scale = windowScale,
-
-        Visible = scope:Computed(function(use)
-            return use(windowScale) > 0
-        end),
+        Scale = windowScaling.Scale,
+        Visible = windowScaling.Visible,
 
         Level = player.Level.Level,
         Coins = player.Coins.Coins,

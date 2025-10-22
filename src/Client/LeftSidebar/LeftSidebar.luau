@@ -13,12 +13,14 @@ local Children = Fusion.Children
 
 local Icons = require(Common.Icons)
 
+local GlobalScale = require(Client.Interface.GlobalScale)
 local SidebarSquareButton = require(Client.LeftSidebar.SidebarSquareButton)
 local LeftSidebarRevives = require(Client.LeftSidebar.LeftSidebarRevives)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
+    GlobalScale: typeof(GlobalScale),
     SidebarSquareButton: typeof(SidebarSquareButton),
     LeftSidebarRevives: typeof(LeftSidebarRevives),
 }
@@ -46,6 +48,7 @@ type LeftSidebarProps = {
 
 local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     local scope: Scope<Components> = scope:innerScope {
+        GlobalScale = GlobalScale,
         SidebarSquareButton = SidebarSquareButton,
         LeftSidebarRevives = LeftSidebarRevives,
     }
@@ -121,6 +124,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
         Activated = props.TrollButton.Activated,
     }
 
+    local globalScale = scope:GlobalScale()
+
     return scope:New "Frame" {
         Position = props.Position,
         AnchorPoint = props.AnchorPoint,
@@ -135,7 +140,9 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
             },
 
             scope:New "UIScale" {
-                Scale = props.Scale,
+                Scale = scope:Computed(function(use)
+                    return (use(props.Scale) :: number) * use(globalScale)
+                end),
             },
 
             scope:New "Frame" {

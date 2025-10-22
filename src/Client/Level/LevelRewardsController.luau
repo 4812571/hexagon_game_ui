@@ -19,7 +19,7 @@ local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
 local WindowController = require(Client.Window.WindowController)
-local WindowSpring = require(Client.Window.WindowSpring)
+local WindowScaling = require(Client.Window.WindowScaling)
 
 local LevelWindow = require(Client.Level.LevelWindow)
 
@@ -37,7 +37,7 @@ local function LevelRewardsController(scope: Scope, player: ClientPlayer, contro
     
     local scope = scope:innerScope {
         LevelWindow = LevelWindow,
-        WindowSpring = WindowSpring,
+        WindowScaling = WindowScaling,
     }
     
     local function TryClaim(rewardIndex: number): boolean
@@ -89,14 +89,11 @@ local function LevelRewardsController(scope: Scope, player: ClientPlayer, contro
         table.insert(rewardEntries, entry)
     end
 
-    local windowScale = scope:WindowSpring("Level", WindowController.CurrentWindow)
+    local windowScaling = scope:WindowScaling("Level", WindowController.CurrentWindow)
 
     local levelWindow = scope:LevelWindow {
-        Scale = windowScale,
-
-        Visible = scope:Computed(function(use)
-            return use(windowScale) > 0
-        end),
+        Scale = windowScaling.Scale,
+        Visible = windowScaling.Visible,
 
         Experience = player.Level.Experience,
         Level = player.Level.Level,

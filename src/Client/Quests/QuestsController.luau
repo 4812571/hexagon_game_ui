@@ -23,7 +23,7 @@ local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
 local WindowController = require(Client.Window.WindowController)
-local WindowSpring = require(Client.Window.WindowSpring)
+local WindowScaling = require(Client.Window.WindowScaling)
 
 local QuestsWindow = require(Client.Quests.QuestsWindow)
 
@@ -40,7 +40,7 @@ local function QuestsController(scope: Scope, player: ClientPlayer, controllers:
     local WindowController = controllers.WindowController
 
     local scope = scope:innerScope {
-        WindowSpring = WindowSpring,
+        WindowScaling = WindowScaling,
         QuestsWindow = QuestsWindow,
     }
     
@@ -121,15 +121,13 @@ local function QuestsController(scope: Scope, player: ClientPlayer, controllers:
         table.insert(questEntries, entry)
     end
 
-    local windowScale = scope:WindowSpring("Quests", WindowController.CurrentWindow)
+    local windowScaling = scope:WindowScaling("Quests", WindowController.CurrentWindow)
 
     local questsWindow = scope:QuestsWindow {
-        Scale = windowScale,
+        Scale = windowScaling.Scale,
+        Visible = windowScaling.Visible,
+        
         Quests = questEntries,
-
-        Visible = scope:Computed(function(use)
-            return use(windowScale) > 0
-        end),
 
         OnClose = function()
             WindowController.CloseWindow()

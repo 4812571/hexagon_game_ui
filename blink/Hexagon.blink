@@ -61,16 +61,22 @@ event Claimed {
     Data: (i32, i32),
 }
 
-event TileCountChanged {
+event IsInGameChanged {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: boolean,
+}
+
+event TileChanged {
     From: Server,
     Type: Reliable,
     Call: SingleAsync,
     Data: i32,
 }
 
-event IsInGameChanged {
+event TilesCleared {
     From: Server,
     Type: Reliable,
     Call: SingleAsync,
-    Data: boolean,
 }

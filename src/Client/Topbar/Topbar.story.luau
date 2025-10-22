@@ -27,6 +27,7 @@ return function(target: Instance)
             Icon = Icons.Globe,
             Text = "1000",
             BounceScale = 1.0,
+            IconPositionOut = scope:Value(Vector2.zero),
             OnPurchase = function()
                 print("Tiles Purchased")
             end,
@@ -36,6 +37,7 @@ return function(target: Instance)
             Icon = Icons.Coin,
             Text = "50",
             BounceScale = 1.0,
+            IconPositionOut = scope:Value(Vector2.zero),
             OnPurchase = function()
                 print("Coins Purchased")
             end,

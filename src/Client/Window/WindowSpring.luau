@@ -6,7 +6,7 @@ local Fusion = require(Packages.Fusion)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
-type WindowType = 
+export type WindowType = 
     | "Level"
     | "Quests"
     | "Rebirth"

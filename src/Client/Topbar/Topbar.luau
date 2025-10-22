@@ -10,11 +10,13 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
+local GlobalScale = require(Client.Interface.GlobalScale)
 local TopbarItem = require(Client.Topbar.TopbarItem)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
+    GlobalScale: typeof(GlobalScale),
     TopbarItem: typeof(TopbarItem),
 }
 
@@ -22,6 +24,7 @@ export type ItemProps = {
     Icon: Fusion.UsedAs<string>,
     Text: Fusion.UsedAs<string>,
     BounceScale: Fusion.UsedAs<number>,
+    IconPositionOut: Fusion.Value<Vector2>,
     OnPurchase: () -> (),
 }
 
@@ -38,8 +41,11 @@ export type TopbarProps = {
 
 local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
     local scope: Scope<Components> = scope:innerScope {
+        GlobalScale = GlobalScale,
         TopbarItem = TopbarItem,
     }
+
+    local globalScale = scope:GlobalScale()
 
     return scope:New "Frame" {
         Position = props.Position,
@@ -50,7 +56,9 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
 
         [Children] = {
             scope:New "UIScale" {
-                Scale = props.Scale,
+                Scale = scope:Computed(function(use)
+                    return (use(props.Scale) :: number) * use(globalScale)
+                end),
             },
 
             scope:New "UIListLayout" {
@@ -75,21 +83,25 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
 
                     scope:TopbarItem {
                         Size = UDim2.fromOffset(400, 100),
+                        AnchorPoint = Vector2.new(0.5, 0.5),
                         LayoutOrder = 1,
 
                         Icon = props.LeftBar.Icon,
                         Text = props.LeftBar.Text,
                         BounceScale = props.LeftBar.BounceScale,
+                        IconPositionOut = props.LeftBar.IconPositionOut,
                         OnPurchaseButton = props.LeftBar.OnPurchase,
                     },
 
                     scope:TopbarItem {
                         Size = UDim2.fromOffset(400, 100),
+                        AnchorPoint = Vector2.new(0.5, 0.5),
                         LayoutOrder = 2,
 
                         Icon = props.RightBar.Icon,
                         Text = props.RightBar.Text,
                         BounceScale = props.RightBar.BounceScale,
+                        IconPositionOut = props.RightBar.IconPositionOut,
                         OnPurchaseButton = props.RightBar.OnPurchase,
                     },
                 },

@@ -17,13 +17,7 @@ export type HexagonController = {
 
 local function HexagonController(scope: Scope, player: ClientPlayer): HexagonController
     local function Start()
-        NetworkClient.Hexagon.TileCountChanged.On(function(newTileCount: number)
-            print("Tile count changed:", newTileCount)
-            player.Hexagons.Tiles:set(newTileCount)
-        end)
-
         NetworkClient.Hexagon.IsInGameChanged.On(function(isInGame: boolean)
-            print("IsInGame changed:", isInGame)
             player.Hexagons.IsInGame:set(isInGame)
         end)
     end
