@@ -14,8 +14,8 @@ export type Queue<T> = {
 }
 
 local function Queue<T>(): Queue<T>
-    local head = nil
-    local tail = nil
+    local head: Node<T>? = nil
+    local tail: Node<T>? = nil
 
     local function IsEmpty(): boolean
         return head == nil
