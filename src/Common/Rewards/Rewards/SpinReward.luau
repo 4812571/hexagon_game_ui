@@ -7,7 +7,7 @@ export type SpinReward = {
 }
 
 local function SpinReward(amount: number): SpinReward
-    local reward = {
+    local reward: SpinReward = {
         Type = "Spin",
         Amount = amount,
     }
