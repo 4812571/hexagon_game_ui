@@ -25,6 +25,9 @@ export type IconProps = {
     Icon: UsedAs<string>,
     IconScale: UsedAs<number>?,
 
+    Color: UsedAs<Color3>?,
+
+    Gradient: Fusion.UsedAs<Fusion.Child?>?,
     Children: Fusion.Child?,
 }
 
@@ -47,15 +50,20 @@ local function Icon<U>(scope: Scope<typeof(Fusion) & U>, props: IconProps)
                 Position = UDim2.fromScale(0.5, 0.5),
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Rotation = props.Rotation,
+                ImageColor3 = props.Color,
                 ZIndex = 0,
 
                 BackgroundTransparency = 1,
 
                 Image = props.Icon,
 
-                [Children] = scope:New "UIScale" {
-                    Scale = props.IconScale,
-                },
+                [Children] = {
+                    scope:New "UIScale" {
+                        Scale = props.IconScale,
+                    },
+
+                    props.Gradient,
+                } :: {Fusion.Child?},
             },
 
             scope:New "UIAspectRatioConstraint" {

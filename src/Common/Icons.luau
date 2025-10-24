@@ -32,6 +32,7 @@ local Icons = {
     SpinnerHighRes = "rbxassetid://104087681511205",
     BorderlessSpinnerHighRes = "rbxassetid://109330033487139",
     BlueQuestionMark = "rbxassetid://111029123909466",
+    Hexagon = "rbxassetid://126695671113863",
 
     CoinBag = "rbxassetid://129417199230918",
     CoinChest = "rbxassetid://106844640408324",

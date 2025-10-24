@@ -51,7 +51,6 @@ local hexagonRenderingController = HexagonRenderingController(scope, initialData
 local hexagonEffectsController = HexagonEffectsController(scope)
 local victoryController = VictoryController(scope)
 local crownController = CrownController(scope)
-local bombController = BombController(scope, clientPlayer)
 local playerSpeedController = PlayerSpeedController(scope, clientPlayer)
 local spinController = SpinController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
@@ -62,6 +61,10 @@ local hexagonController = HexagonController(scope, clientPlayer)
 -- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
 local respawnController = RespawnController(scope, clientPlayer)
+
+local bombController = BombController(scope, clientPlayer, {
+    WindowController = windowController,
+})
 
 local leftSidebarController = LeftSidebarController(scope, clientPlayer, {
     WindowController = windowController,
