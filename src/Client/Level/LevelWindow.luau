@@ -95,11 +95,6 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                 BackgroundTransparency = 1,
 
                 [Children] = {
-                    scope:New "UIListLayout" {
-                        SortOrder = Enum.SortOrder.LayoutOrder,
-                        FillDirection = Enum.FillDirection.Vertical,
-                    },
-
                     scope:New "Frame" {
                         Size = UDim2.fromScale(1, 0.20),
                         BackgroundTransparency = 1,
@@ -207,10 +202,13 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                     },
 
                     scope:New "ScrollingFrame" {
-                        Size = UDim2.fromScale(1, 0.4),
+                        Size = UDim2.fromScale(1, 0),
+                        Position = UDim2.fromScale(0, 0.7),
+                        AnchorPoint = Vector2.new(0, 1),
                         BackgroundTransparency = 1,
                         LayoutOrder = 2,
 
+                        AutomaticSize = Enum.AutomaticSize.Y,
                         AutomaticCanvasSize = Enum.AutomaticSize.X,
                         CanvasSize = UDim2.new(0, 0, 0, 0),
                         ScrollingDirection = Enum.ScrollingDirection.X,
@@ -219,10 +217,6 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                         HorizontalScrollBarInset = Enum.ScrollBarInset.ScrollBar,
 
                         [Children] = {
-                            scope:New "UIFlexItem" {
-                                FlexMode = Enum.UIFlexMode.Fill,
-                            },
-
                             scope:New "UIListLayout" {
                                 FillDirection = Enum.FillDirection.Horizontal,
                                 SortOrder = Enum.SortOrder.LayoutOrder,
@@ -236,11 +230,13 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                             scope:New "UIPadding" {
                                 PaddingLeft = UDim.new(0, 10),
                                 PaddingRight = UDim.new(0, 10),
+                                PaddingTop = UDim.new(0, 10),
+                                PaddingBottom = UDim.new(0, 10),
                             },
 
                             scope:ForValues(props.Rewards, function(use, scope: Scope<Components>, reward: LevelRewardEntry)
                                 return scope:LevelRewardCard {
-                                    Size = UDim2.fromOffset(100, 135),
+                                    Size = UDim2.fromOffset(120, 162),
 
                                     Color = scope:Computed(function(use)
                                         if use(reward.ClaimState) == "Claimed" then
@@ -356,6 +352,9 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
                     scope:New "Frame" {
                         Size = UDim2.fromScale(1, 0.20),
+                        Position = UDim2.fromScale(0.5, 0.9),
+                        AnchorPoint = Vector2.new(0.5, 0.5),
+
                         LayoutOrder = 3,
 
                         [Children] = {
