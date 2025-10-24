@@ -219,6 +219,8 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
 
+                                BackgroundTransparency = 1,
+
                                 GuiStateChanged = function(state: Enum.GuiState)
                                     leftButtonState:set(state)
                                 end,
@@ -278,6 +280,8 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 Size = UDim2.fromScale(1, 1),
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
+
+                                BackgroundTransparency = 1,
 
                                 GuiStateChanged = function(state: Enum.GuiState)
                                     middleButtonState:set(state)
@@ -340,6 +344,8 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 Size = UDim2.fromScale(1, 1),
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
+
+                                BackgroundTransparency = 1,
 
                                 GuiStateChanged = function(state: Enum.GuiState)
                                     rightButtonState:set(state)
