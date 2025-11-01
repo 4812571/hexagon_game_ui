@@ -71,7 +71,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
         CosmeticShopCard = CosmeticShopCard,
     }
 
-    local ITEM_SIZE = 135
+    local ITEM_SIZE = 125
     local ITEM_PADDING = 10
 
     local ITEMS_PER_ROW = 3
@@ -79,8 +79,6 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
     local itemsFrameWidth = scope:Computed(function(use)
         return PaddedSize(use(ITEMS_PER_ROW), use(ITEM_SIZE), use(ITEM_PADDING))
     end)
-
-    print(Fusion.peek(itemsFrameWidth))
 
     local equipButtonState = scope:Value(Enum.GuiState.NonInteractable)
     local purchaseButtonState = scope:Value(Enum.GuiState.NonInteractable)
@@ -110,10 +108,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                     SortOrder = Enum.SortOrder.LayoutOrder,
                     FillDirection = Enum.FillDirection.Horizontal,
                     HorizontalFlex = Enum.UIFlexAlignment.Fill,
-
-                    Padding = UDim.new(0, 20),
                 },
-
 
                 scope:New "Frame" {
                     LayoutOrder = 1,
@@ -189,7 +184,6 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                             Size = UDim2.fromScale(1, 0),
 
                                             BackgroundTransparency = 1,
-
 
                                             GuiStateChanged = function(state: Enum.GuiState)
                                                 equipButtonState:set(state)
@@ -276,7 +270,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                     BackgroundTransparency = 1,
 
                     Size = scope:Computed(function(use)
-                        return UDim2.new(0, use(itemsFrameWidth) + 35, 1, 0)
+                        return UDim2.new(0, use(itemsFrameWidth) + 50, 1, 0)
                     end),
 
                     [Children] = {

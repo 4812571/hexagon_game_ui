@@ -20,7 +20,7 @@ return function(target: Instance)
     })
 
     local entries = {}
-    
+
     local random = Random.new()
 
     for _, v in SkinShop do
