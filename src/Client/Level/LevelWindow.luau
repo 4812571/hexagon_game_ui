@@ -23,6 +23,7 @@ local LevelRewardCard = require(Client.Level.LevelRewardCard)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local IconText = require(Client.Interface.IconText)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
@@ -34,6 +35,7 @@ type Components = {
     LevelRewardCard: typeof(LevelRewardCard),
     InteractionFrame: typeof(InteractionFrame),
     EmbossedFrame: typeof(EmbossedFrame),
+    Text: typeof(Text),
 }
 
 export type ClaimState = "NotAvailable" | "Available" | "Claimed"
@@ -71,6 +73,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
         InteractionFrame = InteractionFrame,
         EmbossedFrame = EmbossedFrame,
         IconText = IconText,
+        Text = Text,
     }
 
     return scope:Window {
@@ -387,24 +390,16 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                                     PaddingBottom = UDim.new(0, 10),
                                                 },
 
-                                                scope:New "TextLabel" {
+                                                scope:Text {
                                                     Size = UDim2.fromScale(0.35, 1),
                                                     Position = UDim2.fromScale(0, 0.5),
                                                     AnchorPoint = Vector2.new(0, 0.5),
 
-                                                    BackgroundTransparency = 1,
-                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                    Font = Enum.Font.FredokaOne,
-                                                    TextSize = 30,
-
                                                     Text = "Skip",
-
-                                                    [Children] = {
-                                                        scope:New "UIStroke" {
-                                                            Thickness = 2,
-                                                            Color = Color3.fromRGB(0, 0, 0),
-                                                        },
-                                                    },
+                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                                    TextSize = 30,
+                                                    StrokeSize = 2,
+                                                    StrokeColor3 = Color3.fromRGB(0, 0, 0),
                                                 },
 
                                                 scope:IconText {
@@ -449,24 +444,16 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                                     PaddingBottom = UDim.new(0, 10),
                                                 },
 
-                                                scope:New "TextLabel" {
+                                                scope:Text {
                                                     Size = UDim2.fromScale(0.35, 1),
                                                     Position = UDim2.fromScale(0, 0.5),
                                                     AnchorPoint = Vector2.new(0, 0.5),
 
-                                                    BackgroundTransparency = 1,
-                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                    Font = Enum.Font.FredokaOne,
-                                                    TextSize = 30,
-
                                                     Text = "Skip",
-
-                                                    [Children] = {
-                                                        scope:New "UIStroke" {
-                                                            Thickness = 2,
-                                                            Color = Color3.fromRGB(0, 0, 0),
-                                                        },
-                                                    },
+                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
+                                                    TextSize = 30,
+                                                    StrokeSize = 2,
+                                                    StrokeColor3 = Color3.fromRGB(0, 0, 0),
                                                 },
 
                                                 scope:IconText {

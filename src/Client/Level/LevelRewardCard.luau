@@ -15,6 +15,7 @@ local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 
 local ClaimBanner = require(Client.Level.ClaimBanner)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 type UsedAs<T> = Fusion.UsedAs<T>
@@ -24,6 +25,7 @@ type Components = {
     EmbossedFrame: typeof(EmbossedFrame),
     InteractionFrame: typeof(InteractionFrame),
     ClaimBanner: typeof(ClaimBanner),
+    Text: typeof(Text),
 }
 
 type LevelRewardCardProps = {
@@ -52,6 +54,7 @@ local function LevelRewardCard<U>(scope: Scope<U>, props: LevelRewardCardProps)
         EmbossedFrame = EmbossedFrame,
         InteractionFrame = InteractionFrame,
         ClaimBanner = ClaimBanner,
+        Text = Text,
     }
 
     local hasStatus = scope:Computed(function(use)
@@ -136,24 +139,16 @@ local function LevelRewardCard<U>(scope: Scope<U>, props: LevelRewardCardProps)
                         }
                     end),
 
-                    scope:New "TextLabel" {
+                    scope:Text {
                         Size = UDim2.fromScale(1, 0.2),
                         Position = UDim2.fromScale(0.5, 1),
                         AnchorPoint = Vector2.new(0.5, 1),
-                        BackgroundTransparency = 1,
 
                         Text = props.RewardText,
                         TextColor3 = Color3.fromRGB(255, 255, 255),
-                        Font = Enum.Font.FredokaOne,
                         TextSize = 14,
-
-                        [Children] = {
-                            scope:New "UIStroke" {
-                                Thickness = 2,
-                                Color = Color3.fromRGB(0, 0, 0),
-                                LineJoinMode = Enum.LineJoinMode.Miter,
-                            }
-                        }
+                        StrokeSize = 2,
+                        StrokeColor3 = Color3.fromRGB(0, 0, 0),
                     }
                 } :: {Fusion.Child}
             },
@@ -166,22 +161,14 @@ local function LevelRewardCard<U>(scope: Scope<U>, props: LevelRewardCardProps)
                 StrokeColor = Color3.fromRGB(0, 0, 0),
                 StrokeThickness = 3.5,
 
-                Children = scope:New "TextLabel" {
+                Children = scope:Text {
                     Size = UDim2.fromScale(1, 1),
-                    BackgroundTransparency = 1,
 
                     Text = props.LevelText,
                     TextColor3 = Color3.fromRGB(255, 255, 255),
-                    Font = Enum.Font.FredokaOne,
                     TextSize = 24,
-
-                    [Children] = {
-                        scope:New "UIStroke" {
-                            Thickness = 2,
-                            Color = Color3.fromRGB(0, 0, 0),
-                            LineJoinMode = Enum.LineJoinMode.Miter,
-                        },
-                    },
+                    StrokeSize = 2,
+                    StrokeColor3 = Color3.fromRGB(0, 0, 0),
                 },
             },
         }

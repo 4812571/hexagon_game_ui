@@ -17,6 +17,7 @@ local Window = require(Client.Interface.Window)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 
 local RebirthRewardCard = require(Client.Rebirth.RebirthRewardCard)
 local RebirthBar = require(Client.Rebirth.RebirthBar)
@@ -28,6 +29,7 @@ type Components = {
     EmbossedFrame: typeof(EmbossedFrame),
     InteractionFrame: typeof(InteractionFrame),
     Icon: typeof(Icon),
+    Text: typeof(Text),
 
     RebirthRewardCard: typeof(RebirthRewardCard),
     RebirthBar: typeof(RebirthBar),
@@ -77,6 +79,7 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
         EmbossedFrame = EmbossedFrame,
         InteractionFrame = InteractionFrame,
         Icon = Icon,
+        Text = Text,
 
         RebirthRewardCard = RebirthRewardCard,
         RebirthBar = RebirthBar,
@@ -315,18 +318,13 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
                                         StrokeThickness = 4,
 
                                         Children = {
-                                            scope:New "TextLabel" {
+                                            scope:Text {
                                                 Size = UDim2.fromScale(1, 1),
-                                                BackgroundTransparency = 1,
                                                 Text = "Rebirth!",
                                                 TextColor3 = Color3.fromRGB(255, 255, 255),
                                                 TextXAlignment = Enum.TextXAlignment.Center,
                                                 TextSize = 58,
-                                                Font = Enum.Font.FredokaOne,
-
-                                                [Children] = scope:New "UIStroke" {
-                                                    Thickness = 3,
-                                                }
+                                                StrokeSize = 3,
                                             },
 
                                             scope:Icon {

@@ -14,6 +14,7 @@ local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local Icon = require(Client.Interface.Icon)
 local ProgressBar = require(Client.Interface.ProgressBar)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
@@ -22,6 +23,7 @@ export type Components = {
     Icon: typeof(Icon),
     ProgressBar: typeof(ProgressBar),
     InteractionFrame: typeof(InteractionFrame),
+    Text: typeof(Text),
 }
 
 export type QuestCardProps = {
@@ -47,6 +49,7 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
         Icon = Icon,
         ProgressBar = ProgressBar,
         InteractionFrame = InteractionFrame,
+        Text = Text,
     }
 
     local claimCount = scope:Computed(function(use)
@@ -265,22 +268,17 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
                                                     CornerRadius = UDim.new(0, 15),
                                                 },
 
-                                                scope:New "TextLabel" {
+                                                scope:Text {
                                                     Size = UDim2.fromScale(1, 1),
-                                                    BackgroundTransparency = 1,
                                                     Text = scope:Computed(function(use)
                                                         return if use(claimCount) == 1 then "Claim" else `Claim x{use(claimCount)}`
                                                     end),
                                                     TextSize = 26,
-                                                    Font = Enum.Font.FredokaOne,
                                                     TextColor3 = Color3.fromRGB(255, 255, 255),
                                                     TextXAlignment = Enum.TextXAlignment.Center,
                                                     TextYAlignment = Enum.TextYAlignment.Center,
-
-                                                    [Children] = scope:New "UIStroke" {
-                                                        Thickness = 2.5,
-                                                        Color = Color3.fromRGB(0, 0, 0),
-                                                    },
+                                                    StrokeSize = 2.5,
+                                                    StrokeColor3 = Color3.fromRGB(0, 0, 0),
                                                 },
                                             }
                                         },

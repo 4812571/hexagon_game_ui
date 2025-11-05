@@ -12,12 +12,14 @@ local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
     Icon: typeof(Icon),
     InteractionFrame: typeof(InteractionFrame),
+    Text: typeof(Text),
 }
 
 type TimedRewardCardProps = {
@@ -38,6 +40,7 @@ local function TimedRewardCard<U>(scope: Scope<U>, props: TimedRewardCardProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
         InteractionFrame = InteractionFrame,
+        Text = Text,
     }
 
     local guiState = scope:Value(Enum.GuiState.NonInteractable)
@@ -76,39 +79,27 @@ local function TimedRewardCard<U>(scope: Scope<U>, props: TimedRewardCardProps)
                 AnchorPoint = Vector2.new(0.5, 0.5),
 
                 [Children] = {
-                    scope:New "TextLabel" {
+                    scope:Text {
                         Size = UDim2.fromScale(0.9, 0.2),
                         Position = UDim2.fromScale(0.5, 0.15),
                         AnchorPoint = Vector2.new(0.5, 0.5),
 
-                        BackgroundTransparency = 1,
-
                         Text = props.TopText,
                         TextColor3 = Color3.new(1, 1, 1),
                         TextSize = 38,
-                        Font = Enum.Font.FredokaOne,
                         TextXAlignment = Enum.TextXAlignment.Right,
-
-                        [Children] = scope:New "UIStroke" {
-                            Thickness = props.Stroke,
-                        },
+                        StrokeSize = props.Stroke,
                     },
 
-                    scope:New "TextLabel" {
+                    scope:Text {
                         Size = UDim2.fromScale(0.9, 0.2),
                         Position = UDim2.fromScale(0.5, 1),
                         AnchorPoint = Vector2.new(0.5, 0.5),
 
-                        BackgroundTransparency = 1,
-
                         Text = props.BottomText,
                         TextColor3 = Color3.new(1, 1, 1),
                         TextSize = 38,
-                        Font = Enum.Font.FredokaOne,
-
-                        [Children] = scope:New "UIStroke" {
-                            Thickness = props.Stroke,
-                        },
+                        StrokeSize = props.Stroke,
                     },
 
                     scope:Icon {

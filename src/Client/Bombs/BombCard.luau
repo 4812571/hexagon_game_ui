@@ -15,12 +15,14 @@ local Icons = require(Common.Icons)
 
 local Icon = require(Client.Interface.Icon)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
     Icon: typeof(Icon),
     InteractionFrame: typeof(InteractionFrame),
+    Text: typeof(Text),
 }
 
 
@@ -46,6 +48,7 @@ local function BombCard<U>(scope: Scope<U>, props: BombCardProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
         InteractionFrame = InteractionFrame,
+        Text = Text,
     }
 
     local isCooldown = scope:Computed(function(use)
@@ -98,12 +101,10 @@ local function BombCard<U>(scope: Scope<U>, props: BombCardProps)
                             Icon = props.BombIcon,
                         },
 
-                        scope:New "TextLabel" {
+                        scope:Text {
                             Size = UDim2.fromScale(1, 0.3),
                             Position = UDim2.fromScale(0.5, 0.5),
                             AnchorPoint = Vector2.new(0.5, 0.5),
-
-                            BackgroundTransparency = 1,
 
                             Text = scope:Computed(function(use)
                                 if not use(isCooldown) then
@@ -113,40 +114,30 @@ local function BombCard<U>(scope: Scope<U>, props: BombCardProps)
                                 return string.format("%.1fs", use(props.Cooldown))
                             end),
 
-                            Font = Enum.Font.FredokaOne,
                             TextSize = 60,
 
                             TextXAlignment = Enum.TextXAlignment.Center,
                             TextYAlignment = Enum.TextYAlignment.Center,
 
                             TextColor3 = Color3.new(1, 1, 1),
-
-                            [Children] = scope:New "UIStroke" {
-                                Thickness = 2.5,
-                            }
+                            StrokeSize = 2.5,
                         },
 
-                        scope:New "TextLabel" {
+                        scope:Text {
                             Size = UDim2.fromScale(1, 0.3),
                             Position = UDim2.fromScale(0.5, 0.80),
                             AnchorPoint = Vector2.new(0.5, 0.5),
-
-                            BackgroundTransparency = 1,
 
                             Text = scope:Computed(function(use)
                                 return `x{use(props.Count)}`
                             end),
 
-                            Font = Enum.Font.FredokaOne,
                             TextSize = 42,
                             TextXAlignment = Enum.TextXAlignment.Center,
                             TextYAlignment = Enum.TextYAlignment.Center,
 
                             TextColor3 = Color3.new(1, 1, 1),
-
-                            [Children] = scope:New "UIStroke" {
-                                Thickness = 2.5,
-                            }
+                            StrokeSize = 2.5,
                         }
                     } :: {Fusion.Child?},
                 },
