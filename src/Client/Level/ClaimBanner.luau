@@ -10,12 +10,14 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
+local Text = require(Client.Interface.Text)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 type UsedAs<T> = Fusion.UsedAs<T>
 
 type Components = {
+    Text: typeof(Text),
     InteractionFrame: typeof(InteractionFrame),
 }
 
@@ -29,7 +31,8 @@ type ClaimBannerProps = {
 }
 
 local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         InteractionFrame = InteractionFrame,
     }
 
@@ -76,7 +79,7 @@ local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
                 LineJoinMode = Enum.LineJoinMode.Miter,
             },
 
-            scope:New "TextLabel" {
+            scope:Text {
                 Size = UDim2.fromScale(1, 1),
                 AnchorPoint = Vector2.new(0.5, 0.5),
                 Position = UDim2.fromScale(0.5, 0.5),
@@ -85,8 +88,6 @@ local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
                 BackgroundTransparency = 1,
 
                 Text = "Claim!",
-                TextColor3 = Color3.fromRGB(255, 255, 255),
-                Font = Enum.Font.FredokaOne,
                 TextSize = 25,
 
                 [Children] = {
@@ -100,7 +101,7 @@ local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
                         Scale = scope:Spring(claimScale, 32)
                     }
                 }
-            },
+            }
         }
     }
 end

@@ -10,12 +10,14 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
+local Text = require(Client.Interface.Text)
 local GlobalScale = require(Client.Interface.GlobalScale)
 local TopbarItem = require(Client.Topbar.TopbarItem)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
+    Text: typeof(Text),
     GlobalScale: typeof(GlobalScale),
     TopbarItem: typeof(TopbarItem),
 }
@@ -41,6 +43,7 @@ export type TopbarProps = {
 
 local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
     local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         GlobalScale = GlobalScale,
         TopbarItem = TopbarItem,
     }
@@ -114,7 +117,7 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
                     return {} :: Fusion.Child
                 end
 
-                return scope:New "TextLabel" {
+                return scope:Text {
                     Text = text,
                     BackgroundTransparency = 1,
 

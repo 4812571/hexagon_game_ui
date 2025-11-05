@@ -11,11 +11,17 @@ local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 type UsedAs<T> = Fusion.UsedAs<T>
 
 export type IconSide = "Left" | "Right"
+
+export type Components = {
+    Icon: typeof(Icon),
+    Text: typeof(Text),
+}
 
 export type IconTextProps = {
     Size: UsedAs<UDim2>?,
@@ -33,8 +39,9 @@ export type IconTextProps = {
 }
 
 local function IconText<U>(scope: Scope<U>, props: IconTextProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
     }
 
     return scope:New "Frame" {
@@ -73,31 +80,22 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                 }
             },
 
-            scope:New "TextLabel" {
-                BackgroundTransparency = 1,
-                
+            scope:Text {
                 Text = props.Text,
-                TextColor3 = Color3.fromRGB(255, 255, 255),
                 TextSize = props.TextSize,
+                
                 TextXAlignment = scope:Computed(function(use)
                     return if use(props.IconSide) == "Left" then Enum.TextXAlignment.Left else Enum.TextXAlignment.Right
                 end),
-                TextYAlignment = Enum.TextYAlignment.Center,
-                Font = Enum.Font.FredokaOne,
 
                 LayoutOrder = scope:Computed(function(use)
                     return if use(props.IconSide) == "Left" then 1 else -1
                 end),
 
-                [Children] = {
-                    scope:New "UIStroke" {
-                        Color = Color3.fromRGB(0, 0, 0),
-                        Thickness = props.TextStrokeThickness,
-                    },
+                StrokeSize = props.TextStrokeThickness,
 
-                    scope:New "UIFlexItem" {
-                        FlexMode = Enum.UIFlexMode.Fill,
-                    }
+                Children = scope:New "UIFlexItem" {
+                    FlexMode = Enum.UIFlexMode.Fill,
                 }
             }
         }

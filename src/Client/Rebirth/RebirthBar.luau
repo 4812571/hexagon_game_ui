@@ -13,10 +13,12 @@ local Children = Fusion.Children
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 local ProgressBar = require(Client.Interface.ProgressBar)
 
 type Components = {
     Icon: typeof(Icon),
+    Text: typeof(Text),
     ProgressBar: typeof(ProgressBar),
 }
 
@@ -54,6 +56,7 @@ end
 local function RebirthBar<U>(scope: Scope<U>, props: RebirthBarProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
         ProgressBar = ProgressBar,
     }
 
@@ -97,7 +100,7 @@ local function RebirthBar<U>(scope: Scope<U>, props: RebirthBarProps)
                         Padding = UDim.new(0, 8),
                     },
 
-                    scope:New "TextLabel" {
+                    scope:Text {
                         LayoutOrder = 1,
                         Size = UDim2.fromScale(1, 0.5),
                         AutomaticSize = Enum.AutomaticSize.Y,
@@ -105,14 +108,8 @@ local function RebirthBar<U>(scope: Scope<U>, props: RebirthBarProps)
                         TextXAlignment = Enum.TextXAlignment.Left,
                         TextYAlignment = Enum.TextYAlignment.Bottom,
                         
-                        BackgroundTransparency = 1,
-                        TextColor3 = Color3.new(1, 1, 1),
-                        Font = Enum.Font.FredokaOne,
                         Text = props.Text,
-
-                        [Children] = scope:New "UIStroke" {
-                            Thickness = 3,
-                        }
+                        StrokeSize = 3.0,
                     },
 
                     scope:ProgressBar {

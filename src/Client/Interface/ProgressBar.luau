@@ -1,14 +1,25 @@
+--!strict
+--!native
+--!nolint LocalShadow
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
+local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 local Out = Fusion.Out
 
+local Text = require(Client.Interface.Text)
+
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
-type ProgressBarProps = {
+export type Components = {
+    Text: typeof(Text),
+}
+
+export type ProgressBarProps = {
     Size: Fusion.UsedAs<UDim2>?,
     Position: Fusion.UsedAs<UDim2>?,
     AnchorPoint: Fusion.UsedAs<Vector2>?,
@@ -19,13 +30,17 @@ type ProgressBarProps = {
     BackgroundColor: Fusion.UsedAs<Color3>,
 
     Text: Fusion.UsedAs<string>,
-    TextSize: Fusion.UsedAs<number>?,
+    TextSize: Fusion.UsedAs<number>,
     BarAlpha: Fusion.UsedAs<number>,
 
     Children: Fusion.Child?,
 }
 
 local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
+    local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
+    }
+    
     local absoluteSize = scope:Value(Vector2.new(0, 0))
 
     local width = scope:Computed(function(use)
@@ -37,7 +52,7 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
     end)
 
     local barWidth = scope:Computed(function(use)
-        return use(height) + use(props.BarAlpha) * (use(width) - use(height))
+        return use(height) + (use(props.BarAlpha) :: number) * (use(width) - use(height))
     end)
 
     local barSize = scope:Computed(function(use)
@@ -79,24 +94,11 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
                 },
             },
 
-            scope:New "TextLabel" {
-                Size = UDim2.fromScale(1, 1),
-                AnchorPoint = Vector2.new(0.5, 0.5),
-                Position = UDim2.fromScale(0.5, 0.5),
-
-                BackgroundTransparency = 1,
+            scope:Text {
                 Text = props.Text,
                 TextSize = props.TextSize,
-                Font = Enum.Font.FredokaOne,
-                TextColor3 = Color3.fromRGB(255, 255, 255),
 
-                TextXAlignment = Enum.TextXAlignment.Center,
-                TextYAlignment = Enum.TextYAlignment.Center,
-
-                [Children] = scope:New "UIStroke" {
-                    Thickness = 2,
-                    Color = Color3.fromRGB(0, 0, 0),
-                }
+                StrokeSize = 2.0,
             }
         },
     }

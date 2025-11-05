@@ -10,11 +10,18 @@ local Client = ReplicatedStorage.Client
 local Fusion = require(Packages.Fusion)
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 local CloseButton = require(Client.Interface.CloseButton)
 
 local Children = Fusion.Children
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
+export type Components = {
+    Icon: typeof(Icon),
+    Text: typeof(Text),
+    CloseButton: typeof(CloseButton),
+}
 
 export type WindowProps = {
     Visible: Fusion.UsedAs<boolean>?,
@@ -29,8 +36,9 @@ export type WindowProps = {
 }
 
 local function Window<U>(scope: Scope<U>, props: WindowProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
         CloseButton = CloseButton,
     }
 
@@ -119,27 +127,23 @@ local function Window<U>(scope: Scope<U>, props: WindowProps)
                                             Size = UDim2.fromOffset(48, 48),
                                         },
 
-                                        scope:New "TextLabel" {
+                                        scope:Text {
                                             Text = props.Title,
                                             TextSize = 48,
-                                            AutomaticSize = Enum.AutomaticSize.XY,
-                                            Font = Enum.Font.FredokaOne,
-                                            BackgroundTransparency = 1,
-                                            TextColor3 = Color3.fromRGB(255, 255, 255),
 
-                                            [Children] = scope:New "UIStroke" {
-                                                Thickness = 2,
-                                                LineJoinMode = Enum.LineJoinMode.Miter,
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                            Size = UDim2.fromScale(0, 0),
+                                            AutomaticSize = Enum.AutomaticSize.XY,
+                                            
+                                            StrokeSize = 2.0,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     }
 end
 

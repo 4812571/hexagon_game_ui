@@ -13,6 +13,7 @@ local Children = Fusion.Children
 
 local Icons = require(Common.Icons)
 
+local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
@@ -23,6 +24,7 @@ local CosmeticShopCard = require(Client.Cosmetics.CosmeticShopCard)
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
+    Text: typeof(Text),
     Window: typeof(Window),
     InteractionFrame: typeof(InteractionFrame),
     EmbossedFrame: typeof(EmbossedFrame),
@@ -63,6 +65,7 @@ end
 
 local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
     local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         Window = Window,
         InteractionFrame = InteractionFrame,
         EmbossedFrame = EmbossedFrame,
@@ -203,18 +206,10 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                                         Scale = scope:Spring(equipButtonSize, 35),
                                                     },
 
-                                                    scope:New "TextLabel" {
-                                                        Position = UDim2.fromScale(0.5, 0.5),
-                                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
+                                                    scope:Text {
                                                         Text = "Equip",
-                                                        TextColor3 = Color3.new(1, 1, 1),
-                                                        Font = Enum.Font.FredokaOne,
                                                         TextSize = 48,
-                                                        
-                                                        [Children] = scope:New "UIStroke" {
-                                                            Thickness = 2.0,
-                                                        },
+                                                        StrokeSize = 2.0,
                                                     },
                                                 },
                                             },
@@ -242,18 +237,10 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                                         Scale = scope:Spring(purchaseButtonSize, 35),
                                                     },
 
-                                                    scope:New "TextLabel" {
-                                                        Position = UDim2.fromScale(0.5, 0.5),
-                                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
+                                                    scope:Text {
                                                         Text = "Pay me money!",
-                                                        TextColor3 = Color3.new(1, 1, 1),
-                                                        Font = Enum.Font.FredokaOne,
                                                         TextSize = 48,
-                                                        
-                                                        [Children] = scope:New "UIStroke" {
-                                                            Thickness = 2.0,
-                                                        },
+                                                        StrokeSize = 2.0,
                                                     },
                                                 },
                                             },

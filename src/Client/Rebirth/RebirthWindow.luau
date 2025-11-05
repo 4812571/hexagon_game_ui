@@ -13,6 +13,7 @@ local Children = Fusion.Children
 
 local Icons = require(Common.Icons)
 
+local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
@@ -24,6 +25,7 @@ local RebirthBar = require(Client.Rebirth.RebirthBar)
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
+    Text: typeof(Text),
     Window: typeof(Window),
     EmbossedFrame: typeof(EmbossedFrame),
     InteractionFrame: typeof(InteractionFrame),
@@ -73,6 +75,7 @@ end
 
 local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
     local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         Window = Window,
         EmbossedFrame = EmbossedFrame,
         InteractionFrame = InteractionFrame,
@@ -139,38 +142,26 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
                                 Padding = UDim.new(0, 6),
                             },
 
-                            scope:New "TextLabel" {
+                            scope:Text {
                                 Size = UDim2.fromScale(1.0, 0),
                                 AutomaticSize = Enum.AutomaticSize.Y,
-                                BackgroundTransparency = 1,
                                 Text = "Resets: Coins, Levels, Speed",
                                 TextSize = 32,
-                                Font = Enum.Font.FredokaOne,
                                 TextColor3 = Color3.fromRGB(255, 1, 1),
                                 LayoutOrder = 1,
-                                TextXAlignment = Enum.TextXAlignment.Center,
-
-                                [Children] = scope:New "UIStroke" {
-                                    Thickness = 2,
-                                }
+                                StrokeSize = 2.0,
                             },
 
-                            scope:New "TextLabel" {
-                                Size = UDim2.fromScale(1.0, 0),
+                            scope:Text {
+                                Size = UDim2.fromScale(1, 0),
                                 AutomaticSize = Enum.AutomaticSize.Y,
-                                BackgroundTransparency = 1,
                                 Text = scope:Computed(function(use)
                                     return `+{use(props.SpeedGain)}% Permanent Speed, +{use(props.IncomeGain)}% Income, Bomb Pack`
                                 end),
                                 TextSize = 32,
-                                Font = Enum.Font.FredokaOne,
                                 TextColor3 = Color3.fromRGB(255, 204, 0),
                                 LayoutOrder = 2,
-                                TextXAlignment = Enum.TextXAlignment.Center,
-
-                                [Children] = scope:New "UIStroke" {
-                                    Thickness = 2,
-                                }
+                                StrokeSize = 2.0,
                             },
                         }
                     },
@@ -315,18 +306,10 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
                                         StrokeThickness = 4,
 
                                         Children = {
-                                            scope:New "TextLabel" {
-                                                Size = UDim2.fromScale(1, 1),
-                                                BackgroundTransparency = 1,
+                                            scope:Text {
                                                 Text = "Rebirth!",
-                                                TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                TextXAlignment = Enum.TextXAlignment.Center,
                                                 TextSize = 58,
-                                                Font = Enum.Font.FredokaOne,
-
-                                                [Children] = scope:New "UIStroke" {
-                                                    Thickness = 3,
-                                                }
+                                                StrokeSize = 3.0,
                                             },
 
                                             scope:Icon {

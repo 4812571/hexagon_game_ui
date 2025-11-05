@@ -16,6 +16,7 @@ local Icons = require(Common.Icons)
 local TimedRewards = require(Common.TimedRewards.TimedRewards)
 type TimedRewardData = TimedRewards.TimedRewardData
 
+local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
@@ -25,6 +26,7 @@ local TimedRewardCard = require(Client.TimedRewards.TimedRewardCard)
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
+    Text: typeof(Text),
     Window: typeof(Window),
     InteractionFrame: typeof(InteractionFrame),
     EmbossedFrame: typeof(EmbossedFrame),
@@ -80,6 +82,7 @@ end
 
 local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowProps)
     local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         Window = Window,
         InteractionFrame = InteractionFrame,
         EmbossedFrame = EmbossedFrame,
@@ -134,7 +137,7 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                             FlexMode = Enum.UIFlexMode.None,
                         },
 
-                        scope:New "TextLabel" {
+                        scope:Text {
                             Size = UDim2.fromScale(0, 1),
                             Position = UDim2.fromScale(0.925, 0.5),
                             AnchorPoint = Vector2.new(1, 0.5),
@@ -144,12 +147,8 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                             BackgroundTransparency = 1,
 
                             Text = "Rewards reset if you leave!",
-                            TextColor3 = Color3.new(1, 1, 1),
                             TextSize = 30,
-                            Font = Enum.Font.FredokaOne,
-                            [Children] = scope:New "UIStroke" {
-                                Thickness = 2,
-                            },
+                            StrokeSize = 2.0,
                         },
                     },
                 },
@@ -232,22 +231,11 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                         Scale = scope:Spring(claimAllScale, 35),
                                     },
 
-                                    scope:New "TextLabel" {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        BackgroundTransparency = 1,
-
+                                    scope:Text {
                                         Text = "Claim All",
-                                        TextColor3 = Color3.new(1, 1, 1),
                                         TextSize = 42,
-                                        Font = Enum.Font.FredokaOne,
-
-                                        [Children] = scope:New "UIStroke" {
-                                            Thickness = 2.8,
-                                        }
-                                    }
+                                        StrokeSize = 2.8,
+                                    },
                                 },
                             },
                         },
@@ -274,21 +262,10 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                         Scale = scope:Spring(speed2Scale, 35),
                                     },
 
-                                    scope:New "TextLabel" {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        BackgroundTransparency = 1,
-
+                                    scope:Text {
                                         Text = "2x Speed",
-                                        TextColor3 = Color3.new(1, 1, 1),
                                         TextSize = 42,
-                                        Font = Enum.Font.FredokaOne,
-
-                                        [Children] = scope:New "UIStroke" {
-                                            Thickness = 2.8,
-                                        }
+                                        StrokeSize = 2.8,
                                     },
                                 },
                             },
@@ -316,21 +293,10 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                         Scale = scope:Spring(speed5Scale, 35),
                                     },
 
-                                    scope:New "TextLabel" {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        BackgroundTransparency = 1,
-
+                                    scope:Text {
                                         Text = "5x Speed",
-                                        TextColor3 = Color3.new(1, 1, 1),
                                         TextSize = 42,
-                                        Font = Enum.Font.FredokaOne,
-
-                                        [Children] = scope:New "UIStroke" {
-                                            Thickness = 2.8,
-                                        }
+                                        StrokeSize = 2.8,
                                     },
                                 },
                             },

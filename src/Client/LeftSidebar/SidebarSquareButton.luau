@@ -19,6 +19,7 @@ type UsedAs<T> = Fusion.UsedAs<T>
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 
 local TAU = math.pi * 2
 
@@ -35,7 +36,14 @@ local PRESS_SCALE = 0.965
 local NEW_INDICATOR_FREQUENCY = 1
 local NEW_INDICATOR_AMPLITUDE = 0.45
 local NEW_INDICATOR_BASE_SCALE = 0.65
-    
+
+export type Components = {
+    InteractionFrame: typeof(InteractionFrame),
+    EmbossedFrame: typeof(EmbossedFrame),
+    Icon: typeof(Icon),
+    Text: typeof(Text),
+}
+
 export type SidebarSquareButtonProps = {
     Size: Fusion.UsedAs<UDim2>?,
     Position: Fusion.UsedAs<UDim2>?,
@@ -50,10 +58,11 @@ export type SidebarSquareButtonProps = {
 }
 
 local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButtonProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
         InteractionFrame = InteractionFrame,
         EmbossedFrame = EmbossedFrame,
         Icon = Icon,
+        Text = Text,
     }
 
     local guiState = scope:Value(Enum.GuiState.NonInteractable)
@@ -78,12 +87,12 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
         return NEW_INDICATOR_BASE_SCALE * (1 + sinValue * NEW_INDICATOR_AMPLITUDE)
     end)
     
-    local newLabel = scope:Computed(function(use, scope: Scope<U>): Fusion.Child
+    local newLabel = scope:Computed(function(use, scope: Scope<Components>): Fusion.Child
         if not use(props.IsNew) then
             return {}
         end
 
-        return scope:New "TextLabel" {
+        return scope:Text {
             Size = UDim2.fromScale(1, 0.2),
             Position = UDim2.fromScale(0.9, 0.1),
             AnchorPoint = Vector2.new(0.5, 0.5),
@@ -163,22 +172,14 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
                         },
                     },
 
-                    scope:New "TextLabel" {
+                    scope:Text {
                         Size = UDim2.fromScale(1, 0.2),
                         Position = UDim2.fromScale(0.5, 0.97),
-                        AnchorPoint = Vector2.new(0.5, 0.5),
 
                         Text = props.Text,
                         TextSize = 55,
-                        TextColor3 = Color3.fromRGB(255, 255, 255),
-                        FontFace = Font.fromEnum(Enum.Font.FredokaOne),
-                        BackgroundTransparency = 1,
-
-                        [Children] = scope:New "UIStroke" {
-                            Thickness = 4,
-                            Color = Color3.fromRGB(0, 0, 0),
-                            Transparency = 0,
-                        },
+                        
+                        StrokeThickness = 4.0,
                     },
 
                     scope:New "UIScale" {

@@ -14,11 +14,13 @@ local Children = Fusion.Children
 local Icons = require(Common.Icons)
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
     Icon: typeof(Icon),
+    Text: typeof(Text),
 }
 
 type LeftSidebarRevivesProps = {
@@ -34,6 +36,7 @@ type LeftSidebarRevivesProps = {
 local function LeftSidebarRevives<U>(scope: Scope<U>, props: LeftSidebarRevivesProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
     }
 
     return scope:New "Frame" {
@@ -63,21 +66,17 @@ local function LeftSidebarRevives<U>(scope: Scope<U>, props: LeftSidebarRevivesP
                 AnchorPoint = Vector2.new(0.0, 0.5),
             },
 
-            scope:New "TextLabel" {
+            scope:Text {
                 LayoutOrder = 2,
                 Size = UDim2.fromScale(1, 1),
-                BackgroundTransparency = 1,
+
                 Text = scope:Computed(function(use)
                     return `Revives: x{use(props.Revives)}`
                 end),
-                TextColor3 = Color3.fromRGB(255, 255, 255),
+
                 TextXAlignment = Enum.TextXAlignment.Left,
                 TextSize = 32,
-                Font = Enum.Font.FredokaOne,
-
-                [Children] = scope:New "UIStroke" {
-                    Thickness = 2,
-                },
+                StrokeSize = 2.0,
             },
         }
     }

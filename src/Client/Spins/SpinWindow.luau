@@ -15,6 +15,7 @@ local Icons = require(Common.Icons)
 
 local Stopwatch = require(Common.Util.Stopwatch)
 
+local Text = require(Client.Interface.Text)
 local Icon = require(Client.Interface.Icon)
 local CloseButton = require(Client.Interface.CloseButton)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
@@ -39,6 +40,7 @@ local function ButtonSize(scope: Scope<Components>, state: Fusion.UsedAs<Enum.Gu
 end
 
 export type Components = {
+    Text: typeof(Text),
     Stopwatch: typeof(Stopwatch),
     Spinner: typeof(Spinner),
     InteractionFrame: typeof(InteractionFrame),
@@ -68,6 +70,7 @@ end
 
 local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
     local scope: Scope<Components> = scope:innerScope {
+        Text = Text,
         Stopwatch = Stopwatch,
         Spinner = Spinner,
         InteractionFrame = InteractionFrame,
@@ -239,25 +242,10 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                         CornerRadius = UDim.new(0, 18),
                                         StrokeThickness = 3.5,
 
-                                        Children = scope:New "TextLabel" {
-                                            Size = UDim2.fromScale(1, 1),
-                                            Position = UDim2.fromScale(0.5, 0.5),
-                                            AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                            BackgroundTransparency = 1,
-                                            
+                                        Children = scope:Text {
                                             Text = "+10 Spins!",
-
-                                            TextXAlignment = Enum.TextXAlignment.Center,
-                                            TextYAlignment = Enum.TextYAlignment.Center,
-
                                             TextSize = 42,
-                                            TextColor3 = Color3.new(1, 1, 1),
-                                            Font = Enum.Font.FredokaOne,
-
-                                            [Children] = scope:New "UIStroke" {
-                                                Thickness = 2.5,
-                                            }
+                                            StrokeSize = 2.5,
                                         },
                                     }
                                 }
@@ -301,27 +289,13 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                         CornerRadius = UDim.new(0, 18),
                                         StrokeThickness = 3.5,
 
-                                        Children = scope:New "TextLabel" {
-                                            Size = UDim2.fromScale(1, 1),
-                                            Position = UDim2.fromScale(0.5, 0.5),
-                                            AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                            BackgroundTransparency = 1,
-                                            
+                                        Children = scope:Text {
                                             Text = scope:Computed(function(use)
                                                 return `Spin! ({use(props.SpinCount)})`
                                             end),
-
-                                            TextXAlignment = Enum.TextXAlignment.Center,
-                                            TextYAlignment = Enum.TextYAlignment.Center,
                                             
                                             TextSize = 42,
-                                            TextColor3 = Color3.new(1, 1, 1),
-                                            Font = Enum.Font.FredokaOne,
-
-                                            [Children] = scope:New "UIStroke" {
-                                                Thickness = 2.5,
-                                            }
+                                            StrokeSize = 2.5,
                                         },
                                     }
                                 }
@@ -365,22 +339,10 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                         CornerRadius = UDim.new(0, 18),
                                         StrokeThickness = 3.5,
 
-                                        Children = scope:New "TextLabel" {
-                                            Size = UDim2.fromScale(1, 1),
-                                            Position = UDim2.fromScale(0.5, 0.5),
-                                            AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                            BackgroundTransparency = 1,
-                                            
+                                        Children = scope:Text {
                                             Text = "+100 Spins!",
-                                            
                                             TextSize = 42,
-                                            TextColor3 = Color3.new(1, 1, 1),
-                                            Font = Enum.Font.FredokaOne,
-
-                                            [Children] = scope:New "UIStroke" {
-                                                Thickness = 2.5,
-                                            }
+                                            StrokeSize = 2.5,
                                         },
                                     }
                                 }

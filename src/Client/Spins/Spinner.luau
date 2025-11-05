@@ -14,6 +14,7 @@ local Children = Fusion.Children
 local Icons = require(Common.Icons)
 
 local Clock = require(Common.Util.Clock)
+local Text = require(Client.Interface.Text)
 
 local SpinnerIcon = require(Client.Spins.SpinnerIcon)
 
@@ -27,6 +28,7 @@ export type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
     Clock: typeof(Clock),
+    Text: typeof(Text),
     SpinnerIcon: typeof(SpinnerIcon),
 }
 
@@ -63,8 +65,9 @@ export type Positioning = {
 }
 
 local function Spinner<U>(scope: Scope<U>, props: SpinnerProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
         Clock = Clock,
+        Text = Text,
         SpinnerIcon = SpinnerIcon,
     }
 
@@ -111,7 +114,7 @@ local function Spinner<U>(scope: Scope<U>, props: SpinnerProps)
     local texts = scope:ForValues(positionings, function(use: Fusion.Use, scope: Scope<Components>, positioning: Positioning)
         local item: SpinnerItemProps = use(props.Items)[positioning.Index + 1]
         
-        return scope:New "TextLabel" {
+        return scope:Text {
             Size = UDim2.fromScale(0.15, 0.05),
             Position = ToUDimFromCenter(positioning.Position * 0.732),
             AnchorPoint = Vector2.new(0.5, 0.5),

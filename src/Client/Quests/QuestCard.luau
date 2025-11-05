@@ -13,15 +13,18 @@ local Children = Fusion.Children
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 local ProgressBar = require(Client.Interface.ProgressBar)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
     EmbossedFrame: typeof(EmbossedFrame),
-    Icon: typeof(Icon),
-    ProgressBar: typeof(ProgressBar),
     InteractionFrame: typeof(InteractionFrame),
+    Icon: typeof(Icon),
+    Text: typeof(Text),
+
+    ProgressBar: typeof(ProgressBar),
 }
 
 export type QuestCardProps = {
@@ -44,9 +47,11 @@ export type QuestCardProps = {
 local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
     local scope: Scope<Components> = scope:innerScope {
         EmbossedFrame = EmbossedFrame,
-        Icon = Icon,
-        ProgressBar = ProgressBar,
         InteractionFrame = InteractionFrame,
+        Icon = Icon,
+        Text = Text,
+
+        ProgressBar = ProgressBar,
     }
 
     local claimCount = scope:Computed(function(use)
@@ -137,22 +142,14 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
                                             Padding = UDim.new(0, 5),
                                         },
 
-                                        scope:New "TextLabel" {
+                                        scope:Text {
                                             LayoutOrder = 1,
 
                                             Size = UDim2.fromScale(1, 0.45),
-                                            BackgroundTransparency = 1,
                                             Text = props.QuestText,
                                             TextSize = 22,
-                                            Font = Enum.Font.FredokaOne,
-                                            TextColor3 = Color3.fromRGB(255, 255, 255),
                                             TextXAlignment = Enum.TextXAlignment.Left,
-                                            TextYAlignment = Enum.TextYAlignment.Center,
-                                            
-                                            [Children] = scope:New "UIStroke" {
-                                                Thickness = 2,
-                                                Color = Color3.fromRGB(0, 0, 0),
-                                            },
+                                            StrokeSize = 2.0,
                                         },
 
                                         scope:ProgressBar {
@@ -195,24 +192,16 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
                                     Padding = UDim.new(0, 10),
                                 },
 
-                                scope:New "TextLabel" {
+                                scope:Text {
                                     Size = UDim2.fromScale(0.25, 0.4),
-                                    AnchorPoint = Vector2.new(0.5, 0.5),
-                                    BackgroundTransparency = 1,
+                                    
                                     Text = scope:Computed(function(use)
                                         return `+{use(props.RewardExperience)} XP`
                                     end),
+                                    
                                     TextSize = 32,
-                                    Font = Enum.Font.FredokaOne,
-                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                    TextXAlignment = Enum.TextXAlignment.Center,
-                                    TextYAlignment = Enum.TextYAlignment.Center,
                                     LayoutOrder = 2,
-
-                                    [Children] = scope:New "UIStroke" {
-                                        Thickness = 2.5,
-                                        Color = Color3.fromRGB(0, 0, 0),
-                                    },
+                                    StrokeSize = 2.5,
                                 },
 
                                 scope:Computed(function(use): Fusion.Child
@@ -265,24 +254,15 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
                                                     CornerRadius = UDim.new(0, 15),
                                                 },
 
-                                                scope:New "TextLabel" {
-                                                    Size = UDim2.fromScale(1, 1),
-                                                    BackgroundTransparency = 1,
+                                                scope:Text {
                                                     Text = scope:Computed(function(use)
                                                         return if use(claimCount) == 1 then "Claim" else `Claim x{use(claimCount)}`
                                                     end),
-                                                    TextSize = 26,
-                                                    Font = Enum.Font.FredokaOne,
-                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                    TextXAlignment = Enum.TextXAlignment.Center,
-                                                    TextYAlignment = Enum.TextYAlignment.Center,
 
-                                                    [Children] = scope:New "UIStroke" {
-                                                        Thickness = 2.5,
-                                                        Color = Color3.fromRGB(0, 0, 0),
-                                                    },
+                                                    TextSize = 26,
+                                                    StrokeSize = 2.5,
                                                 },
-                                            }
+                                            },
                                         },
                                     }
                                 end),

@@ -17,6 +17,7 @@ local Window = require(Client.Interface.Window)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local IconText = require(Client.Interface.IconText)
+local Text = require(Client.Interface.Text)
 
 local CosmeticPreview = require(Client.Cosmetics.CosmeticPreview)
 local CosmeticShopCard = require(Client.Cosmetics.CosmeticShopCard)
@@ -28,6 +29,7 @@ export type Components = {
     InteractionFrame: typeof(InteractionFrame),
     EmbossedFrame: typeof(EmbossedFrame),
     IconText: typeof(IconText),
+    Text: typeof(Text),
 
     CosmeticPreview: typeof(CosmeticPreview),
     CosmeticShopCard: typeof(CosmeticShopCard),
@@ -69,6 +71,7 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
         InteractionFrame = InteractionFrame,
         EmbossedFrame = EmbossedFrame,
         IconText = IconText,
+        Text = Text,
 
         CosmeticPreview = CosmeticPreview,
         CosmeticShopCard = CosmeticShopCard,
@@ -330,18 +333,14 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                                                 Scale = scope:Spring(equipButtonSize, 35),
                                                             },
 
-                                                            scope:New "TextLabel" {
+                                                            scope:Text {
                                                                 Position = UDim2.fromScale(0.5, 0.5),
                                                                 AnchorPoint = Vector2.new(0.5, 0.5),
 
                                                                 Text = "Equip",
-                                                                TextColor3 = Color3.new(1, 1, 1),
-                                                                Font = Enum.Font.FredokaOne,
                                                                 TextSize = 48,
-                                                                
-                                                                [Children] = scope:New "UIStroke" {
-                                                                    Thickness = 2.0,
-                                                                },
+
+                                                                StrokeSize = 2.0,
                                                             },
                                                         },
                                                     },

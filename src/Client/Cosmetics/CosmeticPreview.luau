@@ -11,11 +11,13 @@ local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
-    Icon: typeof(Icon)
+    Icon: typeof(Icon),
+    Text: typeof(Text),
 }
 
 type CosmeticPreviewProps = {
@@ -39,6 +41,7 @@ type CosmeticPreviewProps = {
 local function CosmeticPreview<U>(scope: Scope<U>, props: CosmeticPreviewProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
     }
 
     return scope:New "Frame" {
@@ -59,19 +62,14 @@ local function CosmeticPreview<U>(scope: Scope<U>, props: CosmeticPreviewProps)
                 Icon = props.Icon,
             },
 
-            scope:New "TextLabel" {
+            scope:Text {
                 Size = UDim2.fromScale(1, 0),
                 Position = UDim2.fromScale(0.5, 0),
                 AnchorPoint = Vector2.new(0.5, 0.5),
 
                 Text = props.Title,
                 TextSize = props.TextSize,
-                TextColor3 = Color3.new(1, 1, 1),
-                Font = Enum.Font.FredokaOne,
-
-                [Children] = scope:New "UIStroke" {
-                    Thickness = props.Stroke,
-                },
+                StrokeSize = props.Stroke,
             },
 
             scope:New "UIGradient" {

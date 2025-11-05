@@ -13,10 +13,18 @@ local Out = Fusion.Out
 local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
+local Text = require(Client.Interface.Text)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
+type Components = {
+    Icon: typeof(Icon),
+    Text: typeof(Text),
+    EmbossedFrame: typeof(EmbossedFrame),
+    InteractionFrame: typeof(InteractionFrame),
+}
 
 type TopbarItemProps = {
     Size: Fusion.UsedAs<UDim2>?,
@@ -36,8 +44,9 @@ type TopbarItemProps = {
 }
 
 local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
-    local scope = scope:innerScope {
+    local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
+        Text = Text,
         EmbossedFrame = EmbossedFrame,
         InteractionFrame = InteractionFrame,
     }
@@ -111,25 +120,11 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
                     }
                 },
 
-                scope:New "TextLabel" {
-                    Size = UDim2.fromScale(1, 1),
-                    Position = UDim2.fromScale(0.5, 0.5),
-                    AnchorPoint = Vector2.new(0.5, 0.5),
-
+                scope:Text {
                     BackgroundTransparency = 1,
-
                     Text = props.Text,
-                    TextColor3 = Color3.new(1, 1, 1),
-                    Font = Enum.Font.FredokaOne,
-
                     TextSize = 48,
-                    TextXAlignment = Enum.TextXAlignment.Center,
-                    TextYAlignment = Enum.TextYAlignment.Center,
-
-                    [Children] = scope:New "UIStroke" {
-                        Thickness = 2,
-                        Color = Color3.fromRGB(0, 0, 0),
-                    }
+                    StrokeSize = 2,
                 },
 
                 scope:InteractionFrame {
@@ -167,23 +162,11 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
                                 Scale = scope:Spring(purchaseButtonScale, 25),
                             },
 
-                            scope:New "TextLabel" {
+                            scope:Text {
                                 Size = UDim2.fromScale(0.8, 0.8),
-                                Position = UDim2.fromScale(0.5, 0.5),
-                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                BackgroundTransparency = 1,
                                 Text = "+",
-                                TextColor3 = Color3.new(1, 1, 1),
-                                Font = Enum.Font.FredokaOne,
-                                
-                                TextXAlignment = Enum.TextXAlignment.Center,
-                                TextYAlignment = Enum.TextYAlignment.Center,
                                 TextSize = 68,
-
-                                [Children] = scope:New "UIStroke" {
-                                    Thickness = 2,
-                                    Color = Color3.fromRGB(0, 0, 0),
-                                }
+                                StrokeSize = 2.0,
                             },
                         },
                     },
