@@ -8,7 +8,6 @@ local Packages = ReplicatedStorage.Packages
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-local Children = Fusion.Children
 
 local Text = require(Client.Interface.Text)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
@@ -89,20 +88,13 @@ local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
 
                 Text = "Claim!",
                 TextSize = 25,
+                StrokeSize = 3.0,
 
-                [Children] = {
-                    scope:New "UIStroke" {
-                        Thickness = 3,
-                        Color = Color3.fromRGB(0, 0, 0),
-                        LineJoinMode = Enum.LineJoinMode.Miter,
-                    },
-
-                    scope:New "UIScale" {
-                        Scale = scope:Spring(claimScale, 32)
-                    }
-                }
-            }
-        }
+                Children = scope:New "UIScale" {
+                    Scale = scope:Spring(claimScale, 32)
+                },
+            },
+        },
     }
 end
 

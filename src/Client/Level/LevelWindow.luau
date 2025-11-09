@@ -64,6 +64,18 @@ local function Pluralize(word: string, count: number): string
     return if count == 1 then word else `{word}s`
 end
 
+local function ButtonScale(enum: Enum.GuiState): number
+    if enum == Enum.GuiState.Hover then
+        return 1.05
+    end
+
+    if enum == Enum.GuiState.Press then
+        return 0.95
+    end
+
+    return 1.0
+end
+
 local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
@@ -78,6 +90,14 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
     local leftSkipButtonState = scope:Value(Enum.GuiState.NonInteractable)
     local rightSkipButtonState = scope:Value(Enum.GuiState.NonInteractable)
+
+    local leftSkipButtonScale = scope:Computed(function(use)
+        return ButtonScale(use(leftSkipButtonState))
+    end)
+
+    local rightSkipButtonScale = scope:Computed(function(use)
+        return ButtonScale(use(rightSkipButtonState))
+    end)
 
     return scope:Window {
         Title = "Level",
@@ -346,133 +366,172 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
 
                         [Children] = {
                             scope:New "UIListLayout" { 
+                                SortOrder = Enum.SortOrder.LayoutOrder,
                                 FillDirection = Enum.FillDirection.Horizontal,
                                 VerticalAlignment = Enum.VerticalAlignment.Center,
                                 HorizontalFlex = Enum.UIFlexAlignment.SpaceAround,
                             },
 
-                            scope:InteractionFrame {
+                            scope:New "Frame" {
+                                Name = "LeftSkipButton",
+                                LayoutOrder = 1,
+
                                 Size = UDim2.fromScale(0.35, 0.7),
                                 BackgroundTransparency = 1,
 
-                                Children = {
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Color = Color3.fromRGB(30, 255, 0),
-                                        CornerRadius = UDim.new(0, 20),
-                                        StrokeThickness = 3,
+                                [Children] = scope:InteractionFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                        Children = scope:New "Frame" {
+                                    BackgroundTransparency = 1,
+
+                                    GuiStateChanged = function(state: Enum.GuiState)
+                                        leftSkipButtonState:set(state)
+                                    end,
+
+                                    Children = {
+                                        scope:New "UIScale" {
+                                            Scale = scope:Spring(leftSkipButtonScale, 35),
+                                        },
+
+                                        scope:EmbossedFrame {
                                             Size = UDim2.fromScale(1, 1),
-                                            BackgroundTransparency = 1,
+                                            Color = Color3.fromRGB(30, 255, 0),
+                                            CornerRadius = UDim.new(0, 20),
+                                            StrokeThickness = 3,
 
-                                            [Children] = {
-                                                scope:New "UIPadding" {
-                                                    PaddingLeft = UDim.new(0, 10),
-                                                    PaddingRight = UDim.new(0, 10),
-                                                    PaddingTop = UDim.new(0, 10),
-                                                    PaddingBottom = UDim.new(0, 10),
+                                            Children = scope:New "Frame" {
+                                                Size = UDim2.fromScale(1, 1),
+                                                BackgroundTransparency = 1,
+
+                                                [Children] = {
+                                                    scope:New "UIPadding" {
+                                                        PaddingLeft = UDim.new(0, 10),
+                                                        PaddingRight = UDim.new(0, 10),
+                                                        PaddingTop = UDim.new(0, 10),
+                                                        PaddingBottom = UDim.new(0, 10),
+                                                    },
+
+                                                    scope:Text {
+                                                        Size = UDim2.fromScale(0.35, 1),
+                                                        Position = UDim2.fromScale(0, 0.5),
+                                                        AnchorPoint = Vector2.new(0, 0.5),
+
+                                                        TextColor3 = Color3.fromRGB(255, 255, 255),
+                                                        TextSize = 30,
+
+                                                        Text = "Skip",
+
+                                                        [Children] = {
+                                                            scope:New "UIStroke" {
+                                                                Thickness = 2,
+                                                                Color = Color3.fromRGB(0, 0, 0),
+                                                            },
+                                                        },
+                                                    },
+
+                                                    scope:IconText {
+                                                        Size = UDim2.fromScale(0.6, 1),
+                                                        Position = UDim2.fromScale(1, 0.5),
+                                                        AnchorPoint = Vector2.new(1, 0.5),
+
+                                                        Icon = Icons.Coin,
+                                                        IconScale = 1.4,
+
+                                                        Text = "5,000,000",
+                                                        TextSize = 15.5,
+                                                        IconSide = "Right",
+                                                        TextStrokeThickness = 1,
+                                                    },
                                                 },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
 
-                                                scope:Text {
-                                                    Size = UDim2.fromScale(0.35, 1),
-                                                    Position = UDim2.fromScale(0, 0.5),
-                                                    AnchorPoint = Vector2.new(0, 0.5),
+                            scope:New "Frame" {
+                                Name = "RightSkipButton",
+                                LayoutOrder = 2,
 
-                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                    TextSize = 30,
+                                Size = UDim2.fromScale(0.35, 0.7),
+                                BackgroundTransparency = 1,
 
-                                                    Text = "Skip",
+                                [Children] = scope:InteractionFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                                    [Children] = {
-                                                        scope:New "UIStroke" {
+                                    BackgroundTransparency = 1,
+
+                                    GuiStateChanged = function(state: Enum.GuiState)
+                                        rightSkipButtonState:set(state)
+                                    end,
+
+                                    Children = {
+                                        scope:New "UIScale" {
+                                            Scale = scope:Spring(rightSkipButtonScale, 35),
+                                        },
+
+                                        scope:EmbossedFrame {
+                                            Size = UDim2.fromScale(1, 1),
+                                            Color = Color3.fromRGB(255, 0, 0),
+                                            CornerRadius = UDim.new(0, 20),
+                                            StrokeThickness = 3,
+
+                                            Children = scope:New "Frame" {
+                                                Size = UDim2.fromScale(1, 1),
+                                                BackgroundTransparency = 1,
+
+                                                [Children] = {
+                                                    scope:New "UIPadding" {
+                                                        PaddingLeft = UDim.new(0, 10),
+                                                        PaddingRight = UDim.new(0, 10),
+                                                        PaddingTop = UDim.new(0, 10),
+                                                        PaddingBottom = UDim.new(0, 10),
+                                                    },
+
+                                                    scope:Text {
+                                                        Size = UDim2.fromScale(0.35, 1),
+                                                        Position = UDim2.fromScale(0, 0.5),
+                                                        AnchorPoint = Vector2.new(0, 0.5),
+
+                                                        TextColor3 = Color3.fromRGB(255, 255, 255),
+                                                        TextSize = 30,
+
+                                                        Text = "Skip",
+
+                                                        [Children] = scope:New "UIStroke" {
                                                             Thickness = 2,
                                                             Color = Color3.fromRGB(0, 0, 0),
                                                         },
                                                     },
-                                                },
 
-                                                scope:IconText {
-                                                    Size = UDim2.fromScale(0.6, 1),
-                                                    Position = UDim2.fromScale(1, 0.5),
-                                                    AnchorPoint = Vector2.new(1, 0.5),
+                                                    scope:IconText {
+                                                        Size = UDim2.fromScale(0.6, 1),
+                                                        Position = UDim2.fromScale(1, 0.5),
+                                                        AnchorPoint = Vector2.new(1, 0.5),
 
-                                                    Icon = Icons.Coin,
-                                                    IconScale = 1.4,
+                                                        Icon = Icons.Robux,
+                                                        IconScale = 1.4,
 
-                                                    Text = "5,000,000",
-                                                    TextSize = 15.5,
-                                                    IconSide = "Right",
-                                                    TextStrokeThickness = 1,
-                                                }
-                                            }
-                                        },
-                                    },
-                                }
-                            },
-
-                            scope:InteractionFrame {
-                                Size = UDim2.fromScale(0.35, 0.7),
-                                BackgroundTransparency = 1,
-
-                                Children = {
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Color = Color3.fromRGB(255, 0, 0),
-                                        CornerRadius = UDim.new(0, 20),
-                                        StrokeThickness = 3,
-
-                                        Children = scope:New "Frame" {
-                                            Size = UDim2.fromScale(1, 1),
-                                            BackgroundTransparency = 1,
-
-                                            [Children] = {
-                                                scope:New "UIPadding" {
-                                                    PaddingLeft = UDim.new(0, 10),
-                                                    PaddingRight = UDim.new(0, 10),
-                                                    PaddingTop = UDim.new(0, 10),
-                                                    PaddingBottom = UDim.new(0, 10),
-                                                },
-
-                                                scope:Text {
-                                                    Size = UDim2.fromScale(0.35, 1),
-                                                    Position = UDim2.fromScale(0, 0.5),
-                                                    AnchorPoint = Vector2.new(0, 0.5),
-
-                                                    TextColor3 = Color3.fromRGB(255, 255, 255),
-                                                    TextSize = 30,
-
-                                                    Text = "Skip",
-
-                                                    [Children] = scope:New "UIStroke" {
-                                                        Thickness = 2,
-                                                        Color = Color3.fromRGB(0, 0, 0),
+                                                        Text = "5,000,000",
+                                                        TextSize = 15.5,
+                                                        IconSide = "Right",
+                                                        TextStrokeThickness = 1,
                                                     },
                                                 },
-
-                                                scope:IconText {
-                                                    Size = UDim2.fromScale(0.6, 1),
-                                                    Position = UDim2.fromScale(1, 0.5),
-                                                    AnchorPoint = Vector2.new(1, 0.5),
-
-                                                    Icon = Icons.Robux,
-                                                    IconScale = 1.4,
-
-                                                    Text = "5,000,000",
-                                                    TextSize = 15.5,
-                                                    IconSide = "Right",
-                                                    TextStrokeThickness = 1,
-                                                }
-                                            }
+                                            },
                                         },
                                     },
-                                }
+                                },
                             },
-                        }
+                        },
                     },
-                }
-            }
-        }
+                },
+            },
+        },
     }
 end
 
