@@ -76,6 +76,9 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
         IconText = IconText,
     }
 
+    local leftSkipButtonState = scope:Value(Enum.GuiState.NonInteractable)
+    local rightSkipButtonState = scope:Value(Enum.GuiState.NonInteractable)
+
     return scope:Window {
         Title = "Level",
         Icon = Icons.UpArrow,
@@ -123,9 +126,8 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                         Size = UDim2.fromScale(1, 0.5),
 
                                         TextXAlignment = Enum.TextXAlignment.Left,
-                                        
-                                        TextSize = 24,
                                         LayoutOrder = 1,
+                                        TextSize = 24,
 
                                         Text = scope:Computed(function(use)
                                             return `Level: {use(props.Level)}`
@@ -134,7 +136,7 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                         StrokeSize = 3.0,
 
                                         Children = scope:New "UIPadding" {
-                                            PaddngLeft = UDim.new(0, 10),
+                                            PaddingLeft = UDim.new(0, 10),
                                         },
                                     },
 
@@ -148,6 +150,8 @@ local function LevelWindow<U>(scope: Scope<U>, props: LevelWindowProps)
                                         Text = scope:Computed(function(use)
                                             return `Speed: {use(props.Speed)}`
                                         end),
+
+                                        StrokeSize = 3.0,
 
                                         Children = scope:New "UIPadding" {
                                             PaddingLeft = UDim.new(0, 10),

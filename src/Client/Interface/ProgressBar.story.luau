@@ -38,7 +38,9 @@ return function(target: Instance)
         BarColor = Color3.fromRGB(53, 255, 3),
 
         BarAlpha = alpha,
+
         Text = "Development in progress...",
+        TextSize = 18,
     }
 
     instance.Parent = target

@@ -124,7 +124,10 @@ local function Topbar<U>(scope: Scope<U>, props: TopbarProps)
                     TextSize = 56,
                     Font = Enum.Font.FredokaOne,
                     TextColor3 = Color3.new(1, 1, 1),
+
+                    Size = UDim2.fromScale(0, 0),
                     AutomaticSize = Enum.AutomaticSize.XY,
+ 
                     TextXAlignment = Enum.TextXAlignment.Center,
                     TextYAlignment = Enum.TextYAlignment.Center,
                     LayoutOrder = 3,

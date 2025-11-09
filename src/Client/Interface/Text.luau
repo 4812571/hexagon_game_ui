@@ -30,7 +30,11 @@ export type TextProps = {
 }
 
 local function Text<U>(scope: Scope<U>, props: TextProps)
+    print(props.Children)
+
     return scope:New "TextLabel" {
+        Name = "Text",
+
         Size = props.Size or UDim2.fromScale(1, 1),
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
         AnchorPoint = props.AnchorPoint or Vector2.new(0.5, 0.5),

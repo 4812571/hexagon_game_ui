@@ -50,22 +50,21 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
         AnchorPoint = props.AnchorPoint,
 
         BackgroundTransparency = 1,
+        BackgroundColor3 = Color3.fromRGB(50, 50, 50),
 
         [Children] = {
             scope:New "UIListLayout" {
                 SortOrder = Enum.SortOrder.LayoutOrder,
                 FillDirection = Enum.FillDirection.Horizontal,
-                HorizontalFlex = Enum.UIFlexAlignment.Fill,
-                VerticalFlex = Enum.UIFlexAlignment.Fill,
-                VerticalAlignment = Enum.VerticalAlignment.Center,
-                HorizontalAlignment = Enum.HorizontalAlignment.Left,
                 Padding = UDim.new(0, 12),
             },
 
             scope:New "Frame" {
-                AutomaticSize = Enum.AutomaticSize.Y,
                 BackgroundTransparency = 1,
                 LayoutOrder = 0,
+
+                Size = UDim2.fromScale(1, 1),
+                SizeConstraint = Enum.SizeConstraint.RelativeYY,
 
                 [Children] = {
                     scope:Icon {
@@ -73,11 +72,7 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
                         Icon = props.Icon,
                         IconScale = props.IconScale,
                     },
-
-                    scope:New "UIAspectRatioConstraint" {
-                        AspectRatio = 1,
-                    },
-                }
+                },
             },
 
             scope:Text {
@@ -96,9 +91,9 @@ local function IconText<U>(scope: Scope<U>, props: IconTextProps)
 
                 Children = scope:New "UIFlexItem" {
                     FlexMode = Enum.UIFlexMode.Fill,
-                }
-            }
-        }
+                },
+            },
+        },
     }
 end
 
