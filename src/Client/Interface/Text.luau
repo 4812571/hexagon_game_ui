@@ -13,6 +13,7 @@ export type TextProps = {
     AnchorPoint: Fusion.UsedAs<Vector2>?,
     Rotation: Fusion.UsedAs<number>?,
 
+    ZIndex: Fusion.UsedAs<number>?,
     AutomaticSize: Fusion.UsedAs<Enum.AutomaticSize>?,
     LayoutOrder: Fusion.UsedAs<number>?,
 
@@ -38,9 +39,9 @@ local function Text<U>(scope: Scope<U>, props: TextProps)
         Size = props.Size or UDim2.fromScale(1, 1),
         Position = props.Position or UDim2.fromScale(0.5, 0.5),
         AnchorPoint = props.AnchorPoint or Vector2.new(0.5, 0.5),
-
         Rotation = props.Rotation,
 
+        ZIndex = props.ZIndex,
         AutomaticSize = props.AutomaticSize,
         LayoutOrder = props.LayoutOrder,
 
