@@ -63,7 +63,7 @@ local function TrailsService(scope: Scope, services: Services): TrailsService
             return Terminate(player, "[TrailsService] Player does not own trail: " .. trailId)
         end
 
-        serverPlayer.Trails.EquipTrail(trailId)
+        serverPlayer.Trails.EquippedId:set(trailId)
 
         return
     end

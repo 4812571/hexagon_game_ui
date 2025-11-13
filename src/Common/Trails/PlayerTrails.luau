@@ -17,7 +17,7 @@ type TrailsData = TrailsData.TrailsData
 
 export type PlayerTrails = {
     EquippedId: Value<string?>,
-    OwnedIds: Value<{string}>,
+    OwnedIds: Value<{[string]: boolean}>,
 
     HasTrail: (trailId: string) -> boolean,
     AddTrail: (trailId: string) -> (),
@@ -41,7 +41,7 @@ local function PlayerTrails(scope: Scope, trailsData: TrailsData)
         return peek(ownedIds)[trailId] == true
     end
 
-    local function AddTrail(trailId: string)
+    local function AddTrail(trailId: string): ()
         local currentOwnedIds = peek(ownedIds)
         currentOwnedIds[trailId] = true
         ownedIds:set(currentOwnedIds)

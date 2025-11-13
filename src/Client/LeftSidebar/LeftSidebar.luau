@@ -181,7 +181,7 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
 
             scope:LeftSidebarRevives {
                 LayoutOrder = 3,
-                Size = UDim2.fromOffset(0, 80),
+                Size = UDim2.fromOffset(0, 90),
                 Position = UDim2.fromOffset(0, -100),
 
                 Revives = 3,

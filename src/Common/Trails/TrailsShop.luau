@@ -14,8 +14,6 @@ local TrailsShop = {
     Trails.Green,
     Trails.Purple,
     Trails.Pink,
-    Trails.White,
-    Trails.Black,
     Trails.Hacker,
     Trails.Fire,
     Trails.Blossom,

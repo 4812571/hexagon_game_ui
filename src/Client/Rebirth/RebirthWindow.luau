@@ -37,6 +37,7 @@ type Components = {
 
 export type RebirthWindowProps = {
     Scale: Fusion.UsedAs<number>,
+    Visible: Fusion.UsedAs<boolean>,
 
     SpeedGain: Fusion.UsedAs<number>,
     IncomeGain: Fusion.UsedAs<number>,
@@ -102,6 +103,7 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
     return scope:Window {
         Title = "Rebirth",
         Icon = Icons.Rebirth,
+        Visible = props.Visible,
         IconScale = 1.35,
 
         OnClose = props.OnClose,

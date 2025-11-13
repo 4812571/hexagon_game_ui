@@ -1,5 +1,6 @@
 --!strict
 --!native
+--!nolint LocalShadow
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -8,21 +9,48 @@ local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
-type Scope = Fusion.Scope<typeof(Fusion)>
+local peek = Fusion.peek
 
 local Trails = require(Common.Trails.Trails)
+local TrailsShop = require(Common.Trails.TrailsShop)
 
 local NetworkClient = require(ReplicatedStorage.NetworkClient)
+local Observe = require(ReplicatedStorage.Packages.Observe)
 
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
+local WindowController = require(Client.Window.WindowController)
+local WindowScaling = require(Client.Window.WindowScaling)
+
+local TrailWindow = require(Client.Trails.TrailsWindow)
+
 export type TrailsController = {
     TryPurchase: (trailId: string) -> boolean,
     TryEquip: (trailId: string?) -> boolean,
+
+    Start: () -> (),
 }
 
-local function TrailsController(scope: Scope, player: ClientPlayer)
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
+export type Components = {
+    TrailsWindow: typeof(TrailWindow),
+    WindowScaling: typeof(WindowScaling),
+}
+
+export type Controllers = {
+    WindowController: WindowController.WindowController,
+}
+
+local function TrailsController<U>(scope: Scope<U>, player: ClientPlayer, controllers: Controllers): TrailsController
+    local WindowController = controllers.WindowController
+
+    local scope: Scope<Components> = scope:innerScope {
+        TrailsWindow = TrailWindow,
+        WindowScaling = WindowScaling,
+    }
+
     local function TryPurchase(trailId: string): boolean
         if player.Trails.HasTrail(trailId) then
             return false
@@ -61,9 +89,66 @@ local function TrailsController(scope: Scope, player: ClientPlayer)
         return true
     end
 
+    local selectedTrail = scope:Value(TrailsShop[1])
+
+    local windowScaling = scope:WindowScaling("Trails", WindowController.CurrentWindow)
+
+    local trailsWindow = scope:TrailsWindow {
+        Scale = windowScaling.Scale,
+        Visible = windowScaling.Visible,
+
+        Trails = TrailsShop,
+        SelectedTrail = selectedTrail,
+        EquippedTrail = player.Trails.EquippedId,
+        OwnedTrails = player.Trails.OwnedIds,
+
+        OnClose = function()
+            WindowController.CloseWindow()
+        end,
+
+        OnTrailSelected = function(trail: Trails.TrailEntry)
+            selectedTrail:set(trail)
+        end,
+
+        OnPurchase = function(trail: Trails.TrailEntry)
+            TryPurchase(trail.Id)
+        end,
+
+        OnEquip = function(trail: Trails.TrailEntry?)
+            TryEquip(if trail then trail.Id else nil)
+        end,
+    }
+
+    local function Start()
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.ResetOnSpawn = false
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+        trailsWindow.Parent = screenGui
+        screenGui.Parent = player.Player.PlayerGui
+
+        table.insert(scope, Observe.Character(player.Player, function(character: Model?)
+            if not character then
+                return
+            end
+
+            character:AddTag("CharacterTrail")
+            
+            local scope = scope:innerScope()
+
+            scope:Observer(player.Trails.EquippedId):onBind(function()
+                character:SetAttribute("TrailName", peek(player.Trails.EquippedId))
+            end)
+
+            return
+        end))
+    end
+
     local self: TrailsController = {
         TryPurchase = TryPurchase,
         TryEquip = TryEquip,
+
+        Start = Start,
     }
 
     return self

@@ -15,6 +15,8 @@ type Scope = Fusion.Scope<typeof(Fusion)>
 local ApplyReward = require(Common.Rewards.ApplyReward)
 local LevelRewards = require(Common.Level.LevelRewards)
 
+local NetworkClient = require(ReplicatedStorage.NetworkClient)
+
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
 
@@ -57,6 +59,7 @@ local function LevelRewardsController(scope: Scope, player: ClientPlayer, contro
 
         player.LevelRewards.Claim(rewardIndex)
         ApplyReward(player, reward :: LevelRewards.LevelReward)
+        NetworkClient.LevelRewards.ClaimReward.Invoke(rewardIndex)
         return true
     end
 

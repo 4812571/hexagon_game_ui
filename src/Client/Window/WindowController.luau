@@ -11,6 +11,7 @@ type WindowType =
     | "Level"
     | "Quests"
     | "Rebirth"
+    | "Trails"
 
 export type WindowController = {
     CloseWindow: () -> (),

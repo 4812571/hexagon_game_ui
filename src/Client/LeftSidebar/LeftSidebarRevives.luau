@@ -75,7 +75,7 @@ local function LeftSidebarRevives<U>(scope: Scope<U>, props: LeftSidebarRevivesP
                 end),
 
                 TextXAlignment = Enum.TextXAlignment.Left,
-                TextSize = 32,
+                TextSize = 68,
                 StrokeSize = 2.0,
             },
         }

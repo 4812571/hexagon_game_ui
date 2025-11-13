@@ -1,5 +1,10 @@
 --!strict
 --!native
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Common = ReplicatedStorage.Common
+
+local TrailIcons = require(Common.TrailIcons)
 
 export type Currency = "Coins" | "Robux"
 
@@ -20,18 +25,10 @@ end
 export type TrailEntry = {
     Id: string,
     Color: ColorSequence,
+    ThemeColor: Color3,
+    Icon: string,
     Price: TrailPrice,
 }
-
-local function TrailEntry(id: string, color: ColorSequence, price: TrailPrice): TrailEntry
-    local shopEntry = {
-        Id = id,
-        Color = color,
-        Price = price,
-    }
-
-    return shopEntry
-end
 
 local Colors = {
     Red = ColorSequence.new(Color3.new(1, 0, 0)),
@@ -91,21 +88,110 @@ local Colors = {
 }
 
 local Trails = {
-    Red = TrailEntry("Red", Colors.Red, Price(500, "Coins")),
-    Yellow = TrailEntry("Yellow", Colors.Yellow, Price(1000, "Coins")),
-    Blue = TrailEntry("Blue", Colors.Blue, Price(1500, "Coins")),
-    Green = TrailEntry("Green", Colors.Green, Price(2000, "Coins")),
-    Purple = TrailEntry("Purple", Colors.Purple, Price(5000, "Coins")),
-    Pink = TrailEntry("Pink", Colors.Pink, Price(10_000, "Coins")),
-    White = TrailEntry("White", Colors.White, Price(25_000, "Coins")),
-    Black = TrailEntry("Black", Colors.Black, Price(50_000, "Coins")),
-    Hacker = TrailEntry("Hacker", Colors.Hacker, Price(200_000, "Coins")),
-    Fire = TrailEntry("Fire", Colors.Fire, Price(400_000, "Coins")),
-    Blossom = TrailEntry("Blossom", Colors.Blossom, Price(1_000_000, "Coins")),
-    Frost = TrailEntry("Frost", Colors.Frost, Price(2_000_000, "Coins")),
-    Electric =  TrailEntry("Electric", Colors.Electric, Price(49, "Robux")),
-    Rainbow = TrailEntry("Rainbow", Colors.Rainbow, Price(49, "Robux")),
-    Banana = TrailEntry("Banana", Colors.Banana, Price(49, "Robux")),
+    Red = {
+        Id = "Red",
+        Color = Colors.Red,
+        ThemeColor = Color3.new(1, 0, 0),
+        Icon = TrailIcons.Red,
+        Price = Price(500, "Coins"),
+    },
+
+    Yellow = {
+        Id = "Yellow",
+        Color = Colors.Yellow,
+        ThemeColor = Color3.new(1, 1, 0),
+        Icon = TrailIcons.Yellow,
+        Price = Price(1000, "Coins"),
+    },
+
+    Blue = {
+        Id = "Blue",
+        Color = Colors.Blue,
+        ThemeColor = Color3.new(0, 0, 1),
+        Icon = TrailIcons.Blue,
+        Price = Price(1500, "Coins"),
+    },
+
+    Green = {
+        Id = "Green",
+        Color = Colors.Green,
+        ThemeColor = Color3.new(0, 1, 0),
+        Icon = TrailIcons.Green,
+        Price = Price(2000, "Coins"),
+    },
+
+    Purple = {
+        Id = "Purple",
+        Color = Colors.Purple,
+        ThemeColor = Color3.new(0.5, 0, 0.5),
+        Icon = TrailIcons.Purple,
+        Price = Price(5000, "Coins"),
+    },
+
+    Pink = {
+        Id = "Pink",
+        Color = Colors.Pink,
+        ThemeColor = Color3.new(1, 0.4, 0.7),
+        Icon = TrailIcons.Pink,
+        Price = Price(10_000, "Coins"),
+    },
+
+    Hacker = {
+        Id = "Hacker",
+        Color = Colors.Hacker,
+        ThemeColor = Color3.new(0, 0, 0),
+        Icon = TrailIcons.Green,
+        Price = Price(200_000, "Coins"),
+    },
+
+    Fire = {
+        Id = "Fire",
+        Color = Colors.Fire,
+        ThemeColor = Color3.new(1, 0.5, 0),
+        Icon = TrailIcons.Orange,
+        Price = Price(400_000, "Coins"),
+    },
+
+    Blossom = {
+        Id = "Blossom",
+        Color = Colors.Blossom,
+        ThemeColor = Color3.new(1, 0.2, 0.6),
+        Icon = TrailIcons.Magenta,
+        Price = Price(1_000_000, "Coins"),
+    },
+
+    Frost = {
+        Id = "Frost",
+        Color = Colors.Frost,
+        ThemeColor = Color3.new(0.5, 0.75, 1),
+        Icon = TrailIcons.Cyan,
+        Price = Price(2_000_000, "Coins"),
+    },
+
+    Electric = {
+        Id = "Electric",
+        Color = Colors.Electric,
+        ThemeColor = Color3.new(0, 1, 1),
+        Icon = TrailIcons.Yellow,
+        Price = Price(49, "Robux"),
+    },
+
+    Rainbow = {
+        Id = "Rainbow",
+        Color = Colors.Rainbow,
+        ThemeColor = Color3.new(1, 1, 1),
+        Icon = TrailIcons.Cyan,
+        Price = Price(49, "Robux"),
+    },
+
+    Banana = {
+        Id = "Banana",
+        Color = Colors.Banana,
+        ThemeColor = Color3.new(1, 1, 0),
+        Icon = TrailIcons.Yellow,
+        Price = Price(49, "Robux"),
+    },
+
 }
 
 return Trails

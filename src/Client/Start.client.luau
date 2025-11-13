@@ -55,12 +55,15 @@ local playerSpeedController = PlayerSpeedController(scope, clientPlayer)
 local spinController = SpinController(scope, clientPlayer)
 local dailyRewardsController = DailyRewardsController(scope, clientPlayer)
 local timedRewardsController = TimedRewardsController(scope, clientPlayer)
-local trailsController = TrailsController(scope, clientPlayer)
 local hexagonController = HexagonController(scope, clientPlayer)
 
 -- local musicController = MusicController(scope, clientPlayer)
 local lobbyController = LobbyController(scope)
 local respawnController = RespawnController(scope, clientPlayer)
+
+local trailsController = TrailsController(scope, clientPlayer, {
+    WindowController = windowController,
+})
 
 local bombController = BombController(scope, clientPlayer, {
     WindowController = windowController,

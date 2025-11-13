@@ -66,7 +66,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
         TrailsButton = {
             Activated = function()
-                print("Trails Button Activated")
+                WindowController.ToggleWindow("Trails")
             end,
 
             IsNew = false,

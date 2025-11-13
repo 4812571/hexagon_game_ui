@@ -10,6 +10,7 @@ export type WindowType =
     | "Level"
     | "Quests"
     | "Rebirth"
+    | "Trails"
 
 local function WindowSpring<U>(scope: Scope<U>, windowName: WindowType, currentWindow: Fusion.UsedAs<WindowType?>)
     local controlValue = scope:Computed(function(use)
