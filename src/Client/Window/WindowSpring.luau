@@ -1,16 +1,14 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
+local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
-export type WindowType = 
-    | "Level"
-    | "Quests"
-    | "Rebirth"
-    | "Trails"
+local WindowType = require(Client.Window.WindowType)
+export type WindowType = WindowType.WindowType
 
 local function WindowSpring<U>(scope: Scope<U>, windowName: WindowType, currentWindow: Fusion.UsedAs<WindowType?>)
     local controlValue = scope:Computed(function(use)

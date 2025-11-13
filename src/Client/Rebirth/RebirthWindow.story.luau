@@ -19,6 +19,10 @@ return function(target: Instance)
 
     local window = scope:RebirthWindow {
         Scale = scope:Spring(windowScale, 25),
+        
+        Visible = scope:Computed(function(use)
+            return use(windowScale) > 0.01
+        end),
 
         SpeedGain = 25,
         IncomeGain = 20,

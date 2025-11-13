@@ -10,16 +10,14 @@ local Fusion = require(Packages.Fusion)
 
 local Icons = require(Common.Icons)
 
-local CosmeticShopCard = require(script.Parent.CosmeticShopCard)
+local CosmeticPreview = require(script.Parent.CosmeticPreview)
 
 return function(target: Instance)
     local scope = Fusion.scoped(Fusion, {
-        CosmeticShopCard = CosmeticShopCard,
+        CosmeticPreview = CosmeticPreview,
     })
-
-    local owned = scope:Value(false)
     
-    local instance = scope:CosmeticShopCard {
+    local instance = scope:CosmeticPreview {
         Size = UDim2.fromOffset(300, 300),
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
@@ -35,16 +33,6 @@ return function(target: Instance)
 
         TextSize = 62,
         Title = "Bomb",
-
-        Owned = owned,
-
-        CurrencyIcon = Icons.Coin,
-        CurrencyText = "500",
-        CurrencyTextSize = 52,
-
-        Activated = function()
-            owned:set(true)
-        end,
     }
 
     instance.Parent = target

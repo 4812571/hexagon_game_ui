@@ -1,119 +1,378 @@
 --!strict
 --!native
 
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local Common = ReplicatedStorage.Common
+
+local Flags = require(Common.Skins.Flags)
+
 export type SkinInfo = {
+    Id: string,
     Name: string,
     ImageId: string,
     Price: number,
 }
 
-local function SkinInfo(name: string, imageId: string, price: number): SkinInfo
-    local skinInfo = {
-        Name = name,
-        ImageId = imageId,
-        Price = price,
-    }
-
-    return skinInfo
-end
-
 local THOUSAND = 1000
 local MILLION = 1000 * THOUSAND
 
-local Skins = {
-    -- Various
-    Grass = SkinInfo("Grass", "TODO", 2.5 * THOUSAND),
-    Wood = SkinInfo("Wood", "TODO", 3.0 * THOUSAND),
-    Stone = SkinInfo("Stone", "TODO", 3.5 * THOUSAND),
-    Brick = SkinInfo("Brick", "TODO", 4.0 * THOUSAND),
-    Rock = SkinInfo("Rock", "TODO", 4.5 * THOUSAND),
-    Obsidian = SkinInfo("Obsidian", "TODO", 5.0 * THOUSAND),
-    Amethyst = SkinInfo("Amethyst", "TODO", 6.0 * THOUSAND),
-    Magma = SkinInfo("Magma", "TODO", 7.0 * THOUSAND),
-    Lava = SkinInfo("Lava", "TODO", 8.5 * THOUSAND),
-    GoldOre = SkinInfo("Gold Ore", "TODO", 10.0 * THOUSAND),
-    DiamondOre = SkinInfo("Diamond Ore", "TODO", 12.5 * THOUSAND),
-    GalaxyOre = SkinInfo("Galaxy Ore", "TODO", 13.5 * THOUSAND),
-    Diamonds = SkinInfo("Diamonds", "TODO", 15.0 * THOUSAND),
-    Space = SkinInfo("Space", "TODO", 17.5 * THOUSAND),
-    Rainbow = SkinInfo("Rainbow", "TODO", 20.0 * THOUSAND),
-    MemeDog = SkinInfo("Meme Dog", "TODO", 22.5 * THOUSAND),
-    MemeCat = SkinInfo("Meme Cat", "TODO", 25.0 * THOUSAND),
-    HungryCat = SkinInfo("Hungry Cat", "TODO", 30.0 * THOUSAND),
-    CuteCat = SkinInfo("Cute Cat", "TODO", 35.0 * THOUSAND),
-    BananaCat = SkinInfo("Banana Cat", "TODO", 40.0 * THOUSAND),
-    Backrooms = SkinInfo("Backrooms", "TODO", 60.0 * THOUSAND),
-    Water = SkinInfo("Water", "TODO", 75.0 * THOUSAND),
-    Blank = SkinInfo("Blank", "TODO", 100.0 * THOUSAND),
-    Sahur = SkinInfo("Sahur", "TODO", 200.0 * THOUSAND),
-    Trallalero = SkinInfo("Trallalero", "TODO", 300.0 * THOUSAND),
-    Cappuccino = SkinInfo("Cappuccino", "TODO", 350.0 * THOUSAND),
-    Robux = SkinInfo("Robux", "TODO", 500.0 * THOUSAND),
-    Dollar = SkinInfo("Dollar", "TODO", 750.0 * THOUSAND),
-    Warning = SkinInfo("Warning", "TODO", 1.0 * MILLION),
-    Cards = SkinInfo("Cards", "TODO", 1.5 * MILLION),
-    Chess = SkinInfo("Chess", "TODO", 2.0 * MILLION),
-    Stars = SkinInfo("Stars", "TODO", 3.0 * MILLION),
-    Squid = SkinInfo("Squid", "TODO", 5.0 * MILLION),
-    Doge = SkinInfo("Doge", "TODO", 7.5 * MILLION),
-    Labubu = SkinInfo("Labubu", "TODO", 10.0 * MILLION),
-    Troll = SkinInfo("Troll", "TODO", 15.0 * MILLION),
-    SmileDog = SkinInfo("Smile Dog", "TODO", 20.0 * MILLION),
-    FluffyDog = SkinInfo("Fluffy Dog", "TODO", 30.0 * MILLION),
-    DripDog = SkinInfo("Drip Dog", "TODO", 50.0 * MILLION),
+local function SkinInfo(skinInfo: SkinInfo): SkinInfo
+    return table.freeze(skinInfo)
+end
 
-    -- Flags
-    USA = SkinInfo("USA", "TODO", 1.5 * THOUSAND),
-    China = SkinInfo("China", "TODO", 1.5 * THOUSAND),
-    Brazil = SkinInfo("Brazil", "TODO", 1.5 * THOUSAND),
-    Philippines = SkinInfo("Philippines", "TODO", 1.5 * THOUSAND),
-    Mexico = SkinInfo("Mexico", "TODO", 1.5 * THOUSAND),
-    Japan = SkinInfo("Japan", "TODO", 1.5 * THOUSAND),
-    SouthKorea = SkinInfo("South Korea", "TODO", 1.5 * THOUSAND),
-    Russia = SkinInfo("Russia", "TODO", 1.5 * THOUSAND),
-    Germany = SkinInfo("Germany", "TODO", 1.5 * THOUSAND),
-    France = SkinInfo("France", "TODO", 1.5 * THOUSAND),
-    UK = SkinInfo("UK", "TODO", 1.5 * THOUSAND),
-    India = SkinInfo("India", "TODO", 1.5 * THOUSAND),
-    Indonesia = SkinInfo("Indonesia", "TODO", 1.5 * THOUSAND),
-    Malaysia = SkinInfo("Malaysia", "TODO", 1.5 * THOUSAND),
-    Thailand = SkinInfo("Thailand", "TODO", 1.5 * THOUSAND),
-    Canada = SkinInfo("Canada", "TODO", 1.5 * THOUSAND),
-    Italy = SkinInfo("Italy", "TODO", 1.5 * THOUSAND),
-    Spain = SkinInfo("Spain", "TODO", 1.5 * THOUSAND),
-    Turkey = SkinInfo("Turkey", "TODO", 1.5 * THOUSAND),
-    Australia = SkinInfo("Australia", "TODO", 1.5 * THOUSAND),
-    Poland = SkinInfo("Poland", "TODO", 1.5 * THOUSAND),
-    Netherlands = SkinInfo("Netherlands", "TODO", 1.5 * THOUSAND),
-    Argentina = SkinInfo("Argentina", "TODO", 1.5 * THOUSAND),
-    Vietnam = SkinInfo("Vietnam", "TODO", 1.5 * THOUSAND),
-    Ukraine = SkinInfo("Ukraine", "TODO", 1.5 * THOUSAND),
-    UAE = SkinInfo("UAE", "TODO", 1.5 * THOUSAND),
-    Singapore = SkinInfo("Singapore", "TODO", 1.5 * THOUSAND),
-    Switzerland = SkinInfo("Switzerland", "TODO", 1.5 * THOUSAND),
-    Sweden = SkinInfo("Sweden", "TODO", 1.5 * THOUSAND),
-    Pakistan = SkinInfo("Pakistan", "TODO", 1.5 * THOUSAND),
-    Egypt = SkinInfo("Egypt", "TODO", 1.5 * THOUSAND),
-    Colombia = SkinInfo("Colombia", "TODO", 1.5 * THOUSAND),
-    Romania = SkinInfo("Romania", "TODO", 1.5 * THOUSAND),
-    Peru = SkinInfo("Peru", "TODO", 1.5 * THOUSAND),
-    Chile = SkinInfo("Chile", "TODO", 1.5 * THOUSAND),
-    Bangladesh = SkinInfo("Bangladesh", "TODO", 1.5 * THOUSAND),
-    Belgium = SkinInfo("Belgium", "TODO", 1.5 * THOUSAND),
-    Portugal = SkinInfo("Portugal", "TODO", 1.5 * THOUSAND),
-    Austria = SkinInfo("Austria", "TODO", 1.5 * THOUSAND),
-    Czechia = SkinInfo("Czechia", "TODO", 1.5 * THOUSAND),
-    Norway = SkinInfo("Norway", "TODO", 1.5 * THOUSAND),
-    Denmark = SkinInfo("Denmark", "TODO", 1.5 * THOUSAND),
-    Finland = SkinInfo("Finland", "TODO", 1.5 * THOUSAND),
-    Jamaica = SkinInfo("Jamaica", "TODO", 1.5 * THOUSAND),
-    Ireland = SkinInfo("Ireland", "TODO", 1.5 * THOUSAND),
-    Serbia = SkinInfo("Serbia", "TODO", 1.5 * THOUSAND),
-    NewZealand = SkinInfo("New Zealand", "TODO", 1.5 * THOUSAND),
-    Greece = SkinInfo("Greece", "TODO", 1.5 * THOUSAND),
-    Scotland = SkinInfo("Scotland", "TODO", 1.5 * THOUSAND),
-    Ghana = SkinInfo("Ghana", "TODO", 1.5 * THOUSAND),
-    Kenya = SkinInfo("Kenya", "TODO", 1.5 * THOUSAND),
+local FLAG_PRICE = 1500
+
+local Skins = {
+    FlagUS = SkinInfo {
+        Id = "FlagUS",
+        Name = "USA",
+        ImageId = Flags.US,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCN = SkinInfo {
+        Id = "FlagCN",
+        Name = "China",
+        ImageId = Flags.CN,
+        Price = FLAG_PRICE,
+    },
+
+    FlagGB = SkinInfo {
+        Id = "FlagGB",
+        Name = "UK",
+        ImageId = Flags.GB,
+        Price = FLAG_PRICE,
+    },
+
+    FlagFR = SkinInfo {
+        Id = "FlagFR",
+        Name = "France",
+        ImageId = Flags.FR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagDE = SkinInfo {
+        Id = "FlagDE",
+        Name = "Germany",
+        ImageId = Flags.DE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagRU = SkinInfo {
+        Id = "FlagRU",
+        Name = "Russia",
+        ImageId = Flags.RU,
+        Price = FLAG_PRICE,
+    },
+
+    FlagIN = SkinInfo {
+        Id = "FlagIN",
+        Name = "India",
+        ImageId = Flags.IN,
+        Price = FLAG_PRICE,
+    },
+
+    FlagJP = SkinInfo {
+        Id = "FlagJP",
+        Name = "Japan",
+        ImageId = Flags.JP,
+        Price = FLAG_PRICE,
+    },
+
+    FlagIT = SkinInfo {
+        Id = "FlagIT",
+        Name = "Italy",
+        ImageId = Flags.IT,
+        Price = FLAG_PRICE,
+    },
+
+    FlagES = SkinInfo {
+        Id = "FlagES",
+        Name = "Spain",
+        ImageId = Flags.ES,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCA = SkinInfo {
+        Id = "FlagCA",
+        Name = "Canada",
+        ImageId = Flags.CA,
+        Price = FLAG_PRICE,
+    },
+
+    FlagBR = SkinInfo {
+        Id = "FlagBR",
+        Name = "Brazil",
+        ImageId = Flags.BR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagAU = SkinInfo {
+        Id = "FlagAU",
+        Name = "Australia",
+        ImageId = Flags.AU,
+        Price = FLAG_PRICE,
+    },
+
+    FlagMX = SkinInfo {
+        Id = "FlagMX",
+        Name = "Mexico",
+        ImageId = Flags.MX,
+        Price = FLAG_PRICE,
+    },
+
+    FlagKR = SkinInfo {
+        Id = "FlagKR",
+        Name = "South Korea",
+        ImageId = Flags.KR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagNL = SkinInfo {
+        Id = "FlagNL",
+        Name = "Netherlands",
+        ImageId = Flags.NL,
+        Price = FLAG_PRICE,
+    },
+
+    FlagTR = SkinInfo {
+        Id = "FlagTR",
+        Name = "Turkey",
+        ImageId = Flags.TR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagSA = SkinInfo {
+        Id = "FlagSA",
+        Name = "Saudi Arabia",
+        ImageId = Flags.SA,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCH = SkinInfo {
+        Id = "FlagCH",
+        Name = "Switzerland",
+        ImageId = Flags.CH,
+        Price = FLAG_PRICE,
+    },
+
+    FlagAR = SkinInfo {
+        Id = "FlagAR",
+        Name = "Argentina",
+        ImageId = Flags.AR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagPL = SkinInfo {
+        Id = "FlagPL",
+        Name = "Poland",
+        ImageId = Flags.PL,
+        Price = FLAG_PRICE,
+    },
+
+    FlagID = SkinInfo {
+        Id = "FlagID",
+        Name = "Indonesia",
+        ImageId = Flags.ID,
+        Price = FLAG_PRICE,
+    },
+
+    FlagSE = SkinInfo {
+        Id = "FlagSE",
+        Name = "Sweden",
+        ImageId = Flags.SE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagBE = SkinInfo {
+        Id = "FlagBE",
+        Name = "Belgium",
+        ImageId = Flags.BE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagAT = SkinInfo {
+        Id = "FlagAT",
+        Name = "Austria",
+        ImageId = Flags.AT,
+        Price = FLAG_PRICE,
+    },
+
+    FlagEG = SkinInfo {
+        Id = "FlagEG",
+        Name = "Egypt",
+        ImageId = Flags.EG,
+        Price = FLAG_PRICE,
+    },
+
+    FlagIR = SkinInfo {
+        Id = "FlagIR",
+        Name = "Iran",
+        ImageId = Flags.IR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagIL = SkinInfo {
+        Id = "FlagIL",
+        Name = "Israel",
+        ImageId = Flags.IL,
+        Price = FLAG_PRICE,
+    },
+
+    FlagGR = SkinInfo {
+        Id = "FlagGR",
+        Name = "Greece",
+        ImageId = Flags.GR,
+        Price = FLAG_PRICE,
+    },
+
+    FlagPT = SkinInfo {
+        Id = "FlagPT",
+        Name = "Portugal",
+        ImageId = Flags.PT,
+        Price = FLAG_PRICE,
+    },
+
+    FlagNO = SkinInfo {
+        Id = "FlagNO",
+        Name = "Norway",
+        ImageId = Flags.NO,
+        Price = FLAG_PRICE,
+    },
+
+    FlagDK = SkinInfo {
+        Id = "FlagDK",
+        Name = "Denmark",
+        ImageId = Flags.DK,
+        Price = FLAG_PRICE,
+    },
+
+    FlagZA = SkinInfo {
+        Id = "FlagZA",
+        Name = "South Africa",
+        ImageId = Flags.ZA,
+        Price = FLAG_PRICE,
+    },
+
+    FlagTH = SkinInfo {
+        Id = "FlagTH",
+        Name = "Thailand",
+        ImageId = Flags.TH,
+        Price = FLAG_PRICE,
+    },
+
+    FlagAE = SkinInfo {
+        Id = "FlagAE",
+        Name = "UAE",
+        ImageId = Flags.AE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagSG = SkinInfo {
+        Id = "FlagSG",
+        Name = "Singapore",
+        ImageId = Flags.SG,
+        Price = FLAG_PRICE,
+    },
+
+    FlagIE = SkinInfo {
+        Id = "FlagIE",
+        Name = "Ireland",
+        ImageId = Flags.IE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagFI = SkinInfo {
+        Id = "FlagFI",
+        Name = "Finland",
+        ImageId = Flags.FI,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCL = SkinInfo {
+        Id = "FlagCL",
+        Name = "Chile",
+        ImageId = Flags.CL,
+        Price = FLAG_PRICE,
+    },
+
+    FlagNG = SkinInfo {
+        Id = "FlagNG",
+        Name = "Nigeria",
+        ImageId = Flags.NG,
+        Price = FLAG_PRICE,
+    },
+
+    FlagPK = SkinInfo {
+        Id = "FlagPK",
+        Name = "Pakistan",
+        ImageId = Flags.PK,
+        Price = FLAG_PRICE,
+    },
+
+    FlagVN = SkinInfo {
+        Id = "FlagVN",
+        Name = "Vietnam",
+        ImageId = Flags.VN,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCZ = SkinInfo {
+        Id = "FlagCZ",
+        Name = "Czech Republic",
+        ImageId = Flags.CZ,
+        Price = FLAG_PRICE,
+    },
+
+    FlagNZ = SkinInfo {
+        Id = "FlagNZ",
+        Name = "New Zealand",
+        ImageId = Flags.NZ,
+        Price = FLAG_PRICE,
+    },
+
+    FlagPH = SkinInfo {
+        Id = "FlagPH",
+        Name = "Philippines",
+        ImageId = Flags.PH,
+        Price = FLAG_PRICE,
+    },
+
+    FlagCO = SkinInfo {
+        Id = "FlagCO",
+        Name = "Colombia",
+        ImageId = Flags.CO,
+        Price = FLAG_PRICE,
+    },
+
+    FlagMY = SkinInfo {
+        Id = "FlagMY",
+        Name = "Malaysia",
+        ImageId = Flags.MY,
+        Price = FLAG_PRICE,
+    },
+
+    FlagPE = SkinInfo {
+        Id = "FlagPE",
+        Name = "Peru",
+        ImageId = Flags.PE,
+        Price = FLAG_PRICE,
+    },
+
+    FlagUA = SkinInfo {
+        Id = "FlagUA",
+        Name = "Ukraine",
+        ImageId = Flags.UA,
+        Price = FLAG_PRICE,
+    },
+
+    FlagRO = SkinInfo {
+        Id = "FlagRO",
+        Name = "Romania",
+        ImageId = Flags.RO,
+        Price = FLAG_PRICE,
+    },
 }
 
 return Skins

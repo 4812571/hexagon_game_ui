@@ -221,17 +221,22 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                                 Position = UDim2.fromScale(0.5, 0.5),
                                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                                 
-                                                Icon = scope:Computed(function(use)
-                                                    return use(props.SelectedTrail).Icon
-                                                end),
+                                                Background = {
+                                                    Type = "Color",
 
-                                                Color = scope:Computed(function(use)
-                                                    return use(props.SelectedTrail).ThemeColor
-                                                end),
+                                                    Icon = scope:Computed(function(use)
+                                                        return use(props.SelectedTrail).Icon
+                                                    end),
+
+                                                    Color = scope:Computed(function(use)
+                                                        return use(props.SelectedTrail).ThemeColor
+                                                    end),
+                                                },
                                                 
                                                 Title = scope:Computed(function(use)
                                                     return use(props.SelectedTrail).Id
                                                 end),
+
                                                 TextSize = 52,
                                                 
                                                 CornerRadius = UDim.new(0.18, 0),
@@ -351,6 +356,8 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                         LayoutOrder = 2,
                         BackgroundTransparency = 1,
 
+                        AutomaticCanvasSize = Enum.AutomaticSize.Y,
+
                         Size = scope:Computed(function(use)
                             return UDim2.new(0, use(itemsFrameWidth) + 50, 1, 0)
                         end),
@@ -383,11 +390,18 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
 
                                     scope:ForPairs(props.Trails, function(use: Fusion.Use, scope: Scope<Components>, index: number, trail: Trails.TrailEntry)
                                         return index, scope:CosmeticShopCard {
-                                            Color = trail.ThemeColor,
+                                            Background = {
+                                                Type = "Color",
+                                                Icon = trail.Icon,
+                                                Color = trail.ThemeColor,
+                                            },
+
+                                            Owned = scope:Computed(function(use)
+                                                return use(props.OwnedTrails)[trail.Id] == true
+                                            end),
 
                                             Title = trail.Id,
                                             TextSize = 28,
-                                            Icon = trail.Icon,
 
                                             CurrencyIcon = PriceIcon(trail.Price),
                                             CurrencyText = FormatNumber(trail.Price.Amount),

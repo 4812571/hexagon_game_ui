@@ -31,8 +31,6 @@ export type TextProps = {
 }
 
 local function Text<U>(scope: Scope<U>, props: TextProps)
-    print(props.Children)
-
     return scope:New "TextLabel" {
         Name = "Text",
 

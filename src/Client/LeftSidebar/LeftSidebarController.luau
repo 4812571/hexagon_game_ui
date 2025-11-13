@@ -74,7 +74,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
 
         SkinsButton = {
             Activated = function()
-                print("Skins Button Activated")
+                WindowController.ToggleWindow("Skins")
             end,
 
             IsNew = false,

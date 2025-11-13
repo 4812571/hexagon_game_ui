@@ -1,17 +1,15 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
+local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 local peek = Fusion.peek
 type UsedAs<T> = Fusion.UsedAs<T>
 type Scope = Fusion.Scope<typeof(Fusion)>
 
-type WindowType = 
-    | "Level"
-    | "Quests"
-    | "Rebirth"
-    | "Trails"
+local WindowType = require(Client.Window.WindowType)
+type WindowType = WindowType.WindowType
 
 export type WindowController = {
     CloseWindow: () -> (),

@@ -1,11 +1,11 @@
+--!strict
+--!native
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
-local Common = ReplicatedStorage.Common
 
 local Fusion = require(Packages.Fusion)
-
-local Icons = require(Common.Icons)
 
 local CosmeticPreview = require(script.Parent.CosmeticPreview)
 
@@ -22,11 +22,13 @@ return function(target: Instance)
         CornerRadius = UDim.new(0.2, 0),
         Stroke = 4,
 
-        Icon = Icons.Bomb,
-        TextSize = 62,
-        Title = "Bomb",
+        Background = {
+            Type = "Image",
+            Image = "rbxassetid://137136802043840",
+        },
 
-        Color = Color3.new(1, 0, 0),
+        TextSize = 62,
+        Title = "USA",
     }
 
     instance.Parent = target
