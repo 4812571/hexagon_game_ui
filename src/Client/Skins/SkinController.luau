@@ -65,7 +65,7 @@ local function SkinController(scope: Scope<{}>, player: ClientPlayer, controller
         if not player.Coins.ConsumeCoins(skinInfo.Price) then
             return false
         end
-        
+
         player.Skins.AddSkin(skinId)
         NetworkClient.Skins.PurchaseSkin.Invoke(skinId)
 
@@ -119,6 +119,16 @@ local function SkinController(scope: Scope<{}>, player: ClientPlayer, controller
 
         Skins = flagEntries,
         Section = section,
+
+        Equipped = scope:Computed(function(use)
+            local activeSkinId = use(player.Skins.ActiveSkinId)
+
+            if not activeSkinId then
+                return nil
+            end
+
+            return Skins[activeSkinId]
+        end),
 
         OnSelect = function(entry: SkinsWindow.SkinEntry)
             selected:set(entry)

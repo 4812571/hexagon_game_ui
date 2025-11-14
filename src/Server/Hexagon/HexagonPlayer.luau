@@ -11,14 +11,14 @@ type ServerPlayer = ServerPlayer.ServerPlayer
 export type HexagonPlayer = {
     Player: ServerPlayer,
     Character: Model,
-    Color: Color3,
+    RenderId: number,
 }
 
-local function HexagonPlayer(player: ServerPlayer, character: Model, color: Color3): HexagonPlayer
+local function HexagonPlayer(player: ServerPlayer, character: Model, renderId: number): HexagonPlayer
     local self: HexagonPlayer = {
         Player = player,
         Character = character,
-        Color = color,
+        RenderId = renderId,
     }
 
     return self

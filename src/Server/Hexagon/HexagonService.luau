@@ -70,14 +70,6 @@ type SelectionResult = {
     InnerClaimed: TileSet,
 }
 
-local function Color(player: HexagonPlayer?): Color3?
-    if not player then
-        return nil
-    end
-
-    return player.Color
-end
-
 type Services = {
     PlayerService: PlayerService,
 }
@@ -135,23 +127,35 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
     end)
 
     local function InitialData(): HexagonData
+        local skins = renderer.GetSkins()
+
         local owned = {}
 
         for axial, owner in world.GetOwnedTiles() do
-            owned[axial] = owner.Color
+            if not owned[owner.RenderId] then
+                owned[owner.RenderId] = {}
+            end
+
+            table.insert(owned[owner.RenderId], axial)
         end
 
         local selected = {}
 
-        for axial, selector in world.GetSelectedTiles() do
-            selected[axial] = selector.Color
+
+        for axial, owner in world.GetSelectedTiles() do
+            if not selected[owner.RenderId] then
+                selected[owner.RenderId] = {}
+            end
+
+            table.insert(selected[owner.RenderId], axial)
         end
 
         local data: HexagonData = {
+            Skins = skins,
             Owned = owned,
             Selected = selected,
         }
-
+    
         return data
     end
 
@@ -161,18 +165,19 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
 
     local function RemovePlayer(player: HexagonPlayer)
         world.RemoveFromGame(player)
+        renderer.UnregisterSkin(player.RenderId)
         activePlayers[player.Player] = nil
 
         player.Player.Hexagons.IsInGame:set(false)
         player.Player.Hexagons.Tiles:set(0)
-        print("Firing TilesCleared for", player.Player.Player.Name)
         NetworkServer.Hexagon.TilesCleared.Fire(player.Player.Player)
 
         playerRemoved:Fire(player)
     end
 
     local function JoinPlayer(player: ServerPlayer, character: Model): HexagonPlayer
-        local hexagonPlayer = HexagonPlayer(player, character, colors.Next())
+        local renderId = renderer.RegisterSkin(colors.Next(), peek(player.Skins.SkinImage))
+        local hexagonPlayer = HexagonPlayer(player, character, renderId)
 
         local spawnPoint = world.FindBestSpawn()
         world.ClaimRadius(hexagonPlayer, spawnPoint, 3)
@@ -422,11 +427,11 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
 
     local function Init()
         Connect(scope, world.OwnerChanged, function(axial: Axial, owner: HexagonPlayer?)
-            renderer.SetTileColor(axial, Color(owner))
+            renderer.SetTile(axial, if owner then owner.RenderId else nil)
         end)
 
         Connect(scope, world.SelectionChanged, function(axial: Axial, selector: HexagonPlayer?)
-            renderer.SetSelectionColor(axial, Color(selector))
+            renderer.SetSelection(axial, if selector then selector.RenderId else nil)
         end)
     end
 
@@ -466,6 +471,16 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
                 NetworkServer.Hexagon.IsInGameChanged.Fire(serverPlayer.Player, peek(serverPlayer.Hexagons.IsInGame))
             end)
 
+            scope:Observer(serverPlayer.Skins.SkinImage):onBind(function()
+                local hexagonPlayer = GetPlayer(serverPlayer)
+
+                if not hexagonPlayer then
+                    return
+                end
+
+                renderer.SetImage(hexagonPlayer.RenderId, peek(serverPlayer.Skins.SkinImage))
+            end)
+
             leaderstats.Parent = serverPlayer.Player
 
             return function()
@@ -473,12 +488,24 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
             end
         end))
 
-        Connect(scope, renderer.TilesChanged, function(color: Color3?, axials: {Axial})
-            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsColored, color, axials)
+        Connect(scope, renderer.SkinRegistered, function(id: number, color: Color3, imageId: string?)
+            PlayerService.FireAll(NetworkServer.Hexagon.SkinRegistered, id, color, imageId)
         end)
 
-        Connect(scope, renderer.SelectionsChanged, function(color: Color3?, axials: {Axial})
-            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsSelected, color, axials)
+        Connect(scope, renderer.SkinUnregistered, function(id: number)
+            PlayerService.FireAll(NetworkServer.Hexagon.SkinUnregistered, id)
+        end)
+
+        Connect(scope, renderer.SkinImageChanged, function(id: number, imageId: string?)
+            PlayerService.FireAll(NetworkServer.Hexagon.SkinImageChanged, id, imageId)
+        end)
+
+        Connect(scope, renderer.TilesChanged, function(id: number?, axials: {Axial})
+            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsFilled, id, axials)
+        end)
+
+        Connect(scope, renderer.SelectionsChanged, function(id: number?, axials: {Axial})
+            PlayerService.FireAll(NetworkServer.Hexagon.HexagonsSelected, id, axials)
         end)
 
         table.insert(scope, RunService.Heartbeat:Connect(Update))

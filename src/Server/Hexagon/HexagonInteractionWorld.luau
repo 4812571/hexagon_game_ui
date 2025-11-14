@@ -24,13 +24,10 @@ type Signal<T...> = Signal.Signal<T...>
 local ServerPlayer = require(Server.Player.ServerPlayer)
 type ServerPlayer = ServerPlayer.ServerPlayer
 
-type Set<T> = {[T]: true}
+local HexagonPlayer = require(Server.Hexagon.HexagonPlayer)
+type HexagonPlayer = HexagonPlayer.HexagonPlayer
 
-export type HexagonPlayer = {
-    Player: ServerPlayer,
-    Character: Model,
-    Color: Color3,
-}
+type Set<T> = {[T]: true}
 
 type TileSet = {[string]: Axial}
 

@@ -11,6 +11,10 @@ local Fusion = require(Packages.Fusion)
 local peek = Fusion.peek
 type Scope = Fusion.Scope<typeof(Fusion)>
 type Value<T> = Fusion.Value<T>
+type UsedAs<T> = Fusion.UsedAs<T>
+
+local Skins = require(Common.Skins.Skins)
+type SkinInfo = Skins.SkinInfo
 
 local SkinsData = require(Common.Skins.SkinsData)
 type SkinsData = SkinsData.SkinsData
@@ -18,6 +22,7 @@ type SkinsData = SkinsData.SkinsData
 export type PlayerSkins = {
     OwnedSkins: Value<{[string]: boolean}>,
     ActiveSkinId: Value<string?>,
+    SkinImage: UsedAs<string?>,
 
     HasSkin: (id: string) -> boolean,
     AddSkin: (id: string) -> (),
@@ -37,6 +42,22 @@ local function PlayerSkins(scope: Scope, data: SkinsData): PlayerSkins
         end)
     end
 
+    local skinImage = scope:Computed(function(use): string?
+        local skinId = use(activeSkinId)
+
+        if not skinId then
+            return nil
+        end
+
+        local skinInfo: SkinInfo? = Skins[skinId]
+
+        if not skinInfo then
+            return nil
+        end
+
+        return skinInfo.ImageId
+    end)
+
     local function HasSkin(id: string): boolean
         return peek(ownedSkins)[id] == true
     end
@@ -50,6 +71,7 @@ local function PlayerSkins(scope: Scope, data: SkinsData): PlayerSkins
     local self: PlayerSkins = {
         OwnedSkins = ownedSkins,
         ActiveSkinId = activeSkinId,
+        SkinImage = skinImage,
 
         HasSkin = HasSkin,
         AddSkin = AddSkin,

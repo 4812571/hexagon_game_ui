@@ -3,23 +3,50 @@ struct Axial {
     R: i32,
 }
 
-struct HexagonData {
-    Owned: map {[Axial]: Color3},
-    Selected: map {[Axial]: Color3},
+struct SkinRegistryEntry {
+    Color: Color3,
+    ImageId: string?,
 }
 
-event HexagonsColored {
+struct HexagonData {
+    Skins: map {[i32]: SkinRegistryEntry},
+    Owned: map {[i32]: Axial[]},
+    Selected: map {[i32]: Axial[]},
+}
+
+event SkinRegistered {
     From: Server,
     Type: Reliable,
     Call: SingleAsync,
-    Data: (Color3?, Axial[]),
+    Data: (i32, Color3, string?),
+}
+
+event SkinUnregistered {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: i32,
+}
+
+event SkinImageChanged {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: (i32, string?),
+}
+
+event HexagonsFilled {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: (i32?, Axial[]),
 }
 
 event HexagonsSelected {
     From: Server,
     Type: Reliable,
     Call: SingleAsync,
-    Data: (Color3?, Axial[]),
+    Data: (i32?, Axial[]),
 }
 
 function JoinGame {

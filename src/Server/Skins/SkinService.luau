@@ -60,7 +60,7 @@ local function SkinService(scope: Scope, services: Services): SkinService
             return Terminate(player, "[SkinService] EquipSkin - Player does not own skin: " .. skinId)
         end
 
-        serverPlayer.Skins.EquippedSkin:set(skinId)
+        serverPlayer.Skins.ActiveSkinId:set(skinId)
 
         return
     end

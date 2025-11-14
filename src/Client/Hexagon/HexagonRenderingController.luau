@@ -50,32 +50,59 @@ local function HexagonRenderingController(scope: Scope, initialData: InitialData
         renderingWorld.AddHexagonTile(axial, hexagonModel)
     end
 
-    for axial, color in initialData.Owned do
-        renderingWorld.SetHexagonTileColor(axial, color)
+    for id, axials in initialData.Owned do
+        for _, axial in axials do
+            renderingWorld.SetHexagonTile(axial, id)
+        end
     end
 
-    for axial, color in initialData.Selected do
-        renderingWorld.SetHexagonSelectionColor(axial, color)
+    for id, axials in initialData.Selected do
+        for _, axial in axials do
+            renderingWorld.SetHexagonSelection(axial, id)
+        end
     end
 
     for _, hexagonModel in hexagons do
         hexagonModel.Parent = workspace
     end
 
-    local function OnHexagonsColored(color: Color3?, axials: {Axial})
+    local function OnSkinRegistered(id: number, color: Color3, imageId: string?)
+        local entry: HexagonRenderingWorld.SkinRegistryEntry = {
+            Color = color,
+            ImageId = imageId,
+        }
+
+        renderingWorld.RegisterSkin(id, entry)
+    end
+
+    local function OnSkinUnregistered(id: number)
+        renderingWorld.UnregisterSkin(id)
+    end
+
+    local function OnSkinImageChanged(id: number, imageId: string?)
+        renderingWorld.SetImage(id, imageId)
+    end
+
+    local function OnHexagonsFilled(id: number?, axials: {Axial})
+        print(`Filling {#axials} hexagons with skin ID {id}`)
+
         for _, axial in axials do
-            renderingWorld.SetHexagonTileColor(axial, color)
+            renderingWorld.SetHexagonTile(axial, id)
         end
     end
 
-    local function OnHexagonsSelected(color: Color3?, axials: {Axial})
+    local function OnHexagonsSelected(id: number?, axials: {Axial})
         for _, axial in axials do
-            renderingWorld.SetHexagonSelectionColor(axial, color)
+            renderingWorld.SetHexagonSelection(axial, id)
         end
     end
 
     local function Start()
-        NetworkClient.Hexagon.HexagonsColored.On(OnHexagonsColored)
+        NetworkClient.Hexagon.SkinRegistered.On(OnSkinRegistered)
+        NetworkClient.Hexagon.SkinUnregistered.On(OnSkinUnregistered)
+        NetworkClient.Hexagon.SkinImageChanged.On(OnSkinImageChanged)
+
+        NetworkClient.Hexagon.HexagonsFilled.On(OnHexagonsFilled)
         NetworkClient.Hexagon.HexagonsSelected.On(OnHexagonsSelected)
     end
 

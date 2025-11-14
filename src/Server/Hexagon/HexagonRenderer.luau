@@ -26,72 +26,129 @@ type TileSet = TileSet.TileSet
 local HexagonData = require(Common.Hexagon.HexagonData)
 type HexagonData = HexagonData.HexagonData
 
-type ColorRecord = Color3 | "None"
+type Record<T> = T | "None"
 
-type HexagonColorRecord = {
+type HexagonRecord<T> = {
     Axial: Axial,
-    Color: ColorRecord,
+    Value: Record<T>,
 }
 
-local function Record(axial: Axial, color: Color3?): HexagonColorRecord
-    local record: HexagonColorRecord = {
+local function HexagonRecord<T>(axial: Axial, value: T?): HexagonRecord<T>
+    local record: HexagonRecord<T> = {
         Axial = axial,
-        Color = if color then color else "None",
+        Value = if value then value else "None",
     }
 
     return record
 end
 
-local function ToColor(color: ColorRecord): Color3?
-    if color ~= "None" then
-        return color
+local function ToValue<T>(record: Record<T>): T?
+    if record ~= "None" then
+        return record
     else
         return nil
     end
 end
 
-export type HexagonRenderer = {
-    SetTileColor: (Axial, Color3?) -> (),
-    SetSelectionColor: (Axial, Color3?) -> (),
-
-    TilesChanged: Signal<Color3?, {Axial}>,
-    SelectionsChanged: Signal<Color3?, {Axial}>,
+type SkinRegistryEntry = {
+    Color: Color3,
+    ImageId: string?,
 }
 
-local function GroupByColor(records: {[string]: HexagonColorRecord}): {[ColorRecord]: {Axial}} 
-    local groups: {[ColorRecord]: {Axial}} = {}
+export type HexagonRenderer = {
+    RegisterSkin: (Color3, string?) -> number,
+    UnregisterSkin: (number) -> (),
+    SetImage: (number, string?) -> (),
+
+    GetSkins: () -> {[number]: SkinRegistryEntry},
+
+    SkinRegistered: Signal<number, Color3, string?>,
+    SkinUnregistered: Signal<number>,
+    SkinImageChanged: Signal<number, string?>,
+
+    SetTile: (Axial, number?) -> (),
+    SetSelection: (Axial, number?) -> (),
+
+    TilesChanged: Signal<number?, {Axial}>,
+    SelectionsChanged: Signal<number?, {Axial}>,
+}
+
+local function GroupByValue<T>(records: {[string]: HexagonRecord<T>}): {[Record<T>]: {Axial}} 
+    local groups: {[Record<T>]: {Axial}} = {}
 
     for _, record in records do
-        if not groups[record.Color] then
-            groups[record.Color] = {}
+        if not groups[record.Value] then
+            groups[record.Value] = {}
         end
 
-        table.insert(groups[record.Color], record.Axial)
+        table.insert(groups[record.Value], record.Axial)
     end
 
     return groups
 end
 
 local function HexagonRenderer(scope: Scope): HexagonRenderer
-    local tileChanges: {[string]: HexagonColorRecord} = {}
-    local selectionChanges: {[string]: HexagonColorRecord} = {}
+    local nextSkinId = 1
+    local skins: {[number]: SkinRegistryEntry} = {}
 
-    local tileChangesSignal: Signal<Color3?, {Axial}> = Signal(scope)
-    local selectionChangesSignal: Signal<Color3?, {Axial}> = Signal(scope)
+    local skinRegisteredSignal: Signal<number, Color3, string?> = Signal(scope)
+    local skinUnregisteredSignal: Signal<number> = Signal(scope)
+    local skinImageChangedSignal: Signal<number, string?> = Signal(scope)
+
+    local function RegisterSkin(color: Color3, imageId: string?): number
+        local skinId = nextSkinId
+        nextSkinId += 1
+
+        skins[skinId] = {
+            Color = color,
+            ImageId = imageId,
+        }
+
+        skinRegisteredSignal:Fire(skinId, color, imageId)
+
+        return skinId
+    end
+
+    local function UnregisterSkin(skinId: number)
+        skins[skinId] = nil
+
+        skinUnregisteredSignal:Fire(skinId)
+    end
+
+    local function SetImage(skinId: number, imageId: string?)
+        local skin = skins[skinId]
+
+        if not skin then
+            error("Skin ID not registered: " .. tostring(skinId))
+        end
+
+        skin.ImageId = imageId
+        skinImageChangedSignal:Fire(skinId, imageId)
+    end
+
+    local function GetSkins(): {[number]: SkinRegistryEntry}
+        return table.clone(skins)
+    end
+
+    local tileChanges: {[string]: HexagonRecord<number>} = {}
+    local selectionChanges: {[string]: HexagonRecord<number>} = {}
+
+    local tileChangesSignal: Signal<number?, {Axial}> = Signal(scope)
+    local selectionChangesSignal: Signal<number?, {Axial}> = Signal(scope)
 
     local isScheduled = false
 
     local function Dispatch()
-        local tileGroups: {[ColorRecord]: {Axial}} = GroupByColor(tileChanges)
+        local tileGroups: {[Record<number>]: {Axial}} = GroupByValue(tileChanges)
         
         for color, axials in tileGroups do
-            tileChangesSignal:Fire(ToColor(color :: ColorRecord), axials)
+            tileChangesSignal:Fire(ToValue(color :: Record<number>), axials)
         end
 
-        local selectionGroups: {[ColorRecord]: {Axial}} = GroupByColor(selectionChanges)
+        local selectionGroups: {[Record<number>]: {Axial}} = GroupByValue(selectionChanges)
 
         for color, axials in selectionGroups do
-            selectionChangesSignal:Fire(ToColor(color :: ColorRecord), axials)
+            selectionChangesSignal:Fire(ToValue(color :: Record<number>), axials)
         end
 
         tileChanges = {}
@@ -108,19 +165,29 @@ local function HexagonRenderer(scope: Scope): HexagonRenderer
         task.defer(Dispatch)
     end
 
-    local function SetTileColor(axial: Axial, color: Color3?)
-        tileChanges[HexagonUtil.Key(axial)] = Record(axial, color)
+    local function SetTile(axial: Axial, color: number?)
+        tileChanges[HexagonUtil.Key(axial)] = HexagonRecord(axial, color)
         Schedule()
     end
 
-    local function SetSelectionColor(axial: Axial, color: Color3?)
-        selectionChanges[HexagonUtil.Key(axial)] = Record(axial, color)
+    local function SetSelection(axial: Axial, color: number?)
+        selectionChanges[HexagonUtil.Key(axial)] = HexagonRecord(axial, color)
         Schedule()
     end
 
-    local self = {
-        SetTileColor = SetTileColor,
-        SetSelectionColor = SetSelectionColor,
+    local self: HexagonRenderer = {
+        RegisterSkin = RegisterSkin,
+        UnregisterSkin = UnregisterSkin,
+        SetImage = SetImage,
+
+        GetSkins = GetSkins,
+
+        SkinRegistered = skinRegisteredSignal,
+        SkinUnregistered = skinUnregisteredSignal,
+        SkinImageChanged = skinImageChangedSignal,
+
+        SetTile = SetTile,
+        SetSelection = SetSelection,
 
         TilesChanged = tileChangesSignal,
         SelectionsChanged = selectionChangesSignal,
