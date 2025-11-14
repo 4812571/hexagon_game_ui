@@ -23,17 +23,17 @@ export type PlayerTrails = {
     AddTrail: (trailId: string) -> (),
 }
 
-local function PlayerTrails(scope: Scope, trailsData: TrailsData)
-    local equippedId: Value<string?> = scope:Value(trailsData.EquippedId)
-    local ownedIds: Value<{[string]: boolean}> = scope:Value(trailsData.OwnedIds)
+local function PlayerTrails(scope: Scope, data: TrailsData)
+    local equippedId: Value<string?> = scope:Value(data.EquippedId)
+    local ownedIds: Value<{[string]: boolean}> = scope:Value(data.OwnedIds)
 
     if RunService:IsServer() then
         scope:Observer(equippedId):onChange(function()
-            equippedId:set(peek(equippedId))
+            data.EquippedId = peek(equippedId)
         end)
 
         scope:Observer(ownedIds):onChange(function()
-            ownedIds:set(peek(ownedIds))
+            data.OwnedIds = peek(ownedIds)
         end)
     end
 
