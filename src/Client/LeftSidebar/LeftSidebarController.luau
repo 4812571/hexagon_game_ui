@@ -53,7 +53,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
                 WindowController.ToggleWindow("Quests")
             end,
 
-            IsNew = false,
+            IsNew = player.Quests.CanClaimAny,
         },
 
         RebirthButton = {
