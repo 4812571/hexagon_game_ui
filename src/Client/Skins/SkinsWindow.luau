@@ -462,6 +462,8 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                     return UDim2.new(0, use(itemsFrameWidth) + 50, 1, 0)
                                 end),
 
+                                AutomaticCanvasSize = Enum.AutomaticSize.Y,
+
                                 [Children] = {
                                     scope:New "UIFlexItem" {
                                         FlexMode = Enum.UIFlexMode.None,
@@ -469,11 +471,13 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
 
                                     scope:New "Frame" {
                                         Size = scope:Computed(function(use)
-                                            return UDim2.new(0, use(itemsFrameWidth), 1, 0)
+                                            return UDim2.fromOffset(use(itemsFrameWidth), 0)
                                         end),
 
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                        AutomaticSize = Enum.AutomaticSize.Y,
+
+                                        Position = UDim2.fromScale(0.5, 0),
+                                        AnchorPoint = Vector2.new(0.5, 0),
                                     
                                         [Children] = {
                                             scope:New "UIPadding" {
