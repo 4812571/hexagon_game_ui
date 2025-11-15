@@ -65,11 +65,11 @@ local function ClaimBanner<U>(scope: Scope<U>, props: ClaimBannerProps)
         BackgroundTransparency = 0.35,
         BackgroundColor3 = scope:Spring(claimColor, 32),
 
-        GuiStateChanged = function(newState: Enum.GuiState)
-            guiState:set(newState)
-        end,
-
         Activated = props.OnClick,
+
+        GuiStateChanged = function(state: Enum.GuiState)
+            guiState:set(state)
+        end,
 
         Children = {
             scope:New "UIStroke" {

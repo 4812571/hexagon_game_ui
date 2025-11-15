@@ -9,7 +9,7 @@ local Packages = ReplicatedStorage.Packages
 local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
 
-local function Clone(scope: Scope, instance: Instance): Instance
+local function Clone<T>(scope: Scope, instance: Instance & T): T
     local clone = instance:Clone()
     table.insert(scope, clone)
     return clone

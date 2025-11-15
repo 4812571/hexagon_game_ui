@@ -155,8 +155,6 @@ local function BombController(scope: Scope, player: ClientPlayer, controllers: C
 
         Count = player.Bombs.Bombs,
         Cooldown = bombCooldown,
-
-        State = scope:Value(Enum.GuiState.NonInteractable),
         
         CardTransparency = 0.5,
 
@@ -177,7 +175,6 @@ local function BombController(scope: Scope, player: ClientPlayer, controllers: C
 
     local goldBomb: BombWindow.BombEntry = {
         Icon = Icons.GoldenBomb,
-        State = scope:Value(Enum.GuiState.NonInteractable),
 
         Count = player.Bombs.GoldBombs,
         Cooldown = goldBombCooldown,
@@ -204,8 +201,6 @@ local function BombController(scope: Scope, player: ClientPlayer, controllers: C
 
         Count = player.Bombs.Nukes,
         Cooldown = nukeCooldown,
-
-        State = scope:Value(Enum.GuiState.NonInteractable),
 
         CardGradient = scope:New "UIGradient" {
             Color = scope:Computed(function(use)

@@ -13,7 +13,7 @@ local Children = Fusion.Children
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 
 local ClaimBanner = require(Client.Level.ClaimBanner)
 
@@ -24,7 +24,7 @@ type Components = {
     Icon: typeof(Icon),
     Text: typeof(Text),
     EmbossedFrame: typeof(EmbossedFrame),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
 
     ClaimBanner: typeof(ClaimBanner),
 }
@@ -54,7 +54,7 @@ local function LevelRewardCard<U>(scope: Scope<U>, props: LevelRewardCardProps)
         Icon = Icon,
         Text = Text,
         EmbossedFrame = EmbossedFrame,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
 
         ClaimBanner = ClaimBanner,
     }
@@ -171,7 +171,7 @@ local function LevelRewardCard<U>(scope: Scope<U>, props: LevelRewardCardProps)
                     StrokeSize = 2.0,
                 },
             },
-        }
+        },
     }
 end
 

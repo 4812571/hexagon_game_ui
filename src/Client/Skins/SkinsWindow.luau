@@ -16,7 +16,7 @@ local Icons = require(Common.Icons)
 local Skins = require(Common.Skins.Skins)
 
 local Window = require(Client.Interface.Window)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local IconText = require(Client.Interface.IconText)
 local Text = require(Client.Interface.Text)
@@ -28,7 +28,7 @@ type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
     Window: typeof(Window),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     EmbossedFrame: typeof(EmbossedFrame),
     IconText: typeof(IconText),
     Text: typeof(Text),
@@ -98,22 +98,10 @@ local function PaddedSize(count: number, size: number, padding: number): number
     return (size + padding) * count - padding
 end
 
-local function ButtonScale(state: Enum.GuiState): number
-    if state == Enum.GuiState.Hover then
-        return 1.05
-    end
-
-    if state == Enum.GuiState.Press then
-        return 0.95
-    end
-
-    return 1.0
-end
-
 local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
     local scope: Scope<Components> = scope:innerScope {
         Window = Window,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         EmbossedFrame = EmbossedFrame,
         IconText = IconText,
         Text = Text,
@@ -129,22 +117,6 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
 
     local itemsFrameWidth = scope:Computed(function(use)
         return PaddedSize(use(ITEMS_PER_ROW), use(ITEM_SIZE), use(ITEM_PADDING))
-    end)
-
-    local equipButtonState = scope:Value(Enum.GuiState.NonInteractable)
-    local variousButtonState = scope:Value(Enum.GuiState.NonInteractable)
-    local flagsButtonState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local equipButtonSize = scope:Computed(function(use)
-        return ButtonScale(use(equipButtonState))
-    end)
-
-    local variousButtonSize = scope:Computed(function(use)
-        return ButtonScale(use(variousButtonState))
-    end)
-
-    local flagsButtonSize = scope:Computed(function(use)
-        return ButtonScale(use(flagsButtonState))
     end)
 
     local currentSkinState = scope:Computed(function(use)
@@ -209,15 +181,17 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                 Padding = UDim.new(0, 20)
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 LayoutOrder = 1,
                                 BackgroundTransparency = 1,
                                 
                                 Size = UDim2.fromOffset(245, 55),
-                            
-                                GuiStateChanged = function(state: Enum.GuiState)
-                                    variousButtonState:set(state)
-                                end,
+
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.95,
+                                },
 
                                 Children = scope:EmbossedFrame {
                                     Size = UDim2.fromScale(1, 1),
@@ -229,35 +203,31 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                     StrokeThickness = 2.5,
                                     CornerRadius = UDim.new(0.25, 0),
 
-                                    Children = {
-                                        scope:New "UIScale" {
-                                            Scale = scope:Spring(variousButtonSize, 35),
-                                        },
+                                    Children = scope:IconText {
+                                        Size = UDim2.fromScale(0.65, 0.80),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                        scope:IconText {
-                                            Size = UDim2.fromScale(0.65, 0.80),
-                                            Position = UDim2.fromScale(0.5, 0.5),
-                                            AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                            Icon = Icons.Pencil,
-                                            IconSide = "Left",
-                                            Text = "Various",
-                                            TextSize = 30,
-                                            TextStrokeThickness = 2.3,
-                                        },
+                                        Icon = Icons.Pencil,
+                                        IconSide = "Left",
+                                        Text = "Various",
+                                        TextSize = 30,
+                                        TextStrokeThickness = 2.3,
                                     },
                                 }
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 LayoutOrder = 2,
                                 BackgroundTransparency = 1,
 
                                 Size = UDim2.fromOffset(245, 55),
 
-                                GuiStateChanged = function(state: Enum.GuiState)
-                                    flagsButtonState:set(state)
-                                end,
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.95,  
+                                },
 
                                 Children = scope:EmbossedFrame {
                                     Size = UDim2.fromScale(1, 1),
@@ -269,24 +239,18 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                     StrokeThickness = 2.5,
                                     CornerRadius = UDim.new(0.25, 0),
 
-                                    Children = {
-                                        scope:New "UIScale" {
-                                            Scale = scope:Spring(flagsButtonSize, 35),
-                                        },
+                                    Children = scope:IconText {
+                                        Size = UDim2.fromScale(0.65, 0.80),
+                                        Position = UDim2.fromScale(0.5, 0.5),
+                                        AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                        scope:IconText {
-                                            Size = UDim2.fromScale(0.65, 0.80),
-                                            Position = UDim2.fromScale(0.5, 0.5),
-                                            AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                            Icon = Icons.ShoppingCart,
-                                            IconSide = "Left",
-                                            Text = "Flags",
-                                            TextSize = 30,
-                                            TextStrokeThickness = 2.3,
-                                        },
+                                        Icon = Icons.ShoppingCart,
+                                        IconSide = "Left",
+                                        Text = "Flags",
+                                        TextSize = 30,
+                                        TextStrokeThickness = 2.3,
                                     },
-                                }
+                                },
                             },
                         },
                     },
@@ -376,22 +340,18 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                                 Size = UDim2.fromScale(1, 0),
                                                 
                                                 [Children] = {
-                                                    scope:New "UIListLayout" {
-                                                        SortOrder = Enum.SortOrder.LayoutOrder,
-                                                        FillDirection = Enum.FillDirection.Vertical,
-
-                                                        VerticalFlex = Enum.UIFlexAlignment.Fill,
-                                                        Padding = UDim.new(0, 20),
-                                                    },
-                                                        
-                                                    scope:InteractionFrame {
-                                                        Size = UDim2.fromScale(1, 0),
+                                                    scope:ButtonFrame {
+                                                        Size = UDim2.fromScale(1, 1),
+                                                        AnchorPoint = Vector2.new(0.5, 0.5),
+                                                        Position = UDim2.fromScale(0.5, 0.5),
 
                                                         BackgroundTransparency = 1,
 
-                                                        GuiStateChanged = function(state: Enum.GuiState)
-                                                            equipButtonState:set(state)
-                                                        end,
+                                                        Scaling = {
+                                                            Idle = 1.0,
+                                                            Hover = 1.05,
+                                                            Press = 0.95,
+                                                        },
 
                                                         Activated = function()
                                                             if peek(currentSkinState) == "NotOwned" then
@@ -407,6 +367,7 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                                             end
                                                         end,
 
+                                                        
                                                         Children = scope:EmbossedFrame {
                                                             Size = UDim2.fromScale(1, 1),
                                                             Position = UDim2.fromScale(0.5, 0.5),
@@ -416,34 +377,28 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                                             CornerRadius = UDim.new(0.25, 0),
                                                             StrokeThickness = 2.5,
 
-                                                            Children = {
-                                                                scope:New "UIScale" {
-                                                                    Scale = scope:Spring(equipButtonSize, 35),
-                                                                },
+                                                            Children = scope:Text {
+                                                                Position = UDim2.fromScale(0.5, 0.5),
+                                                                AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                                                scope:Text {
-                                                                    Position = UDim2.fromScale(0.5, 0.5),
-                                                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                                                Text = scope:Computed(function(use)
+                                                                    if use(currentSkinState) == "NotOwned" then
+                                                                        return "Buy"
+                                                                    end
 
-                                                                    Text = scope:Computed(function(use)
-                                                                        if use(currentSkinState) == "NotOwned" then
-                                                                            return "Buy"
-                                                                        end
+                                                                    if use(currentSkinState) == "Owned" then
+                                                                        return "Equip"
+                                                                    end
 
-                                                                        if use(currentSkinState) == "Owned" then
-                                                                            return "Equip"
-                                                                        end
+                                                                    if use(currentSkinState) == "Equipped" then
+                                                                        return "Unequip"
+                                                                    end
 
-                                                                        if use(currentSkinState) == "Equipped" then
-                                                                            return "Unequip"
-                                                                        end
+                                                                    error("Unknown skin state")
+                                                                end),
+                                                                TextSize = 48,
 
-                                                                        error("Unknown skin state")
-                                                                    end),
-                                                                    TextSize = 48,
-
-                                                                    StrokeSize = 2.0,
-                                                                },
+                                                                StrokeSize = 2.0,
                                                             },
                                                         },
                                                     },

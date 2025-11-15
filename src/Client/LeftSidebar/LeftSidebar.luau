@@ -54,6 +54,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local levelButton = scope:SidebarSquareButton {
+        Index = 1,
+
         Name = "LevelButton",
         Size = UDim2.fromOffset(150, 150),
 
@@ -65,6 +67,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local questsButton = scope:SidebarSquareButton {
+        Index = 2,
+
         Name = "QuestsButton",
         Size = UDim2.fromOffset(150, 150),
         Position = UDim2.fromOffset(0, 175),
@@ -77,6 +81,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local rebirthButton = scope:SidebarSquareButton {
+        Index = 3,
+
         Name = "RebirthButton",
         Size = UDim2.fromOffset(150, 150),
         Position = UDim2.fromOffset(0, 350),
@@ -89,6 +95,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local trailsButton = scope:SidebarSquareButton {
+        Index = 4,
+
         Name = "TrailsButton",
         Size = UDim2.fromOffset(150, 150),
         Position = UDim2.fromOffset(0, 525),
@@ -101,6 +109,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local skinsButton = scope:SidebarSquareButton {
+        Index = 5,
+
         Name = "SkinsButton",
         Size = UDim2.fromOffset(150, 150),
         Position = UDim2.fromOffset(0, 700),
@@ -113,6 +123,8 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
     }
 
     local trollButton = scope:SidebarSquareButton {
+        Index = 6,
+
         Name = "TrollButton",
         Size = UDim2.fromOffset(150, 150),
         Position = UDim2.fromOffset(0, 875),
@@ -164,6 +176,7 @@ local function LeftSidebar<U>(scope: Scope<U>, props: LeftSidebarProps)
 
             scope:New "Frame" {
                 LayoutOrder = 2,
+
                 AutomaticSize = Enum.AutomaticSize.XY,
                 BackgroundTransparency = 1,
 

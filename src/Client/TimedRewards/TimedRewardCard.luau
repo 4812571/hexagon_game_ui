@@ -12,14 +12,14 @@ local Children = Fusion.Children
 
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
     Icon: typeof(Icon),
     Text: typeof(Text),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
 }
 
 type TimedRewardCardProps = {
@@ -40,91 +40,73 @@ local function TimedRewardCard<U>(scope: Scope<U>, props: TimedRewardCardProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
         Text = Text,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
     }
 
-    local guiState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local scale = scope:Computed(function(use)
-        if use(guiState) == Enum.GuiState.Hover then
-            return 0.95
-        end
-
-        if use(guiState) == Enum.GuiState.Press then
-            return 0.9
-        end
-
-        return 1.0
-    end)
-
-    return scope:InteractionFrame {
+    return scope:ButtonFrame {
         Size = props.Size,
         Position = props.Position,
         AnchorPoint = props.AnchorPoint,
 
         BackgroundTransparency = 1,
 
-        GuiStateChanged = function(state: Enum.GuiState)
-            guiState:set(state)
-        end,
+        Scaling = {
+            Idle = 1.0,
+            Hover = 0.95,
+            Press = 0.9,
+        },
 
-        Children = {
-            scope:New "UIScale" {
-                Scale = scope:Spring(scale, 35),
+        Children = scope:New "Frame" {
+            Size = UDim2.fromScale(1, 1),
+            Position = UDim2.fromScale(0.5, 0.5),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+
+            [Children] = {
+                scope:Text {
+                    Size = UDim2.fromScale(0.9, 0.2),
+                    Position = UDim2.fromScale(0.5, 0.15),
+                    Text = props.TopText,
+                    TextSize = 38,
+                    TextXAlignment = Enum.TextXAlignment.Right,
+                    StrokeSize = 3.5,
+                },
+
+                scope:Text {
+                    Size = UDim2.fromScale(0.9, 0.2),
+                    Position = UDim2.fromScale(0.5, 1),
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                    Text = props.BottomText,
+                    TextSize = 38,
+                    StrokeSize = 3.5,
+                },
+
+                scope:Icon {
+                    Size = UDim2.fromScale(0.75, 0.75),
+                    Position = UDim2.fromScale(0.5, 0.5),
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                    ZIndex = 0,
+
+                    Icon = props.Icon,
+                },
+
+                scope:New "UIGradient" {
+                    Color = scope:Computed(function(use)
+                        return ColorSequence.new(use(props.Color), use(props.Color):Lerp(Color3.new(1, 1, 1), 0.5))
+                    end),
+                    Rotation = -90,
+                },
+
+                scope:New "UICorner" {
+                    CornerRadius = props.CornerRadius,
+                },
+
+                scope:New "UIStroke" {
+                    Thickness = props.Stroke,
+                },
             },
-
-            scope:New "Frame" {
-                Size = UDim2.fromScale(1, 1),
-                Position = UDim2.fromScale(0.5, 0.5),
-                AnchorPoint = Vector2.new(0.5, 0.5),
-
-                [Children] = {
-                    scope:Text {
-                        Size = UDim2.fromScale(0.9, 0.2),
-                        Position = UDim2.fromScale(0.5, 0.15),
-                        Text = props.TopText,
-                        TextSize = 38,
-                        TextXAlignment = Enum.TextXAlignment.Right,
-                        StrokeSize = 3.5,
-                    },
-
-                    scope:Text {
-                        Size = UDim2.fromScale(0.9, 0.2),
-                        Position = UDim2.fromScale(0.5, 1),
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                        Text = props.BottomText,
-                        TextSize = 38,
-                        StrokeSize = 3.5,
-                    },
-
-                    scope:Icon {
-                        Size = UDim2.fromScale(0.75, 0.75),
-                        Position = UDim2.fromScale(0.5, 0.5),
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                        ZIndex = 0,
-
-                        Icon = props.Icon,
-                    },
-
-                    scope:New "UIGradient" {
-                        Color = scope:Computed(function(use)
-                            return ColorSequence.new(use(props.Color), use(props.Color):Lerp(Color3.new(1, 1, 1), 0.5))
-                        end),
-                        Rotation = -90,
-                    },
-
-                    scope:New "UICorner" {
-                        CornerRadius = props.CornerRadius,
-                    },
-
-                    scope:New "UIStroke" {
-                        Thickness = props.Stroke,
-                    },
-                }
-            },
-        }
+        },
     }
 end
 

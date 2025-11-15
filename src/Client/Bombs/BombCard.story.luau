@@ -20,20 +20,6 @@ return function(target: Instance)
         BombCard = BombCard,
     })
 
-    local guiState = scope:Value(Enum.GuiState.NonInteractable)
-    
-    local scale = scope:Computed(function(use)
-        if use(guiState) == Enum.GuiState.Hover then
-            return 1.1
-        end
-
-        if use(guiState) == Enum.GuiState.Press then
-            return 0.9
-        end
-
-        return 1.0
-    end)
-
     local lastUsed = scope:Value(0)
     local now = scope:Clock()
 
@@ -49,8 +35,7 @@ return function(target: Instance)
         Size = UDim2.fromOffset(180, 180),
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
-        
-        Scale = scope:Spring(scale, 35),
+    
         Transparency = 0.75,
 
         Cooldown = cooldown,
@@ -64,10 +49,6 @@ return function(target: Instance)
             end
 
             lastUsed:set(workspace:GetServerTimeNow())
-        end,
-
-        GuiStateChanged = function(state: Enum.GuiState)
-            guiState:set(state)
         end,
     }
 

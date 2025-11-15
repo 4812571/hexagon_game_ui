@@ -18,7 +18,7 @@ type TimedRewardData = TimedRewards.TimedRewardData
 
 local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 
 local TimedRewardCard = require(Client.TimedRewards.TimedRewardCard)
@@ -28,7 +28,7 @@ type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 export type Components = {
     Text: typeof(Text),
     Window: typeof(Window),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     EmbossedFrame: typeof(EmbossedFrame),
 
     TimedRewardCard: typeof(TimedRewardCard),
@@ -68,43 +68,15 @@ local function Range(n: number)
     return arr
 end
 
-local function ButtonScale(state: Enum.GuiState): number
-    if state == Enum.GuiState.Hover then
-        return 1.1
-    end
-
-    if state == Enum.GuiState.Press then
-        return 0.9
-    end
-
-    return 1.0
-end
-
 local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowProps)
     local scope: Scope<Components> = scope:innerScope {
         Text = Text,
         Window = Window,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         EmbossedFrame = EmbossedFrame,
 
         TimedRewardCard = TimedRewardCard,
     }
-
-    local claimAllState = scope:Value(Enum.GuiState.NonInteractable)
-    local speed2State = scope:Value(Enum.GuiState.NonInteractable)
-    local speed5State = scope:Value(Enum.GuiState.NonInteractable)
-
-    local claimAllScale = scope:Computed(function(use)
-        return ButtonScale(use(claimAllState))
-    end)
-
-    local speed2Scale = scope:Computed(function(use)
-        return ButtonScale(use(speed2State))
-    end)
-
-    local speed5Scale = scope:Computed(function(use)
-        return ButtonScale(use(speed5State))
-    end)
 
     return scope:Window {
         Title = "Rewards",
@@ -209,13 +181,15 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                             PaddingTop = UDim.new(0, 15),
                         },
 
-                        scope:InteractionFrame {
+                        scope:ButtonFrame {
                             Size = UDim2.fromOffset(200, 50),
                             BackgroundTransparency = 1,
 
-                            GuiStateChanged = function(state: Enum.GuiState)
-                                claimAllState:set(state)
-                            end,
+                            Scaling = {
+                                Idle = 1.0,
+                                Hover = 1.05,
+                                Press = 0.9,
+                            },
 
                             Children = scope:EmbossedFrame {
                                 Size = UDim2.fromScale(1, 1),
@@ -226,27 +200,23 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                 CornerRadius = UDim.new(0, 20),
                                 StrokeThickness = 3.0,
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = scope:Spring(claimAllScale, 35),
-                                    },
-
-                                    scope:Text {
-                                        Text = "Claim All",
-                                        TextSize = 42,
-                                        StrokeSize = 2.8,
-                                    },
+                                Children = scope:Text {
+                                    Text = "Claim All",
+                                    TextSize = 42,
+                                    StrokeSize = 2.8,
                                 },
                             },
                         },
 
-                        scope:InteractionFrame {
+                        scope:ButtonFrame {
                             Size = UDim2.fromOffset(200, 50),
                             BackgroundTransparency = 1,
 
-                            GuiStateChanged = function(state: Enum.GuiState)
-                                speed2State:set(state)
-                            end,
+                            Scaling = {
+                                Idle = 1.0,
+                                Hover = 1.05,
+                                Press = 0.9,
+                            },
 
                             Children = scope:EmbossedFrame {
                                 Size = UDim2.fromScale(1, 1),
@@ -257,27 +227,23 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                 CornerRadius = UDim.new(0, 20),
                                 StrokeThickness = 3.0,
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = scope:Spring(speed2Scale, 35),
-                                    },
-
-                                    scope:Text {
-                                        Text = "2x Speed",
-                                        TextSize = 42,
-                                        StrokeSize = 2.8,
-                                    },
+                                Children = scope:Text {
+                                    Text = "2x Speed",
+                                    TextSize = 42,
+                                    StrokeSize = 2.8,
                                 },
                             },
                         },
 
-                        scope:InteractionFrame {
+                        scope:ButtonFrame {
                             Size = UDim2.fromOffset(200, 50),
                             BackgroundTransparency = 1,
 
-                            GuiStateChanged = function(state: Enum.GuiState)
-                                speed5State:set(state)
-                            end,
+                            Scaling = {
+                                Idle = 1.0,
+                                Hover = 1.05,
+                                Press = 0.9,
+                            },
 
                             Children = scope:EmbossedFrame {
                                 Size = UDim2.fromScale(1, 1),
@@ -288,16 +254,10 @@ local function TimedRewardsWindow<U>(scope: Scope<U>, props: TimedRewardsWindowP
                                 CornerRadius = UDim.new(0, 20),
                                 StrokeThickness = 3.0,
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = scope:Spring(speed5Scale, 35),
-                                    },
-
-                                    scope:Text {
-                                        Text = "5x Speed",
-                                        TextSize = 42,
-                                        StrokeSize = 2.8,
-                                    },
+                                Children = scope:Text {
+                                    Text = "5x Speed",
+                                    TextSize = 42,
+                                    StrokeSize = 2.8,
                                 },
                             },
                         },

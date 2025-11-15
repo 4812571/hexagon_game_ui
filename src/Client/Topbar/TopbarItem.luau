@@ -15,7 +15,7 @@ local Children = Fusion.Children
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
@@ -23,7 +23,7 @@ type Components = {
     Icon: typeof(Icon),
     Text: typeof(Text),
     EmbossedFrame: typeof(EmbossedFrame),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
 }
 
 type TopbarItemProps = {
@@ -48,22 +48,8 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
         Icon = Icon,
         Text = Text,
         EmbossedFrame = EmbossedFrame,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
     }
-
-    local purchaseButtonState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local purchaseButtonScale = scope:Computed(function(use)
-        if use(purchaseButtonState) == Enum.GuiState.Press then
-            return 0.90
-        end
-
-        if use(purchaseButtonState) == Enum.GuiState.Hover then
-            return 1.10
-        end
-
-        return 1.0
-    end)
 
     local iconPosition = scope:Value(Vector2.zero)
     local iconSize = scope:Value(Vector2.zero)
@@ -127,7 +113,7 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
                     StrokeSize = 2,
                 },
 
-                scope:InteractionFrame {
+                scope:ButtonFrame {
                     Size = UDim2.fromScale(0.65, 0.65),
                     SizeConstraint = Enum.SizeConstraint.RelativeYY,
                     Position = UDim2.fromScale(1, 0.5),
@@ -135,11 +121,13 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
 
                     BackgroundTransparency = 1,
 
-                    Activated = props.OnPurchaseButton,
+                    Scaling = {
+                        Idle = 1.0,
+                        Hover = 1.10,
+                        Press = 0.90,
+                    },
 
-                    GuiStateChanged = function(newState: Enum.GuiState)
-                        purchaseButtonState:set(newState)
-                    end,
+                    Activated = props.OnPurchaseButton,
 
                     Children = scope:New "Frame" {
                         Size = UDim2.fromScale(1, 1),
@@ -156,10 +144,6 @@ local function TopbarItem<U>(scope: Scope<U>, props: TopbarItemProps)
                             scope:New "UIStroke" {
                                 Thickness = 4,
                                 Color = Color3.fromRGB(0, 0, 0),
-                            },
-
-                            scope:New "UIScale" {
-                                Scale = scope:Spring(purchaseButtonScale, 25),
                             },
 
                             scope:Text {

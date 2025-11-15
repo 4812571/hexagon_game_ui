@@ -18,38 +18,23 @@ local Stopwatch = require(Common.Util.Stopwatch)
 local Text = require(Client.Interface.Text)
 local Icon = require(Client.Interface.Icon)
 local CloseButton = require(Client.Interface.CloseButton)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local Spinner = require(Client.Spins.Spinner)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local IconText = require(Client.Interface.IconText)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
-local function ButtonSize(scope: Scope<Components>, state: Fusion.UsedAs<Enum.GuiState>)
-    return scope:Computed(function(use)
-        if use(state) == Enum.GuiState.Hover then
-            return 1.1
-        end
-
-        if use(state) == Enum.GuiState.Press then
-            return 0.95
-        end
-
-        return 1.0
-    end)
-end
-
 export type Components = {
-    Text: typeof(Text),
     Stopwatch: typeof(Stopwatch),
-    Spinner: typeof(Spinner),
-    InteractionFrame: typeof(InteractionFrame),
+
+    Text: typeof(Text),
     Icon: typeof(Icon),
     CloseButton: typeof(CloseButton),
+    ButtonFrame: typeof(ButtonFrame),
+    Spinner: typeof(Spinner),
     EmbossedFrame: typeof(EmbossedFrame),
     IconText: typeof(IconText),
-
-    ButtonSize: typeof(ButtonSize),
 }
 
 export type SpinWindowProps = {
@@ -70,14 +55,14 @@ end
 
 local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
     local scope: Scope<Components> = scope:innerScope {
-        Text = Text,
         Stopwatch = Stopwatch,
-        Spinner = Spinner,
-        InteractionFrame = InteractionFrame,
+
+        Text = Text,
         Icon = Icon,
         CloseButton = CloseButton,
+        ButtonFrame = ButtonFrame,
+        Spinner = Spinner,
         EmbossedFrame = EmbossedFrame,
-        ButtonSize = ButtonSize,
         IconText = IconText,
     }
 
@@ -101,27 +86,7 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
 
     local questionMarkState = scope:Value(Enum.GuiState.NonInteractable)
 
-    local questionMarkScale = scope:Computed(function(use)
-        if use(questionMarkState) == Enum.GuiState.Hover then
-            return 1.2
-        end
-
-        return 1.0
-    end)
-
     local BUTTON_SIZE = UDim2.fromOffset(200, 60)
-
-    local leftButtonState = scope:Value(Enum.GuiState.NonInteractable)
-    local middleButtonState = scope:Value(Enum.GuiState.NonInteractable)
-    local rightButtonState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local leftButtonSize = scope:ButtonSize(leftButtonState)
-    local middleButtonSize = scope:ButtonSize(middleButtonState)
-    local rightButtonSize = scope:ButtonSize(rightButtonState)
-
-    local leftButtonSizeSmooth = scope:Spring(leftButtonSize, 35)
-    local middleButtonSizeSmooth = scope:Spring(middleButtonSize, 35)
-    local rightButtonSizeSmooth = scope:Spring(rightButtonSize, 35)
 
     return scope:New "Frame" {
         Size = UDim2.fromOffset(700, 700),
@@ -139,12 +104,15 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                 Size = UDim2.fromOffset(350, 350),
                 Position = UDim2.fromScale(0.5, 0.5),
                 AnchorPoint = Vector2.new(0.5, 0.5),
+
                 Rotation = scope:Computed(function(use)
                     return Degrees((use(stopwatch) :: number) * 0.085)
                 end),
+
                 PercentagesVisible = scope:Computed(function(use)
                     return use(questionMarkState) ~= Enum.GuiState.Idle
                 end),
+
                 Items = props.Items,
             },
 
@@ -164,7 +132,7 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                 Rotation = scope:Spring(ratchetRotation, 25)
             },
 
-            scope:InteractionFrame {
+            scope:ButtonFrame {
                 Size = UDim2.fromOffset(75, 75),
                 Position = UDim2.fromScale(1.00 - 0.20, 0.20),
                 AnchorPoint = Vector2.new(0.5, 0.5),
@@ -174,20 +142,20 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                 GuiStateChanged = function(state: Enum.GuiState)
                     questionMarkState:set(state)
                 end,
-            
-                Children = {
-                    scope:New "UIScale" {
-                        Scale = scope:Spring(questionMarkScale, 35),
-                    },
 
-                    scope:Icon {
-                        Size = UDim2.fromScale(1, 1),
-                        Position = UDim2.fromScale(0.5, 0.5),
-                        AnchorPoint = Vector2.new(0.5, 0.5),
-                        Icon = Icons.BlueQuestionMark,
-                        Rotation = 12,
-                    },
-                }
+                Scaling = {
+                    Idle = 1.0,
+                    Hover = 1.2,
+                    Press = 1.0,
+                },
+            
+                Children = scope:Icon {
+                    Size = UDim2.fromScale(1, 1),
+                    Position = UDim2.fromScale(0.5, 0.5),
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Icon = Icons.BlueQuestionMark,
+                    Rotation = 12,
+                },
             },
 
             scope:New "Frame" {
@@ -217,40 +185,36 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 Scale = 1.0
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 Size = UDim2.fromScale(1, 1),
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
 
                                 BackgroundTransparency = 1,
 
-                                GuiStateChanged = function(state: Enum.GuiState)
-                                    leftButtonState:set(state)
-                                end,
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.95,
+                                },
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = leftButtonSizeSmooth
+                                Children = scope:EmbossedFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                                    Color = Color3.fromRGB(173, 138, 255),
+                                    CornerRadius = UDim.new(0, 18),
+                                    StrokeThickness = 3.5,
+
+                                    Children = scope:Text {
+                                        Text = "+10 Spins!",
+                                        TextSize = 42,
+                                        StrokeSize = 2.5,
                                     },
-
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        Color = Color3.fromRGB(173, 138, 255),
-                                        CornerRadius = UDim.new(0, 18),
-                                        StrokeThickness = 3.5,
-
-                                        Children = scope:Text {
-                                            Text = "+10 Spins!",
-                                            TextSize = 42,
-                                            StrokeSize = 2.5,
-                                        },
-                                    }
-                                }
-                            }
-                        }
+                                },
+                            },
+                        },
                     },
 
                     scope:New "Frame" {
@@ -264,40 +228,36 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 Scale = 1.2
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 Size = UDim2.fromScale(1, 1),
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
 
                                 BackgroundTransparency = 1,
 
-                                GuiStateChanged = function(state: Enum.GuiState)
-                                    middleButtonState:set(state)
-                                end,
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.95,
+                                },
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = middleButtonSizeSmooth,
+                                Children = scope:EmbossedFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                                    Color = Color3.fromRGB(115, 223, 26),
+                                    CornerRadius = UDim.new(0, 18),
+                                    StrokeThickness = 3.5,
+
+                                    Children = scope:Text {
+                                        Text = scope:Computed(function(use)
+                                            return `Spin! ({use(props.SpinCount)})`
+                                        end),
+                                        
+                                        TextSize = 42,
+                                        StrokeSize = 2.5,
                                     },
-
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        Color = Color3.fromRGB(115, 223, 26),
-                                        CornerRadius = UDim.new(0, 18),
-                                        StrokeThickness = 3.5,
-
-                                        Children = scope:Text {
-                                            Text = scope:Computed(function(use)
-                                                return `Spin! ({use(props.SpinCount)})`
-                                            end),
-                                            
-                                            TextSize = 42,
-                                            StrokeSize = 2.5,
-                                        },
-                                    }
                                 }
                             }
                         }
@@ -314,44 +274,40 @@ local function SpinWindow<U>(scope: Scope<U>, props: SpinWindowProps)
                                 Scale = 1.0
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 Size = UDim2.fromScale(1, 1),
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
 
                                 BackgroundTransparency = 1,
 
-                                GuiStateChanged = function(state: Enum.GuiState)
-                                    rightButtonState:set(state)
-                                end,
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.95,
+                                },
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = rightButtonSizeSmooth
+                                Children = scope:EmbossedFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Position = UDim2.fromScale(0.5, 0.5),
+                                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                                    Color = Color3.fromRGB(140, 0, 255),
+                                    CornerRadius = UDim.new(0, 18),
+                                    StrokeThickness = 3.5,
+
+                                    Children = scope:Text {
+                                        Text = "+100 Spins!",
+                                        TextSize = 42,
+                                        StrokeSize = 2.5,
                                     },
-
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        Color = Color3.fromRGB(140, 0, 255),
-                                        CornerRadius = UDim.new(0, 18),
-                                        StrokeThickness = 3.5,
-
-                                        Children = scope:Text {
-                                            Text = "+100 Spins!",
-                                            TextSize = 42,
-                                            StrokeSize = 2.5,
-                                        },
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                                },
+                            },
+                        },
+                    },
+                },
             },
-        }
+        },
     }
 end
 

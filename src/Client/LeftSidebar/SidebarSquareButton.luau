@@ -16,7 +16,7 @@ local Clock = require(Common.Util.Clock)
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 type UsedAs<T> = Fusion.UsedAs<T>
 
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
@@ -30,15 +30,12 @@ end
 local CORNER_RADIUS = UDim.new(0, 32)
 local STROKE_THICKNESS = 5.5
 
-local HOVER_SCALE = 1.04
-local PRESS_SCALE = 0.965
-
 local NEW_INDICATOR_FREQUENCY = 1
 local NEW_INDICATOR_AMPLITUDE = 0.45
 local NEW_INDICATOR_BASE_SCALE = 0.65
 
 export type Components = {
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     EmbossedFrame: typeof(EmbossedFrame),
     Icon: typeof(Icon),
     Text: typeof(Text),
@@ -48,6 +45,8 @@ export type SidebarSquareButtonProps = {
     Size: Fusion.UsedAs<UDim2>?,
     Position: Fusion.UsedAs<UDim2>?,
     AnchorPoint: Fusion.UsedAs<Vector2>?,
+
+    Index: number,
 
     Icon: Fusion.UsedAs<string>,
     Text: Fusion.UsedAs<string>,
@@ -59,25 +58,11 @@ export type SidebarSquareButtonProps = {
 
 local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButtonProps)
     local scope: Scope<Components> = scope:innerScope {
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         EmbossedFrame = EmbossedFrame,
         Icon = Icon,
         Text = Text,
     }
-
-    local guiState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local scale = scope:Computed(function(use)
-        if use (guiState) == Enum.GuiState.Hover then
-            return HOVER_SCALE
-        end
-
-        if use (guiState) == Enum.GuiState.Press then
-            return PRESS_SCALE
-        end
-
-        return 1
-    end)
 
     local currentTime = Clock(scope)
 
@@ -105,20 +90,13 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
             Rotation = 25,
 
             ZIndex = 2,
+            StrokeSize = 4,
 
-            [Children] = {
-                scope:New "UIStroke" {
-                    Thickness = 4,
-                    Color = Color3.fromRGB(0, 0, 0),
-                    Transparency = 0,
-                },
-
-                scope:New "UIScale" {
-                    Scale = scope:Computed(function(use)
-                        return use(newIndicatorScale)
-                    end),
-                },
-            }
+            [Children] = scope:New "UIScale" {
+                Scale = scope:Computed(function(use)
+                    return use(newIndicatorScale)
+                end),
+            },
         }
     end)
 
@@ -129,10 +107,13 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
         Position = UDim2.fromScale(0.5, 0.5),
         AnchorPoint = Vector2.new(0.5, 0.5),
 
+        LayoutOrder = props.Index,
+        ZIndex = -props.Index,
+
         BackgroundTransparency = 1,
 
         [Children] = {
-            scope:InteractionFrame {
+            scope:ButtonFrame {
                 Name = "SidebarSquareButton",
 
                 Size = UDim2.fromOffset(200, 200),
@@ -141,9 +122,11 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
 
                 BackgroundTransparency = 1,
 
-                GuiStateChanged = function(state: Enum.GuiState)
-                    guiState:set(state)
-                end,
+                Scaling = {
+                    Idle = 1.0,
+                    Hover = 1.04,
+                    Press = 0.965,
+                },
 
                 Activated = props.Activated,
 
@@ -180,10 +163,6 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
                         TextSize = 55,
                         
                         StrokeThickness = 4.0,
-                    },
-
-                    scope:New "UIScale" {
-                        Scale = scope:Spring(scale, 45),
                     },
                 } :: {Fusion.Child}
             },

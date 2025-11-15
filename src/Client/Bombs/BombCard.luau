@@ -15,14 +15,14 @@ local Icons = require(Common.Icons)
 
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 type Components = {
     Icon: typeof(Icon),
     Text: typeof(Text),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
 }
 
 export type BombCardProps = {
@@ -30,16 +30,12 @@ export type BombCardProps = {
     Position: Fusion.UsedAs<UDim2>?,
     AnchorPoint: Fusion.UsedAs<Vector2>?,
     
-    Scale: Fusion.UsedAs<number>,
-    
     Count: Fusion.UsedAs<number>,
     BombIcon: Fusion.UsedAs<string>,
     Transparency: Fusion.UsedAs<number>?,
     Gradient: Fusion.Child?,
     
     Cooldown: Fusion.UsedAs<number>,
-
-    GuiStateChanged: ((Enum.GuiState) -> ())?,
     Activated: (() -> ())?,
 }
 
@@ -47,7 +43,7 @@ local function BombCard<U>(scope: Scope<U>, props: BombCardProps)
     local scope: Scope<Components> = scope:innerScope {
         Icon = Icon,
         Text = Text,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
     }
 
     local isCooldown = scope:Computed(function(use)
@@ -61,21 +57,22 @@ local function BombCard<U>(scope: Scope<U>, props: BombCardProps)
 
         BackgroundTransparency = 1,
 
-        [Children] = scope:InteractionFrame {
+        [Children] = scope:ButtonFrame {
             Size = UDim2.fromScale(1, 1),
             Position = UDim2.fromScale(0.5, 0.5),
             AnchorPoint = Vector2.new(0.5, 0.5),
 
             BackgroundTransparency = 1,
 
+            Scaling = {
+                Idle = 1.0,
+                Hover = 1.1,
+                Press = 0.9,
+            },
+
             Activated = props.Activated,
-            GuiStateChanged = props.GuiStateChanged,
 
             Children = {
-                scope:New "UIScale" {
-                    Scale = props.Scale,
-                },
-
                 scope:New "ImageLabel" {
                     Size = UDim2.fromScale(1, 1),
                     Position = UDim2.fromScale(0.5, 0.5),

@@ -17,7 +17,7 @@ local Trails = require(Common.Trails.Trails)
 
 local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 
 local CosmeticPreview = require(Client.Cosmetics.CosmeticPreview)
@@ -28,7 +28,7 @@ type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 export type Components = {
     Text: typeof(Text),
     Window: typeof(Window),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     EmbossedFrame: typeof(EmbossedFrame),
 
     CosmeticPreview: typeof(CosmeticPreview),
@@ -102,23 +102,11 @@ local function PaddedSize(count: number, size: number, padding: number): number
     return (size + padding) * count - padding
 end
 
-local function ButtonScale(state: Enum.GuiState): number
-    if state == Enum.GuiState.Hover then
-        return 1.05
-    end
-
-    if state == Enum.GuiState.Press then
-        return 0.95
-    end
-
-    return 1.0
-end
-
 local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
     local scope: Scope<Components> = scope:innerScope {
         Text = Text,
         Window = Window,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         EmbossedFrame = EmbossedFrame,
 
         CosmeticPreview = CosmeticPreview,
@@ -132,17 +120,6 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
 
     local itemsFrameWidth = scope:Computed(function(use)
         return PaddedSize(use(ITEMS_PER_ROW), use(ITEM_SIZE), use(ITEM_PADDING))
-    end)
-
-    local equipButtonState = scope:Value(Enum.GuiState.NonInteractable)
-    local purchaseButtonState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local equipButtonSize = scope:Computed(function(use)
-        return ButtonScale(use(equipButtonState))
-    end)
-
-    local purchaseButtonSize = scope:Computed(function(use)
-        return ButtonScale(use(purchaseButtonState))
     end)
 
     local isOwned = scope:Computed(function(use)
@@ -257,47 +234,47 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                                 Padding = UDim.new(0, 20),
                                             },
                                                 
-                                            scope:InteractionFrame {
+                                            scope:New "Frame" {
                                                 Size = UDim2.fromScale(1, 0),
-
-                                                BackgroundTransparency = 1,
-
-                                                GuiStateChanged = function(state: Enum.GuiState)
-                                                    equipButtonState:set(state)
-                                                end,
-
-                                                Activated = function()
-                                                    if not peek(isOwned) then
-                                                        props.OnPurchase(peek(props.SelectedTrail))
-                                                    end
-
-                                                    if peek(isOwned) then
-                                                        if peek(props.EquippedTrail) == peek(props.SelectedTrail).Id then
-                                                            props.OnEquip(nil)
-                                                        else
-                                                            props.OnEquip(peek(props.SelectedTrail))
-                                                        end
-                                                    end
-                                                end,
-
-                                                Children = scope:EmbossedFrame {
+                                                
+                                                [Children] = scope:ButtonFrame {
                                                     Size = UDim2.fromScale(1, 1),
                                                     Position = UDim2.fromScale(0.5, 0.5),
                                                     AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                                    Color = Color3.fromRGB(83, 250, 83),
-                                                    CornerRadius = UDim.new(0.25, 0),
-                                                    StrokeThickness = 2.5,
+                                                    BackgroundTransparency = 1,
 
-                                                    Children = {
-                                                        scope:New "UIScale" {
-                                                            Scale = scope:Spring(equipButtonSize, 35),
-                                                        },
+                                                    Scaling = {
+                                                        Idle = 1.0,
+                                                        Hover = 1.05,
+                                                        Press = 0.95,
+                                                    },
 
-                                                        scope:Text {
+                                                    Activated = function()
+                                                        if not peek(isOwned) then
+                                                            props.OnPurchase(peek(props.SelectedTrail))
+                                                        end
+
+                                                        if peek(isOwned) then
+                                                            if peek(props.EquippedTrail) == peek(props.SelectedTrail).Id then
+                                                                props.OnEquip(nil)
+                                                            else
+                                                                props.OnEquip(peek(props.SelectedTrail))
+                                                            end
+                                                        end
+                                                    end,
+
+                                                    Children = scope:EmbossedFrame {
+                                                        Size = UDim2.fromScale(1, 1),
+                                                        Position = UDim2.fromScale(0.5, 0.5),
+                                                        AnchorPoint = Vector2.new(0.5, 0.5),
+
+                                                        Color = Color3.fromRGB(83, 250, 83),
+                                                        CornerRadius = UDim.new(0.25, 0),
+                                                        StrokeThickness = 2.5,
+
+                                                        Children = scope:Text {
                                                             Text = scope:Computed(function(use)
-                                                                print(use(props.EquippedTrail), use(props.SelectedTrail).Id)
-                                                                
                                                                 if not use(isOwned) then
                                                                     return "Buy"
                                                                 end
@@ -308,6 +285,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
 
                                                                 return "Equip"
                                                             end),
+
                                                             TextSize = 48,
                                                             StrokeSize = 2.0,
                                                         },
@@ -315,41 +293,44 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                                 },
                                             },
 
-                                            scope:InteractionFrame {
+                                            scope:New "Frame" {
                                                 Size = UDim2.fromScale(1, 0),
-                                                BackgroundTransparency = 1,
-
-                                                GuiStateChanged = function(state: Enum.GuiState)
-                                                    purchaseButtonState:set(state)
-                                                end,
-
-                                                Children = scope:EmbossedFrame {
+                                                
+                                                [Children] = scope:ButtonFrame {
                                                     Size = UDim2.fromScale(1, 1),
                                                     Position = UDim2.fromScale(0.5, 0.5),
                                                     AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                                    Color = Color3.fromRGB(255, 95, 67),
-                                                    CornerRadius = UDim.new(0.25, 0),
-                                                    StrokeThickness = 2.5,
+                                                    BackgroundTransparency = 1,
 
-                                                    Children = {
-                                                        scope:New "UIScale" {
-                                                            Scale = scope:Spring(purchaseButtonSize, 35),
-                                                        },
+                                                    Scaling = {
+                                                        Idle = 1.0,
+                                                        Hover = 1.05,
+                                                        Press = 0.95,
+                                                    },
+                                                
+                                                    Children = scope:EmbossedFrame {
+                                                        Size = UDim2.fromScale(1, 1),
+                                                        Position = UDim2.fromScale(0.5, 0.5),
+                                                        AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                                        scope:Text {
+                                                        Color = Color3.fromRGB(255, 95, 67),
+                                                        CornerRadius = UDim.new(0.25, 0),
+                                                        StrokeThickness = 2.5,
+
+                                                        Children = scope:Text {
                                                             Text = "Pay me money!",
                                                             TextSize = 48,
                                                             StrokeSize = 2.0,
                                                         },
                                                     },
                                                 },
-                                            },
-                                        }
+                                            }
+                                        },
                                     },
                                 },
                             },
-                        }
+                        },
                     },
 
                     scope:New "ScrollingFrame" {

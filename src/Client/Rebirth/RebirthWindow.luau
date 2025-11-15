@@ -16,7 +16,7 @@ local Icons = require(Common.Icons)
 local Text = require(Client.Interface.Text)
 local Window = require(Client.Interface.Window)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local Icon = require(Client.Interface.Icon)
 
 local RebirthRewardCard = require(Client.Rebirth.RebirthRewardCard)
@@ -28,7 +28,7 @@ type Components = {
     Text: typeof(Text),
     Window: typeof(Window),
     EmbossedFrame: typeof(EmbossedFrame),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     Icon: typeof(Icon),
 
     RebirthRewardCard: typeof(RebirthRewardCard),
@@ -79,26 +79,12 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
         Text = Text,
         Window = Window,
         EmbossedFrame = EmbossedFrame,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         Icon = Icon,
 
         RebirthRewardCard = RebirthRewardCard,
         RebirthBar = RebirthBar,
     }
-
-    local buttonState = scope:Value(Enum.GuiState.NonInteractable)
-
-    local buttonScale = scope:Computed(function(use)
-        if use(buttonState) == Enum.GuiState.Press then
-            return 0.9
-        end
-
-        if use(buttonState) == Enum.GuiState.Hover then
-            return 1.05
-        end
-
-        return 1.0
-    end)
 
     return scope:Window {
         Title = "Rebirth",
@@ -285,46 +271,42 @@ local function RebirthWindow<U>(scope: Scope<U>, props: RebirthWindowProps)
                                 FlexMode = Enum.UIFlexMode.Fill,
                             },
 
-                            scope:InteractionFrame {
+                            scope:ButtonFrame {
                                 AnchorPoint = Vector2.new(0.5, 0.5),
                                 Position = UDim2.fromScale(0.5, 0.5),
                                 Size = UDim2.fromOffset(320, 70),
 
-                                GuiStateChanged = function(newState: Enum.GuiState)
-                                    buttonState:set(newState)
-                                end,
-
                                 Activated = props.RebirthClicked,
 
-                                Children = {
-                                    scope:New "UIScale" {
-                                        Scale = scope:Spring(buttonScale, 32),
+                                Scaling = {
+                                    Idle = 1.0,
+                                    Hover = 1.05,
+                                    Press = 0.9,
+                                },
+
+                                Children = scope:EmbossedFrame {
+                                    Size = UDim2.fromScale(1, 1),
+                                    Color = Color3.fromRGB(72, 255, 0),
+                                    CornerRadius = UDim.new(0, 32),
+                                    StrokeThickness = 4,
+
+                                    Children = {
+                                        scope:Text {
+                                            Text = "Rebirth!",
+                                            TextSize = 58,
+                                            StrokeSize = 3.0,
+                                        },
+
+                                        scope:Icon {
+                                            Icon = Icons.Rebirth,
+                                            IconScale = 1.2,
+                                            Size = UDim2.fromScale(1, 1),
+                                            Position = UDim2.fromScale(0.05, 0.5),
+                                            AnchorPoint = Vector2.new(0.5, 0.5),
+                                        },
                                     },
-
-                                    scope:EmbossedFrame {
-                                        Size = UDim2.fromScale(1, 1),
-                                        Color = Color3.fromRGB(72, 255, 0),
-                                        CornerRadius = UDim.new(0, 32),
-                                        StrokeThickness = 4,
-
-                                        Children = {
-                                            scope:Text {
-                                                Text = "Rebirth!",
-                                                TextSize = 58,
-                                                StrokeSize = 3.0,
-                                            },
-
-                                            scope:Icon {
-                                                Icon = Icons.Rebirth,
-                                                IconScale = 1.2,
-                                                Size = UDim2.fromScale(1, 1),
-                                                Position = UDim2.fromScale(0.05, 0.5),
-                                                AnchorPoint = Vector2.new(0.5, 0.5),
-                                            },
-                                        }
-                                    },
-                                }
-                            }
+                                },
+                            },
                         },
                     }
                 },

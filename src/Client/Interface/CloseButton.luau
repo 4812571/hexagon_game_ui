@@ -10,18 +10,22 @@ local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 
-type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
-type UsedAs<T> = Fusion.UsedAs<T>
-
 local Icons = require(Common.Icons)
 
 local Icon = require(Client.Interface.Icon)
 local InteractionFrame = require(Client.Interface.InteractionFrame)
 
+type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
+export type Components = {
+    Icon: typeof(Icon),
+    InteractionFrame: typeof(InteractionFrame),
+}
+
 export type CloseButtonProps = {
-    Size: UsedAs<UDim2>?,
-    Position: UsedAs<UDim2>?,
-    AnchorPoint: UsedAs<Vector2>?,
+    Size: Fusion.UsedAs<UDim2>?,
+    Position: Fusion.UsedAs<UDim2>?,
+    AnchorPoint: Fusion.UsedAs<Vector2>?,
 
     Activated: () -> ()?,
 }

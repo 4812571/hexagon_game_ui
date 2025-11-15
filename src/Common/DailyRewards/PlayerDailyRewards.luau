@@ -22,7 +22,7 @@ export type PlayerDailyRewards = {
     NextClaimIndex: Value<number>,
 
     CanClaim: (instant: number) -> boolean,
-    PerformClaim: (currentTime: number, totalRewards: number) -> (),
+    PerformClaim: (currentTime: number, totalRewards: number) -> number,
 }
 
 local function NextIndex(currentIndex: number, indexCount: number): number
@@ -52,8 +52,12 @@ local function PlayerDailyRewards(scope: Scope, data: DailyRewardsData): PlayerD
     end
 
     local function PerformClaim(currentTime: number, totalRewards: number)
+        local toClaim = peek(nextClaimIndex)
+        nextClaimIndex:set(NextIndex(toClaim, totalRewards))
+
         lastClaim:set(currentTime)
-        nextClaimIndex:set(NextIndex(peek(nextClaimIndex), totalRewards))
+        
+        return toClaim
     end
 
     local self: PlayerDailyRewards = {

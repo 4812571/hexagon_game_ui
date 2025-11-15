@@ -37,7 +37,6 @@ return function(target: Instance)
     local bomb: BombWindow.BombEntry = {
         Icon = Icons.Bomb,
         Count = random:NextInteger(1, 100),
-        State = scope:Value(Enum.GuiState.NonInteractable),
         Cooldown = 0.0,
 
         CardTransparency = 0.5,
@@ -50,7 +49,6 @@ return function(target: Instance)
     local goldBomb: BombWindow.BombEntry = {
         Icon = Icons.GoldenBomb,
         Count = random:NextInteger(1, 100),
-        State = scope:Value(Enum.GuiState.NonInteractable),
         Cooldown = 0.0,
 
         CardTransparency = 0.5,
@@ -63,7 +61,6 @@ return function(target: Instance)
     local nuke: BombWindow.BombEntry = {
         Icon = Icons.Rocket,
         Count = random:NextInteger(1, 100),
-        State = scope:Value(Enum.GuiState.NonInteractable),
         Cooldown = 0.0,
 
         CardGradient = scope:New "UIGradient" {

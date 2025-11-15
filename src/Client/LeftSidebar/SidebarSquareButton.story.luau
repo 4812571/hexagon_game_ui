@@ -16,9 +16,12 @@ return function(target: Instance)
     local scope = Fusion.scoped(Fusion, {
         SidebarSquareButton = SidebarSquareButton,
     })
+
+    local isNew = scope:Value(true)
     
     local instance = scope:SidebarSquareButton {
         Name = "NewSidebarSquareButton",
+        Index = 1,
 
         Size = UDim2.fromOffset(200, 200),
         Position = UDim2.fromScale(0.5, 0.5),
@@ -27,10 +30,10 @@ return function(target: Instance)
         Icon = Icons.Rebirth,
         Text = "Rebirth",
         Color = Color3.fromRGB(242, 98, 110),
-        IsNew = false,
+        IsNew = isNew,
 
         Activated = function()
-            print("SidebarSquareButton activated!")
+            isNew:set(false)
         end,
     }
 

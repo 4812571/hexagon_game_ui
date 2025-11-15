@@ -22,7 +22,6 @@ export type BombEntry = {
     Icon: string,
     Count: Fusion.UsedAs<number>,
     Cooldown: Fusion.UsedAs<number>,
-    State: Fusion.Value<Enum.GuiState>,
     Activated: () -> (),
 
     CardTransparency: Fusion.UsedAs<number>?,
@@ -66,18 +65,6 @@ local function BombWindow<U>(scope: Scope<U>, props: BombWindowProps)
             },
 
             scope:ForPairs(props.Bombs, function(use, scope: Scope<Components>, index: number, bomb: BombEntry)
-                local scale = scope:Computed(function(use)
-                    if use(bomb.State) == Enum.GuiState.Hover then
-                        return 1.1
-                    end
-
-                    if use(bomb.State) == Enum.GuiState.Press then
-                        return 0.9
-                    end
-
-                    return 1.0
-                end)
-
                 return index, scope:BombCard {
                     BombIcon = bomb.Icon,
 
@@ -91,12 +78,6 @@ local function BombWindow<U>(scope: Scope<U>, props: BombWindowProps)
                     Gradient = bomb.CardGradient,
 
                     Activated = bomb.Activated,
-
-                    GuiStateChanged = function(state: Enum.GuiState)
-                        bomb.State:set(state)
-                    end,
-
-                    Scale = scope:Spring(scale, 30),
                 }
             end)
         } :: {Fusion.Child},

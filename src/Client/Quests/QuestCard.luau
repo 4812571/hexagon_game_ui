@@ -11,7 +11,7 @@ local Fusion = require(Packages.Fusion)
 local Children = Fusion.Children
 
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
-local InteractionFrame = require(Client.Interface.InteractionFrame)
+local ButtonFrame = require(Client.Interface.ButtonFrame)
 local Icon = require(Client.Interface.Icon)
 local Text = require(Client.Interface.Text)
 local ProgressBar = require(Client.Interface.ProgressBar)
@@ -20,7 +20,7 @@ type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
 
 export type Components = {
     EmbossedFrame: typeof(EmbossedFrame),
-    InteractionFrame: typeof(InteractionFrame),
+    ButtonFrame: typeof(ButtonFrame),
     Icon: typeof(Icon),
     Text: typeof(Text),
 
@@ -47,7 +47,7 @@ export type QuestCardProps = {
 local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
     local scope: Scope<Components> = scope:innerScope {
         EmbossedFrame = EmbossedFrame,
-        InteractionFrame = InteractionFrame,
+        ButtonFrame = ButtonFrame,
         Icon = Icon,
         Text = Text,
 
@@ -211,56 +211,48 @@ local function QuestCard<U>(scope: Scope<U>, props: QuestCardProps)
                                         return {}
                                     end
 
-                                    local guiState = scope:Value(Enum.GuiState.NonInteractable)
-
-                                    local buttonScale = scope:Computed(function(use)
-                                        if use(guiState) == Enum.GuiState.Press then
-                                            return 0.95
-                                        end
-
-                                        if use(guiState) == Enum.GuiState.Hover then
-                                            return 1.05
-                                        end
-
-                                        return 1
-                                    end)
-
-                                    return scope:InteractionFrame {
-                                        LayoutOrder = 2,
+                                    return scope:New "Frame" {
                                         Size = UDim2.fromScale(0.50, 0.45),
+                                        LayoutOrder = 2,
                                         BackgroundTransparency = 1,
 
-                                        Activated = props.OnClaim,
-
-                                        GuiStateChanged = function(newState: Enum.GuiState)
-                                            guiState:set(newState)
-                                        end,
-
-                                        Children = scope:New "Frame" {
-                                            BackgroundTransparency = 1,
+                                        [Children] = scope:ButtonFrame {
                                             Size = UDim2.fromScale(1, 1),
                                             Position = UDim2.fromScale(0.5, 0.5),
                                             AnchorPoint = Vector2.new(0.5, 0.5),
 
-                                            [Children] = {
-                                                scope:New "UIScale" {
-                                                    Scale = scope:Spring(buttonScale, 25),
-                                                },
+                                            BackgroundTransparency = 1,
 
-                                                scope:EmbossedFrame {
-                                                    Size = UDim2.fromScale(1, 1),
-                                                    Color = Color3.fromRGB(0, 255, 0),
-                                                    StrokeThickness = 2.5,
-                                                    CornerRadius = UDim.new(0, 15),
-                                                },
+                                            Scaling = {
+                                                Idle = 1.0,
+                                                Hover = 1.05,
+                                                Press = 0.95,
+                                            },
 
-                                                scope:Text {
-                                                    Text = scope:Computed(function(use)
-                                                        return if use(claimCount) == 1 then "Claim" else `Claim x{use(claimCount)}`
-                                                    end),
+                                            Activated = props.OnClaim,
 
-                                                    TextSize = 26,
-                                                    StrokeSize = 2.5,
+                                            Children = scope:New "Frame" {
+                                                BackgroundTransparency = 1,
+                                                Size = UDim2.fromScale(1, 1),
+                                                Position = UDim2.fromScale(0.5, 0.5),
+                                                AnchorPoint = Vector2.new(0.5, 0.5),
+
+                                                [Children] = {
+                                                    scope:EmbossedFrame {
+                                                        Size = UDim2.fromScale(1, 1),
+                                                        Color = Color3.fromRGB(0, 255, 0),
+                                                        StrokeThickness = 2.5,
+                                                        CornerRadius = UDim.new(0, 15),
+                                                    },
+
+                                                    scope:Text {
+                                                        Text = scope:Computed(function(use)
+                                                            return if use(claimCount) == 1 then "Claim" else `Claim x{use(claimCount)}`
+                                                        end),
+
+                                                        TextSize = 26,
+                                                        StrokeSize = 2.5,
+                                                    },
                                                 },
                                             },
                                         },
