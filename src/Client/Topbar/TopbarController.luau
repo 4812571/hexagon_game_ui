@@ -301,9 +301,20 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
     local tileQueue = {}
     local lastTime = 0
 
+    local function Queue(kind: ParticleKind)
+        if kind == "Coin" then
+            return coinQueue
+        end
+
+        if kind == "Tile" then
+            return tileQueue
+        end
+
+        error("Unknown particle kind: " .. kind)
+    end
+
     local function QueueParticles(kind: ParticleKind, totalAmount: number)
         local totalParticles = math.min(MAX_PARTITIONS, math.ceil(totalAmount / MIN_PARTITION_SIZE))
-
         
         local particleSeries = {}
         local remainingAmount = totalAmount
@@ -314,13 +325,11 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
             remainingAmount -= partitionSize
         end
 
-        local queue = kind == "Coin" and coinQueue or tileQueue
+        local queue = Queue(kind)
 
         for _, size in particleSeries do
             table.insert(queue, {Kind = kind, Amount = size})
         end
-
-        error("Unknown particle kind: " .. kind)
     end
 
     local function DeployParticles(deltaTime: number)
