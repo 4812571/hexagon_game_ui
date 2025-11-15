@@ -482,6 +482,7 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                         [Children] = {
                                             scope:New "UIPadding" {
                                                 PaddingTop = UDim.new(0, 50),
+                                                PaddingBottom = UDim.new(0, 50),
                                             },
 
                                             scope:New "UIGridLayout" {

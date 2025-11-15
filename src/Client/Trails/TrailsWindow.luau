@@ -378,6 +378,7 @@ local function TrailsWindow<U>(scope: Scope<U>, props: TrailsWindowProps)
                                 [Children] = {
                                     scope:New "UIPadding" {
                                         PaddingTop = UDim.new(0, 50),
+                                        PaddingBottom = UDim.new(0, 50),
                                     },
 
                                     scope:New "UIGridLayout" {
