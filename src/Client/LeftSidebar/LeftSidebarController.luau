@@ -5,10 +5,13 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Packages = ReplicatedStorage.Packages
+local Common = ReplicatedStorage.Common
 local Client = ReplicatedStorage.Client
 
 local Fusion = require(Packages.Fusion)
 type Scope = Fusion.Scope<typeof(Fusion)>
+
+local RebirthConfig = require(Common.Rebirth.RebirthConfig)
 
 local ClientPlayer = require(Client.Player.ClientPlayer)
 type ClientPlayer = ClientPlayer.ClientPlayer
@@ -72,7 +75,17 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
                 WindowController.ToggleWindow("Rebirth")
             end,
 
-            IsNew = false,
+            IsNew = scope:Computed(function(use)
+                if use(player.Level.Level) < RebirthConfig.Costs.Level then
+                    return false
+                end
+
+                if use(player.Coins.Coins) < RebirthConfig.Costs.Coins then
+                    return false
+                end
+
+                return true
+            end)
         },
 
         TrailsButton = {
