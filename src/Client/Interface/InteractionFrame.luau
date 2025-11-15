@@ -37,11 +37,11 @@ export type InteractionFrameProps = {
 local function InteractionFrame<U>(scope: Scope<typeof(Fusion) & U>, props: InteractionFrameProps)
     local guiState = scope:Value(Enum.GuiState.NonInteractable)
 
-    scope:Observer(guiState):onBind(function()
-        if props.GuiStateChanged then
+    if props.GuiStateChanged then
+        scope:Observer(guiState):onBind(function()
             props.GuiStateChanged(peek(guiState))
-        end
-    end)
+        end)
+    end
 
     return scope:New "ImageButton" {
         Name = props.Name,
