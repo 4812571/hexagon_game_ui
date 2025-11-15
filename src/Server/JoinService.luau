@@ -58,12 +58,19 @@ local function PlayerJoinService(scope: Scope, services: Services): PlayerJoinSe
 
     local playerDataLoader: PlayerDataLoader<PlayerData> = PlayerDataLoader(scope, "PlayerData_1", DefaultPlayerData)
 
+    -- Use this to set/modify player data on load for testing purposes
+    local function ApplyTestingProfileOverrides(data: PlayerData)
+        data.Coins.Coins = 10000
+    end
+
     local function OnJoin(player: Player): InitialData?
         local profile: Profile<PlayerData>? = playerDataLoader.AwaitProfile(player)
        
         if not profile then
             return nil
         end
+
+        ApplyTestingProfileOverrides(profile.Data)
 
         local joinTime = workspace:GetServerTimeNow()
 
