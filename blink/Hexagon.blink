@@ -107,3 +107,10 @@ event TilesCleared {
     Type: Reliable,
     Call: SingleAsync,
 }
+
+event CoinReward {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync,
+    Data: i32,
+}

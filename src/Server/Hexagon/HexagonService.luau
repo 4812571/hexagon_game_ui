@@ -92,6 +92,8 @@ export type HexagonService = {
     Claimed: Signal.Signal<HexagonPlayer, number, number>,
 }
 
+local COINS_PER_TILE = 1
+
 local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Services): HexagonService
     local PlayerService = services.PlayerService
 
@@ -414,12 +416,21 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
             local previousTiles = peek(player.Player.Hexagons.Tiles)
             local currentTiles = world.GetCount(player)
 
-            if previousTiles == currentTiles then
+            local tileDelta = currentTiles - previousTiles
+
+            if tileDelta == 0 then
                 continue
             end
 
             player.Player.Hexagons.Tiles:set(currentTiles)
-            NetworkServer.Hexagon.TileChanged.Fire(player.Player.Player, currentTiles - previousTiles)
+            NetworkServer.Hexagon.TileChanged.Fire(player.Player.Player, tileDelta)
+
+            if tileDelta > 0 then
+                local coinReward = math.floor(tileDelta * COINS_PER_TILE)
+                player.Player.Coins.AwardCoins(coinReward)
+
+                NetworkServer.Hexagon.CoinReward.Fire(player.Player.Player, coinReward)
+            end
         end
 
         UpdateCrowned()

@@ -48,6 +48,10 @@ export type ParticleEntry = {
     Speed: number,
 }
 
+local MAX_PARTITIONS = 6
+local MIN_PARTITION_SIZE = 5
+local DEPLOY_INTERVAL = 0.125
+
 local function CommaFormatNumber(number: number): string
     local str = tostring(number)
     local result = ""
@@ -171,18 +175,6 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
         end)
     }
 
-    local function State(kind: ParticleKind): Fusion.Value<number>
-        if kind == "Tile" then
-            return player.Hexagons.Tiles
-        end
-
-        if kind == "Coin" then
-            return player.Coins.Coins
-        end
-    
-        error("Unknown particle kind: " .. kind)
-    end
-
     local function Icon(kind: ParticleKind): string
         if kind == "Tile" then
             return Icons.Globe
@@ -208,13 +200,22 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
     end
 
     local function ApplyReward(kind: ParticleKind, amount: number)
-        local state = State(kind)
-        state:set(peek(state) + amount)
+        if kind == "Tile" then
+            player.Hexagons.Tiles:set(peek(player.Hexagons.Tiles) + amount)
+            return
+        end
+
+        if kind == "Coin" then
+            player.Coins.AwardCoins(amount)
+            return
+        end
+
+        error("Unknown particle kind: " .. kind)
     end
 
     local particleEntries: Fusion.Value<{ParticleEntry}> = scope:Value({})
 
-    local function Update(deltaTime: number)
+    local function AnimateParticles(deltaTime: number)
         local entries = peek(particleEntries)
         
         local cleaning = {}
@@ -264,7 +265,7 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
                     Position = scope:Computed(function(use)
                         return UDim2.fromOffset(use(entry.Position).X, use(entry.Position).Y)
                     end),
-                    Size = UDim2.fromOffset(50, 50),
+                    Size = UDim2.fromOffset(90, 90),
                     Scale = scale,
                 }
             end),
@@ -296,13 +297,69 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
         particleEntries:set(entries)
     end
 
+    local coinQueue = {}
+    local tileQueue = {}
+    local lastTime = 0
+
+    local function QueueParticles(kind: ParticleKind, totalAmount: number)
+        local totalParticles = math.min(MAX_PARTITIONS, math.ceil(totalAmount / MIN_PARTITION_SIZE))
+
+        
+        local particleSeries = {}
+        local remainingAmount = totalAmount
+
+        for remainingParticles = totalParticles, 1, -1 do
+            local partitionSize = math.ceil(totalAmount / remainingParticles)
+            table.insert(particleSeries, partitionSize)
+            remainingAmount -= partitionSize
+        end
+
+        local queue = kind == "Coin" and coinQueue or tileQueue
+
+        for _, size in particleSeries do
+            table.insert(queue, {Kind = kind, Amount = size})
+        end
+
+        error("Unknown particle kind: " .. kind)
+    end
+
+    local function DeployParticles(deltaTime: number)
+        local now = os.clock()
+
+        if (now - lastTime) < DEPLOY_INTERVAL then
+            return
+        end
+
+        lastTime = now
+
+        local tileEntry = table.remove(tileQueue, 1)
+
+        if tileEntry then
+            CreateParticle("Tile", math.min(tileEntry.Amount, MIN_PARTITION_SIZE))
+        end
+
+        local coinEntry = table.remove(coinQueue, 1)
+
+        if coinEntry then
+            CreateParticle("Coin", math.min(coinEntry.Amount, MIN_PARTITION_SIZE))
+        end
+    end
+
     local function OnTileChanged(tiles: number)
         if tiles < 0 then
             ApplyReward("Tile", 0)
             return
         end
 
-        CreateParticle("Tile", tiles)
+        QueueParticles("Tile", tiles)
+    end
+
+    local function OnCoinReward(coins: number)
+        if coins <= 0 then
+            error("Coin reward must be positive")
+        end
+
+        QueueParticles("Coin", coins)
     end
 
     local function OnTilesCleared()
@@ -315,9 +372,15 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
         player.Hexagons.Tiles:set(0)
     end
 
+    local function Update(deltaTime: number)
+        AnimateParticles(deltaTime)
+        DeployParticles(deltaTime)
+    end
+
     local function Start()
         NetworkClient.Hexagon.TileChanged.On(OnTileChanged)
         NetworkClient.Hexagon.TilesCleared.On(OnTilesCleared)
+        NetworkClient.Hexagon.CoinReward.On(OnCoinReward)
 
         table.insert(scope, RunService.RenderStepped:Connect(Update))
 
