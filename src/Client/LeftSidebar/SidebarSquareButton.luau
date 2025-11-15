@@ -92,7 +92,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
             ZIndex = 2,
             StrokeSize = 4,
 
-            [Children] = scope:New "UIScale" {
+            Children = scope:New "UIScale" {
                 Scale = scope:Computed(function(use)
                     return use(newIndicatorScale)
                 end),
