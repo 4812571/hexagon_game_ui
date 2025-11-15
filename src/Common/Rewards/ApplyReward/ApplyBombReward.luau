@@ -20,14 +20,17 @@ local function ApplyBombReward(player: CommonPlayer, reward: BombReward)
     
     if reward.BombType == "Bomb" then
         bombs.Bombs:set(peek(bombs.Bombs) + reward.Amount)
+        return
     end
     
     if reward.BombType == "GoldBomb" then
         bombs.GoldBombs:set(peek(bombs.GoldBombs) + reward.Amount)
+        return
     end
 
     if reward.BombType == "Nuke" then
         bombs.Nukes:set(peek(bombs.Nukes) + reward.Amount)
+        return
     end
 
     error("[ApplyBombReward] Unknown bomb type: " .. tostring(reward.BombType))
