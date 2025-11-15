@@ -36,7 +36,7 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
     }
 
     local leftSidebar = scope:LeftSidebar {
-        Scale = 0.40,
+        Scale = 0.5,
 
         Position = UDim2.fromScale(0.005, 0.5),
         AnchorPoint = Vector2.new(0, 0.5),

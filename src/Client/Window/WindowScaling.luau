@@ -24,7 +24,7 @@ export type WindowScaling = {
     Visible: Fusion.UsedAs<boolean>,
 }
 
-local BASE_SCALE = 1.0
+local BASE_SCALE = 0.85
 
 local function WindowScaling<U>(scope: Scope<U>, windowName: WindowSpring.WindowType, activeWindow: Fusion.UsedAs<WindowSpring.WindowType?>): WindowScaling
     local scope: Scope<Components> = scope:innerScope {
