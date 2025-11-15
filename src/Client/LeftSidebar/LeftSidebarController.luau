@@ -45,7 +45,18 @@ local function LeftSidebarController(scope: Scope, player: ClientPlayer, control
                 WindowController.ToggleWindow("Level")
             end,
 
-            IsNew = false,
+            IsNew = scope:Computed(function(use)
+                local currentLevel = use(player.Level.Level)
+                local claimedIndexes = use(player.LevelRewards.ClaimedIndexes)
+
+                for i = 1, currentLevel do
+                    if not claimedIndexes[i] then
+                        return true
+                    end
+                end
+
+                return false
+            end)
         },
 
         QuestsButton = {
