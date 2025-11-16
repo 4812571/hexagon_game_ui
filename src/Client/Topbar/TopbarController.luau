@@ -49,8 +49,8 @@ export type ParticleEntry = {
 }
 
 local MAX_PARTITIONS = 6
-local MIN_PARTITION_SIZE = 5
-local DEPLOY_INTERVAL = 0.125
+local MIN_PARTITION_SIZE = 18
+local DEPLOY_INTERVAL = 0.085
 
 local function CommaFormatNumber(number: number): string
     local str = tostring(number)
@@ -313,23 +313,23 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
         error("Unknown particle kind: " .. kind)
     end
 
-    local function QueueParticles(kind: ParticleKind, totalAmount: number)
+    local function PartitionSizes(totalAmount: number): {number}
         local totalParticles = math.min(MAX_PARTITIONS, math.ceil(totalAmount / MIN_PARTITION_SIZE))
         
         local particleSeries = {}
         local remainingAmount = totalAmount
 
         for remainingParticles = totalParticles, 1, -1 do
-            local partitionSize = math.ceil(totalAmount / remainingParticles)
+            local partitionSize = math.ceil(remainingAmount / remainingParticles)
             table.insert(particleSeries, partitionSize)
             remainingAmount -= partitionSize
         end
 
-        local queue = Queue(kind)
+        return particleSeries
+    end
 
-        for _, size in particleSeries do
-            table.insert(queue, {Kind = kind, Amount = size})
-        end
+    local function QueueParticle(kind: ParticleKind, totalAmount: number)
+        table.insert(Queue(kind), {Kind = kind, Amount = totalAmount})
     end
 
     local function DeployParticles(deltaTime: number)
@@ -344,13 +344,13 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
         local tileEntry = table.remove(tileQueue, 1)
 
         if tileEntry then
-            CreateParticle("Tile", math.min(tileEntry.Amount, MIN_PARTITION_SIZE))
+            CreateParticle("Tile", tileEntry.Amount)
         end
 
         local coinEntry = table.remove(coinQueue, 1)
 
         if coinEntry then
-            CreateParticle("Coin", math.min(coinEntry.Amount, MIN_PARTITION_SIZE))
+            CreateParticle("Coin", coinEntry.Amount)
         end
     end
 
@@ -360,7 +360,7 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
             return
         end
 
-        QueueParticles("Tile", tiles)
+        QueueParticle("Tile", tiles)
     end
 
     local function OnCoinReward(coins: number)
@@ -368,7 +368,11 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
             error("Coin reward must be positive")
         end
 
-        QueueParticles("Coin", coins)
+        local partitions = PartitionSizes(coins)
+
+        for _, partitionSize in partitions do
+            QueueParticle("Coin", partitionSize)
+        end
     end
 
     local function OnTilesCleared()
