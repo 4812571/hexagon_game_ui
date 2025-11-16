@@ -83,7 +83,7 @@ local function SidebarSquareButton<U>(scope: Scope<U>, props: SidebarSquareButto
             AnchorPoint = Vector2.new(0.5, 0.5),
 
             Text = "New!",
-            TextSize = 55,
+            TextSize = 75,
             TextColor3 = Color3.fromRGB(255, 255, 255),
             FontFace = Font.fromEnum(Enum.Font.FredokaOne),
             BackgroundTransparency = 1,
