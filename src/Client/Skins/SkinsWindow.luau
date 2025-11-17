@@ -20,11 +20,91 @@ local ButtonFrame = require(Client.Interface.ButtonFrame)
 local EmbossedFrame = require(Client.Interface.EmbossedFrame)
 local IconText = require(Client.Interface.IconText)
 local Text = require(Client.Interface.Text)
+local Icon = require(Client.Interface.Icon)
 
 local CosmeticPreview = require(Client.Cosmetics.CosmeticPreview)
 local CosmeticShopCard = require(Client.Cosmetics.CosmeticShopCard)
 
 type Scope<T> = Fusion.Scope<typeof(Fusion) & T>
+
+export type SectionButtonProps = {
+    Text: Fusion.UsedAs<string>,
+    Icon: Fusion.UsedAs<string>,
+
+    IsActive: Fusion.UsedAs<boolean>,
+
+    Activated: () -> (),
+}
+
+local function SectionButton(scope: Scope<Components>, props: SectionButtonProps)
+    local BUTTON_COLOR = Color3.fromRGB(150, 134, 252)    
+
+    local guiState = scope:Value(Enum.GuiState.NonInteractable)
+
+    return scope:ButtonFrame {
+        BackgroundTransparency = 1,
+         
+        Size = UDim2.fromScale(1, 1),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.fromScale(0.5, 0.5),
+
+        Scaling = {
+            Idle = 1.0,
+            Hover = 1.05,
+            Press = 0.95,
+        },
+
+        Activated = props.Activated,
+
+        GuiStateChanged = function(state: Enum.GuiState)
+            guiState:set(state)
+        end,
+
+        Children = scope:EmbossedFrame {
+            Size = UDim2.fromScale(1, 1),
+            Position = UDim2.fromScale(0.5, 0.5),
+            AnchorPoint = Vector2.new(0.5, 0.5),
+
+            Color = scope:Computed(function(use)
+                if use(props.IsActive) then
+                    return BUTTON_COLOR:Lerp(Color3.new(0, 0, 0), 0.4)
+                end
+
+                if use(guiState) == Enum.GuiState.Hover then
+                    return BUTTON_COLOR:Lerp(Color3.new(0, 0, 0), 0.3)
+                end
+
+                return BUTTON_COLOR
+            end),
+            
+            StrokeThickness = 2.5,
+            CornerRadius = UDim.new(0.25, 0),
+
+            Children = {
+                scope:IconText {
+                    Size = UDim2.fromScale(0.65, 0.80),
+                    Position = UDim2.fromScale(0.5, 0.5),
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+
+                    Icon = props.Icon,
+                    IconSide = "Left",
+                    Text = props.Text,
+                    TextSize = 30,
+                    TextStrokeThickness = 2.3,
+                },
+
+                scope:Icon {
+                    Size = UDim2.fromOffset(40, 40),
+                    Position = UDim2.fromScale(0, 0.125),
+                    AnchorPoint = Vector2.new(0.5, 0.5),
+                    Visible = props.IsActive,
+
+                    Icon = Icons.Check,
+                }
+            }
+        }
+    }
+end
 
 export type Components = {
     Window: typeof(Window),
@@ -32,28 +112,32 @@ export type Components = {
     EmbossedFrame: typeof(EmbossedFrame),
     IconText: typeof(IconText),
     Text: typeof(Text),
+    Icon: typeof(Icon),
 
     CosmeticPreview: typeof(CosmeticPreview),
     CosmeticShopCard: typeof(CosmeticShopCard),
+
+    SectionButton: typeof(SectionButton),
 }
+
+export type SkinSection = "Various" | "Flags"
 
 export type SkinEntry = {
     Owned: Fusion.UsedAs<boolean>,
     Skin: Skins.SkinInfo,
 }
 
-export type SkinSection = "Various" | "Flags"
-
 export type SkinsWindowProps = {
     Scale: Fusion.UsedAs<number>,
     Visible: Fusion.UsedAs<boolean>,
 
-    Section: Fusion.UsedAs<SkinSection>,
+    Section: Fusion.UsedAs<SkinSection | string>,
     Skins: Fusion.UsedAs<{SkinEntry}>,
     Selected: Fusion.UsedAs<SkinEntry>,
     Equipped: Fusion.UsedAs<Skins.SkinInfo?>,
 
     OnClose: () -> (),
+    OnSectionChange: (SkinSection) -> (),
     OnSelect: (SkinEntry) -> (),
     OnPurchase: (SkinEntry) -> (),
     OnEquip: (SkinEntry?) -> (),
@@ -108,6 +192,9 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
 
         CosmeticPreview = CosmeticPreview,
         CosmeticShopCard = CosmeticShopCard,
+
+        SectionButton = SectionButton,
+        Icon = Icon,
     }
 
     local ITEM_SIZE = 125
@@ -181,75 +268,45 @@ local function SkinsWindow<U>(scope: Scope<U>, props: SkinsWindowProps)
                                 Padding = UDim.new(0, 20)
                             },
 
-                            scope:ButtonFrame {
+                            scope:New "Frame" {
                                 LayoutOrder = 1,
                                 BackgroundTransparency = 1,
-                                
+
                                 Size = UDim2.fromOffset(245, 55),
 
-                                Scaling = {
-                                    Idle = 1.0,
-                                    Hover = 1.05,
-                                    Press = 0.95,
+                                [Children] = scope:SectionButton {
+                                    Text = "Various",
+                                    Icon = Icons.Pencil,
+
+                                    IsActive = scope:Computed(function(use)
+                                        print( use(props.Section) )
+                                        return use(props.Section) == "Various"
+                                    end),
+
+                                    Activated = function()
+                                        props.OnSectionChange("Various")
+                                    end,
                                 },
-
-                                Children = scope:EmbossedFrame {
-                                    Size = UDim2.fromScale(1, 1),
-                                    Position = UDim2.fromScale(0.5, 0.5),
-                                    AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                    Color = Color3.fromRGB(150, 134, 252),
-                                    
-                                    StrokeThickness = 2.5,
-                                    CornerRadius = UDim.new(0.25, 0),
-
-                                    Children = scope:IconText {
-                                        Size = UDim2.fromScale(0.65, 0.80),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        Icon = Icons.Pencil,
-                                        IconSide = "Left",
-                                        Text = "Various",
-                                        TextSize = 30,
-                                        TextStrokeThickness = 2.3,
-                                    },
-                                }
                             },
 
-                            scope:ButtonFrame {
+                            scope:New "Frame" {
                                 LayoutOrder = 2,
                                 BackgroundTransparency = 1,
 
                                 Size = UDim2.fromOffset(245, 55),
 
-                                Scaling = {
-                                    Idle = 1.0,
-                                    Hover = 1.05,
-                                    Press = 0.95,  
-                                },
+                                [Children] = scope:SectionButton {
+                                    Text = "Flags",
+                                    Icon = Icons.ShoppingCart,
 
-                                Children = scope:EmbossedFrame {
-                                    Size = UDim2.fromScale(1, 1),
-                                    Position = UDim2.fromScale(0.5, 0.5),
-                                    AnchorPoint = Vector2.new(0.5, 0.5),
+                                    IsActive = scope:Computed(function(use)
+                                        print( use(props.Section) )
+                                        return use(props.Section) == "Flags"
+                                    end),
 
-                                    Color = Color3.fromRGB(150, 134, 252),
-                                    
-                                    StrokeThickness = 2.5,
-                                    CornerRadius = UDim.new(0.25, 0),
-
-                                    Children = scope:IconText {
-                                        Size = UDim2.fromScale(0.65, 0.80),
-                                        Position = UDim2.fromScale(0.5, 0.5),
-                                        AnchorPoint = Vector2.new(0.5, 0.5),
-
-                                        Icon = Icons.ShoppingCart,
-                                        IconSide = "Left",
-                                        Text = "Flags",
-                                        TextSize = 30,
-                                        TextStrokeThickness = 2.3,
-                                    },
+                                    Activated = function()
+                                        props.OnSectionChange("Flags")
+                                    end,
                                 },
                             },
                         },

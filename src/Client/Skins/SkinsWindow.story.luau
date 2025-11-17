@@ -22,23 +22,41 @@ return function(target: Instance)
     
     local ownedSkins = scope:Value({})
 
-    local entries = {}
+    local section = scope:Value("Various")
 
-    for _, v in SkinShop.Flags do
-        local entry: SkinEntry = {
-            Skin = v :: SkinShop.SkinInfo,
-            Owned = scope:Computed(function(use)
-                return use(ownedSkins)[v.Id] == true
-            end),
-        }
+    local skins = scope:Computed(function(use)
+        if use(section) == "Various" then
+            return SkinShop.Various
+        end
 
-        table.insert(entries, entry)
-    end
+        if use(section) == "Flags" then
+            return SkinShop.Flags
+        end
+
+        error("Unknown section: " .. use(section))
+    end)
+
+    local entries = scope:Computed(function(use)
+        local skinEntries: { SkinEntry } = {}
+
+        for _, skin in use(skins) do
+            local entry: SkinEntry = {
+                Skin = skin,
+                Owned = scope:Computed(function(use)
+                    return use(ownedSkins)[skin.Id] == true
+                end),
+            }
+
+            table.insert(skinEntries, entry)
+        end
+
+        return skinEntries
+    end)
 
     local scale = scope:Value(1)
 
-    local selected = scope:Value(entries[1])
-    local equipped = scope:Value(entries[1].Skin)
+    local selected = scope:Value(Fusion.peek(entries)[1])
+    local equipped = scope:Value(Fusion.peek(entries)[1].Skin)
 
     local window = scope:SkinsWindow {
         Scale = scale,
@@ -47,10 +65,14 @@ return function(target: Instance)
             return use(scale) > 0.01
         end),
 
-        Section = "Various",
+        Section = section,
         Skins = entries,
         Selected = selected,
         Equipped = equipped,
+
+        OnSectionChange = function(sectionName)
+            section:set(sectionName)
+        end,
 
         OnClose = function()
             print("SkinsWindow closed")

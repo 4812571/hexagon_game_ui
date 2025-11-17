@@ -112,12 +112,24 @@ local function SkinController(scope: Scope<{}>, player: ClientPlayer, controller
     local selected = scope:Value(flagEntries[1])
     local section: Fusion.Value<SkinsWindow.SkinSection> = scope:Value("Various") :: any
 
+    local selectedEntries = scope:Computed(function(use)
+        if use(section) == "Various" then
+            return variousEntries
+        end
+
+        if use(section) == "Flags" then
+            return flagEntries
+        end
+
+        error("Invalid skin section: " .. use(section))
+    end)
+
     local skinsWindow = scope:SkinsWindow {
         Scale = windowScaling.Scale,
         Visible = windowScaling.Visible,
         Selected = selected,
 
-        Skins = flagEntries,
+        Skins = selectedEntries, 
         Section = section,
 
         Equipped = scope:Computed(function(use)
@@ -129,6 +141,10 @@ local function SkinController(scope: Scope<{}>, player: ClientPlayer, controller
 
             return Skins[activeSkinId]
         end),
+
+        OnSectionChange = function(sectionName)
+            section:set(sectionName)
+        end,
 
         OnSelect = function(entry: SkinsWindow.SkinEntry)
             selected:set(entry)
