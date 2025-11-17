@@ -249,6 +249,13 @@ local Skins = {
         Price = 5.0 * MILLION,
     },
 
+    Skibidi = SkinInfo {
+        Id = "Skibidi",
+        Name = "Skibidi",
+        ImageId = "http://www.roblox.com/asset/?id=112746037706866",
+        Price = 7.5 * MILLION,
+    },
+
     Labubu = SkinInfo {
         Id = "Labubu",
         Name = "Labubu",
