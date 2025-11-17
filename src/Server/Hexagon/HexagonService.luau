@@ -188,7 +188,6 @@ local function HexagonService(scope: Fusion.Scope<typeof(Fusion)>, services: Ser
         character:PivotTo(CFrame.new(worldPosition + Vector3.yAxis * 5))
 
         player.Hexagons.IsInGame:set(true)
-        player.Hexagons.Tiles:set(world.GetCount(hexagonPlayer))
 
         activePlayers[player] = hexagonPlayer
         return hexagonPlayer
