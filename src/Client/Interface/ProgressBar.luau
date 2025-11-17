@@ -36,6 +36,8 @@ export type ProgressBarProps = {
     Children: Fusion.Child?,
 }
 
+local SCALE_WATCH_RESOLUTION = 10 * 1000
+
 local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
     local scope: Scope<Components> = scope:innerScope {
         Text = Text,
@@ -43,12 +45,18 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
     
     local absoluteSize = scope:Value(Vector2.new(0, 0))
 
+    local scalarSize = scope:Value(Vector2.new(0, 0))
+
+    local appliedScale = scope:Computed(function(use)
+        return use(scalarSize).X / SCALE_WATCH_RESOLUTION
+    end)
+
     local width = scope:Computed(function(use)
-        return use(absoluteSize).X
+        return use(absoluteSize).X // use(appliedScale)
     end)
 
     local height = scope:Computed(function(use)
-        return use(absoluteSize).Y
+        return use(absoluteSize).Y // use(appliedScale)
     end)
 
     local barWidth = scope:Computed(function(use)
@@ -70,6 +78,13 @@ local function ProgressBar<U>(scope: Scope<U>, props: ProgressBarProps)
 
         [Children] = {
             props.Children,
+
+            scope:New "Frame" {
+                Visible = false,
+                BackgroundTransparency = 1,
+                Size = UDim2.fromOffset(SCALE_WATCH_RESOLUTION, SCALE_WATCH_RESOLUTION),
+                [Out "AbsoluteSize"] = scalarSize,
+            },
 
             scope:New "UICorner" {
                 CornerRadius = UDim.new(1, 0),
