@@ -356,7 +356,7 @@ local function TopbarController(scope: Scope<{}>, player: ClientPlayer, controll
 
     local function OnTileChanged(tiles: number)
         if tiles < 0 then
-            ApplyReward("Tile", 0)
+            ApplyReward("Tile", tiles)
             return
         end
 
